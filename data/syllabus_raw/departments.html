@@ -1,0 +1,676 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+
+</title><link href="../Content/css/bootstrap.css" rel="stylesheet" type="text/css" /><link href="../Content/font-awesome.min.css" rel="stylesheet" type="text/css" /><link href="../Content/css/Grid.css" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc.css?_=20201215" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc_public_theme.css?_=20150406" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/jquery-3.7.1.min.js"></script>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-51403293-1', 'mccdemo.cloudapp.net');
+        ga('send', 'pageview');
+        
+    </script>
+    <script>
+
+        function searchThisSite() {
+
+            
+            $("#loadingModal")[0].style.visibility = "visible";
+            
+            $("#btnSearchThisSite")[0].blur();
+
+            var querys = getUrlVars();
+            var paramString = "";
+
+            querys.forEach(function (value, index, array) {
+
+                if (value != "keyword") {
+                    paramString += "&" + value + "=" + querys[value];
+                }
+            });
+
+            var keyword = $('#siteKeyword').val();
+            var encodeKeyword = encodeURIComponent(keyword);
+
+            var pageName =  getPageName();
+            if (pageName != "PublicSearchResult") {
+                paramString += "&before_page=" + pageName;
+            }
+
+            location.href = "/Pages/PublicSearchResult.aspx?keyword=" + encodeKeyword + paramString;
+        }
+
+        $(document).ready(function () {
+
+            
+            var langSelected = $('#langSelected');
+            langSelected.change(function () {
+                
+                var addQuery = '';
+                var hrefs = location.href.split('?');
+                if (hrefs.length > 1) {
+                    addQuery = cleanQuery(hrefs[1], 'lang');
+                }
+                if (addQuery != '') {
+                    addQuery = addQuery + '&';
+                }
+                location.href = hrefs[0] + '?' + addQuery + 'lang=' + $(this).val();
+            });
+
+            
+            $('#siteKeyword').tooltip();
+        });
+
+        function getPageName() {
+            var split = window.location.pathname.split('/');
+            return split[split.length - 1];
+        }
+
+        function getUrlVars() {
+            var vars = [], hash;
+
+            var split = window.location.href.split('?');
+            if (split.length != 2) {
+                // 要素無し
+                return vars;
+            }
+
+            var hashes = split[1].split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
+        function cleanQuery(query, target) {
+            var arr = [];
+            $.each(query.split('&'), function (i, param) {
+                if (param.split('=')[0] != target) { arr.push(param); }
+            });
+            return arr.join('&');
+        }
+
+    </script>
+
+    
+    
+
+    <!-- for dodai -->
+    
+    </head>
+<body>
+    
+    <div id="wrap">
+        <!-- Loading -->
+        <div class="modal-backdrop in" id="loadingModal" tabindex="-1" style="visibility:hidden;">
+             <div style="top: 1.5%; position: absolute; left: 50%;">
+                 <div id="loadingSearchPanel" class='loading'></div>
+             </div>
+        </div>
+        <div class="navbar navbar-default navbar-fixed-top header_area" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    
+                    <span class="navbar-brand"><i class="glyphicon glyphicon-home"></i>高専Webシラバス</span>
+                    <div class="navbar-text navbar-text-min-none">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+
+                    
+
+                    
+                    <table class="navbar-brand navbar-right" style="height:50px;">
+                        <tr id="SyllabusSearchArea">
+	<td style="padding-top:6px;">
+                                <input type="text" maxlength="50" class="form-control" data-placement="bottom" data-original-title="学校内検索" placeholder="シラバス検索キーワード" style="width:200px;" id="siteKeyword"/>
+                            </td>
+	<td style="padding-top:6px;">
+                                <button class="btn btn-default" onclick="searchThisSite()" id="btnSearchThisSite">検索</button>
+                            </td>
+</tr>
+
+                        
+                    </table>
+                    <div class="navbar-text navbar-text-min-none navbar-right">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                    <div class="navbar-collapse navbar-brand navbar-right">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="page-header">
+
+            <ol class="breadcrumb">
+                <li><a href="/Pages/PublicSchools?lang=ja"><i class="glyphicon glyphicon-home"></i>ホーム</a></li>
+                
+
+    <li>
+        北九州工業高等専門学校
+    </li>
+
+
+            </ol>
+            <div id="AlertMessage" class="alert alert-danger" style="display:none;">
+            </div>
+        </div>
+        <div class="container" style="margin-left:50px;margin-right:50px;width:90%;">
+            
+    <form method="post" action="./PublicDepartments?school_id=45&amp;lang=ja" id="form1">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="72692EBD" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAA1x4NFgJBNLl+AT6PgifCfiGu5P0RdQkoz0zf8tXVRBGcAgtF384z8aQg5z8QEXCJ7J+/JVO4QuTO4R7aa37WTqoC+MSun48pVf/Kd2dVXz4DHYtzHshy/09W4CJvsARvocngDNdM6e810CEmMnJHneWRCVKTrw960zQCDf/A6rk3HJdqVHLdIp9ufCJgEUi+VeGVHPJ1FzoRTUGlWCeulEo3gkvzyLlwEbTEllylgcKMQ/YMpTNNuem5GN8sKdyboGRvLtGFN06K43+vJ0DfJ+G8jh+oj83Uqeh3JmImwod/74bgx8TUxAnu4AHmtKloY=" />
+        <div class="mcc-title-bar">
+            <div class="row" style="display: flex; align-items: center;">
+                <div class="col-sm-8">
+                    <h1>北九州工業高等専門学校</h1>
+                </div>
+                      <div class="col-xs-12 col-sm-5 text-right" style="margin: 10px 0;">
+                        <div style="display: flex; align-items: center; justify-content: flex-end;">
+                            <label style="margin-right: 10px; margin-bottom: 0; white-space: nowrap; font-weight: bold; font-size: 16px;">
+                                開講年度
+                            </label>
+                        <select size="1" name="ctl00$MainContent$custom_year_eq" id="MainContent_custom_year_eq" class="form-control" style="width:120px;height:40px;">
+	<option selected="selected" value="2026">令和08年度</option>
+	<option value="2025">令和07年度</option>
+	<option value="2024">令和06年度</option>
+	<option value="2023">令和05年度</option>
+	<option value="2022">令和04年度</option>
+	<option value="2021">令和03年度</option>
+	<option value="2020">令和02年度</option>
+	<option value="2019">平成31年度</option>
+	<option value="2018">平成30年度</option>
+	<option value="2017">平成29年度</option>
+	<option value="2016">平成28年度</option>
+	<option value="2015">平成27年度</option>
+
+</select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">学科一覧</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="list-group">
+                            
+                                    <div class="row" style="padding: 10px 0;">
+                                        <div class="col-md-5">
+                                            <h4 class="list-group-item-heading" style="margin-top: 5px;">
+                                                生産デザイン工学科（一般科目）
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-7 text-right">
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjects?school_id=45&department_id=12&year=2026&lang=ja">
+                                                本年度の開講科目一覧
+                                            </a>
+
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjectMapping?school_id=45&department_id=12&year=2026&lang=ja">
+                                                本年度開講科目とMCCの対応
+                                                </a>
+                                             
+                                        <a class="btn btn-primary btn-sm" href="/Pages/PublicCurriculumMap?school_id=45&department_id=12&year=2026&lang=ja">カリキュラムマップ（MCC)</a>
+                                        
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicLearningMap?school_id=45&department_id=12&year=2026&lang=ja">
+                                                カリキュラムマップ（本科）
+                                                </a>
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicJABEEMap?school_id=45&department_id=12&year=2026&lang=ja">
+                                                JABEEマップ
+                                                </a>
+                                            
+                                        </div>
+                                    </div>
+                                
+                                    <hr style="margin: 10px 0;" />
+                                
+                                    <div class="row" style="padding: 10px 0;">
+                                        <div class="col-md-5">
+                                            <h4 class="list-group-item-heading" style="margin-top: 5px;">
+                                                生産デザイン工学科（機械創造システムコース）
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-7 text-right">
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjects?school_id=45&department_id=31&year=2026&lang=ja">
+                                                本年度の開講科目一覧
+                                            </a>
+
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjectMapping?school_id=45&department_id=31&year=2026&lang=ja">
+                                                本年度開講科目とMCCの対応
+                                                </a>
+                                             
+                                        <a class="btn btn-primary btn-sm" href="/Pages/PublicCurriculumMap?school_id=45&department_id=31&year=2026&lang=ja">カリキュラムマップ（MCC)</a>
+                                        
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicLearningMap?school_id=45&department_id=31&year=2026&lang=ja">
+                                                カリキュラムマップ（本科）
+                                                </a>
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicJABEEMap?school_id=45&department_id=31&year=2026&lang=ja">
+                                                JABEEマップ
+                                                </a>
+                                            
+                                        </div>
+                                    </div>
+                                
+                                    <hr style="margin: 10px 0;" />
+                                
+                                    <div class="row" style="padding: 10px 0;">
+                                        <div class="col-md-5">
+                                            <h4 class="list-group-item-heading" style="margin-top: 5px;">
+                                                生産デザイン工学科（知能ロボットシステムコース）
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-7 text-right">
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjects?school_id=45&department_id=32&year=2026&lang=ja">
+                                                本年度の開講科目一覧
+                                            </a>
+
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjectMapping?school_id=45&department_id=32&year=2026&lang=ja">
+                                                本年度開講科目とMCCの対応
+                                                </a>
+                                             
+                                        <a class="btn btn-primary btn-sm" href="/Pages/PublicCurriculumMap?school_id=45&department_id=32&year=2026&lang=ja">カリキュラムマップ（MCC)</a>
+                                        
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicLearningMap?school_id=45&department_id=32&year=2026&lang=ja">
+                                                カリキュラムマップ（本科）
+                                                </a>
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicJABEEMap?school_id=45&department_id=32&year=2026&lang=ja">
+                                                JABEEマップ
+                                                </a>
+                                            
+                                        </div>
+                                    </div>
+                                
+                                    <hr style="margin: 10px 0;" />
+                                
+                                    <div class="row" style="padding: 10px 0;">
+                                        <div class="col-md-5">
+                                            <h4 class="list-group-item-heading" style="margin-top: 5px;">
+                                                生産デザイン工学科（電気電子コース）
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-7 text-right">
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjects?school_id=45&department_id=33&year=2026&lang=ja">
+                                                本年度の開講科目一覧
+                                            </a>
+
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjectMapping?school_id=45&department_id=33&year=2026&lang=ja">
+                                                本年度開講科目とMCCの対応
+                                                </a>
+                                             
+                                        <a class="btn btn-primary btn-sm" href="/Pages/PublicCurriculumMap?school_id=45&department_id=33&year=2026&lang=ja">カリキュラムマップ（MCC)</a>
+                                        
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicLearningMap?school_id=45&department_id=33&year=2026&lang=ja">
+                                                カリキュラムマップ（本科）
+                                                </a>
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicJABEEMap?school_id=45&department_id=33&year=2026&lang=ja">
+                                                JABEEマップ
+                                                </a>
+                                            
+                                        </div>
+                                    </div>
+                                
+                                    <hr style="margin: 10px 0;" />
+                                
+                                    <div class="row" style="padding: 10px 0;">
+                                        <div class="col-md-5">
+                                            <h4 class="list-group-item-heading" style="margin-top: 5px;">
+                                                生産デザイン工学科（情報システムコース）
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-7 text-right">
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjects?school_id=45&department_id=34&year=2026&lang=ja">
+                                                本年度の開講科目一覧
+                                            </a>
+
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjectMapping?school_id=45&department_id=34&year=2026&lang=ja">
+                                                本年度開講科目とMCCの対応
+                                                </a>
+                                             
+                                        <a class="btn btn-primary btn-sm" href="/Pages/PublicCurriculumMap?school_id=45&department_id=34&year=2026&lang=ja">カリキュラムマップ（MCC)</a>
+                                        
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicLearningMap?school_id=45&department_id=34&year=2026&lang=ja">
+                                                カリキュラムマップ（本科）
+                                                </a>
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicJABEEMap?school_id=45&department_id=34&year=2026&lang=ja">
+                                                JABEEマップ
+                                                </a>
+                                            
+                                        </div>
+                                    </div>
+                                
+                                    <hr style="margin: 10px 0;" />
+                                
+                                    <div class="row" style="padding: 10px 0;">
+                                        <div class="col-md-5">
+                                            <h4 class="list-group-item-heading" style="margin-top: 5px;">
+                                                生産デザイン工学科（物質化学コース）
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-7 text-right">
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjects?school_id=45&department_id=35&year=2026&lang=ja">
+                                                本年度の開講科目一覧
+                                            </a>
+
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjectMapping?school_id=45&department_id=35&year=2026&lang=ja">
+                                                本年度開講科目とMCCの対応
+                                                </a>
+                                             
+                                        <a class="btn btn-primary btn-sm" href="/Pages/PublicCurriculumMap?school_id=45&department_id=35&year=2026&lang=ja">カリキュラムマップ（MCC)</a>
+                                        
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicLearningMap?school_id=45&department_id=35&year=2026&lang=ja">
+                                                カリキュラムマップ（本科）
+                                                </a>
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicJABEEMap?school_id=45&department_id=35&year=2026&lang=ja">
+                                                JABEEマップ
+                                                </a>
+                                            
+                                        </div>
+                                    </div>
+                                
+                                    <hr style="margin: 10px 0;" />
+                                
+                                    <div class="row" style="padding: 10px 0;">
+                                        <div class="col-md-5">
+                                            <h4 class="list-group-item-heading" style="margin-top: 5px;">
+                                                生産デザイン工学専攻
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-7 text-right">
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjects?school_id=45&department_id=22&year=2026&lang=ja">
+                                                本年度の開講科目一覧
+                                            </a>
+
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjectMapping?school_id=45&department_id=22&year=2026&lang=ja">
+                                                本年度開講科目とMCCの対応
+                                                </a>
+                                             
+                                        <a class="btn btn-primary btn-sm" href="/Pages/PublicCurriculumMap?school_id=45&department_id=22&year=2026&lang=ja">カリキュラムマップ（MCC)</a>
+                                        
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicLearningMap?school_id=45&department_id=22&year=2026&lang=ja">
+                                                カリキュラムマップ（本科）
+                                                </a>
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicJABEEMap?school_id=45&department_id=22&year=2026&lang=ja">
+                                                JABEEマップ
+                                                </a>
+                                            
+                                        </div>
+                                    </div>
+                                
+                                    <hr style="margin: 10px 0;" />
+                                
+                                    <div class="row" style="padding: 10px 0;">
+                                        <div class="col-md-5">
+                                            <h4 class="list-group-item-heading" style="margin-top: 5px;">
+                                                生産デザイン工学専攻（連携プログラム）
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-7 text-right">
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjects?school_id=45&department_id=23&year=2026&lang=ja">
+                                                本年度の開講科目一覧
+                                            </a>
+
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjectMapping?school_id=45&department_id=23&year=2026&lang=ja">
+                                                本年度開講科目とMCCの対応
+                                                </a>
+                                             
+                                        <a class="btn btn-primary btn-sm" href="/Pages/PublicCurriculumMap?school_id=45&department_id=23&year=2026&lang=ja">カリキュラムマップ（MCC)</a>
+                                        
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicLearningMap?school_id=45&department_id=23&year=2026&lang=ja">
+                                                カリキュラムマップ（本科）
+                                                </a>
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicJABEEMap?school_id=45&department_id=23&year=2026&lang=ja">
+                                                JABEEマップ
+                                                </a>
+                                            
+                                        </div>
+                                    </div>
+                                
+                                    <hr style="margin: 10px 0;" />
+                                
+                                    <div class="row" style="padding: 10px 0;">
+                                        <div class="col-md-5">
+                                            <h4 class="list-group-item-heading" style="margin-top: 5px;">
+                                                機械工学科
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-7 text-right">
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjects?school_id=45&department_id=13&year=2026&lang=ja">
+                                                本年度の開講科目一覧
+                                            </a>
+
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjectMapping?school_id=45&department_id=13&year=2026&lang=ja">
+                                                本年度開講科目とMCCの対応
+                                                </a>
+                                             
+                                        <a class="btn btn-primary btn-sm" href="/Pages/PublicCurriculumMap?school_id=45&department_id=13&year=2026&lang=ja">カリキュラムマップ（MCC)</a>
+                                        
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicLearningMap?school_id=45&department_id=13&year=2026&lang=ja">
+                                                カリキュラムマップ（本科）
+                                                </a>
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicJABEEMap?school_id=45&department_id=13&year=2026&lang=ja">
+                                                JABEEマップ
+                                                </a>
+                                            
+                                        </div>
+                                    </div>
+                                
+                                    <hr style="margin: 10px 0;" />
+                                
+                                    <div class="row" style="padding: 10px 0;">
+                                        <div class="col-md-5">
+                                            <h4 class="list-group-item-heading" style="margin-top: 5px;">
+                                                電気電子工学科
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-7 text-right">
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjects?school_id=45&department_id=14&year=2026&lang=ja">
+                                                本年度の開講科目一覧
+                                            </a>
+
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjectMapping?school_id=45&department_id=14&year=2026&lang=ja">
+                                                本年度開講科目とMCCの対応
+                                                </a>
+                                             
+                                        <a class="btn btn-primary btn-sm" href="/Pages/PublicCurriculumMap?school_id=45&department_id=14&year=2026&lang=ja">カリキュラムマップ（MCC)</a>
+                                        
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicLearningMap?school_id=45&department_id=14&year=2026&lang=ja">
+                                                カリキュラムマップ（本科）
+                                                </a>
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicJABEEMap?school_id=45&department_id=14&year=2026&lang=ja">
+                                                JABEEマップ
+                                                </a>
+                                            
+                                        </div>
+                                    </div>
+                                
+                                    <hr style="margin: 10px 0;" />
+                                
+                                    <div class="row" style="padding: 10px 0;">
+                                        <div class="col-md-5">
+                                            <h4 class="list-group-item-heading" style="margin-top: 5px;">
+                                                電子制御工学科
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-7 text-right">
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjects?school_id=45&department_id=15&year=2026&lang=ja">
+                                                本年度の開講科目一覧
+                                            </a>
+
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjectMapping?school_id=45&department_id=15&year=2026&lang=ja">
+                                                本年度開講科目とMCCの対応
+                                                </a>
+                                             
+                                        <a class="btn btn-primary btn-sm" href="/Pages/PublicCurriculumMap?school_id=45&department_id=15&year=2026&lang=ja">カリキュラムマップ（MCC)</a>
+                                        
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicLearningMap?school_id=45&department_id=15&year=2026&lang=ja">
+                                                カリキュラムマップ（本科）
+                                                </a>
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicJABEEMap?school_id=45&department_id=15&year=2026&lang=ja">
+                                                JABEEマップ
+                                                </a>
+                                            
+                                        </div>
+                                    </div>
+                                
+                                    <hr style="margin: 10px 0;" />
+                                
+                                    <div class="row" style="padding: 10px 0;">
+                                        <div class="col-md-5">
+                                            <h4 class="list-group-item-heading" style="margin-top: 5px;">
+                                                制御情報工学科
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-7 text-right">
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjects?school_id=45&department_id=16&year=2026&lang=ja">
+                                                本年度の開講科目一覧
+                                            </a>
+
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjectMapping?school_id=45&department_id=16&year=2026&lang=ja">
+                                                本年度開講科目とMCCの対応
+                                                </a>
+                                             
+                                        <a class="btn btn-primary btn-sm" href="/Pages/PublicCurriculumMap?school_id=45&department_id=16&year=2026&lang=ja">カリキュラムマップ（MCC)</a>
+                                        
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicLearningMap?school_id=45&department_id=16&year=2026&lang=ja">
+                                                カリキュラムマップ（本科）
+                                                </a>
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicJABEEMap?school_id=45&department_id=16&year=2026&lang=ja">
+                                                JABEEマップ
+                                                </a>
+                                            
+                                        </div>
+                                    </div>
+                                
+                                    <hr style="margin: 10px 0;" />
+                                
+                                    <div class="row" style="padding: 10px 0;">
+                                        <div class="col-md-5">
+                                            <h4 class="list-group-item-heading" style="margin-top: 5px;">
+                                                物質化学工学科
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-7 text-right">
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjects?school_id=45&department_id=17&year=2026&lang=ja">
+                                                本年度の開講科目一覧
+                                            </a>
+
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjectMapping?school_id=45&department_id=17&year=2026&lang=ja">
+                                                本年度開講科目とMCCの対応
+                                                </a>
+                                             
+                                        <a class="btn btn-primary btn-sm" href="/Pages/PublicCurriculumMap?school_id=45&department_id=17&year=2026&lang=ja">カリキュラムマップ（MCC)</a>
+                                        
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicLearningMap?school_id=45&department_id=17&year=2026&lang=ja">
+                                                カリキュラムマップ（本科）
+                                                </a>
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicJABEEMap?school_id=45&department_id=17&year=2026&lang=ja">
+                                                JABEEマップ
+                                                </a>
+                                            
+                                        </div>
+                                    </div>
+                                
+                                    <hr style="margin: 10px 0;" />
+                                
+                                    <div class="row" style="padding: 10px 0;">
+                                        <div class="col-md-5">
+                                            <h4 class="list-group-item-heading" style="margin-top: 5px;">
+                                                総合科学科
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-7 text-right">
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjects?school_id=45&department_id=18&year=2026&lang=ja">
+                                                本年度の開講科目一覧
+                                            </a>
+
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicSubjectMapping?school_id=45&department_id=18&year=2026&lang=ja">
+                                                本年度開講科目とMCCの対応
+                                                </a>
+                                             
+                                        <a class="btn btn-primary btn-sm" href="/Pages/PublicCurriculumMap?school_id=45&department_id=18&year=2026&lang=ja">カリキュラムマップ（MCC)</a>
+                                        
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicLearningMap?school_id=45&department_id=18&year=2026&lang=ja">
+                                                カリキュラムマップ（本科）
+                                                </a>
+                                            
+                                            <a class="btn btn-primary btn-sm" href="/Pages/PublicJABEEMap?school_id=45&department_id=18&year=2026&lang=ja">
+                                                JABEEマップ
+                                                </a>
+                                            
+                                        </div>
+                                    </div>
+                                
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+        </div>
+    </div>
+
+    <div id="footer">
+        <br />
+        <br />
+        <div class="container">
+            <p class="text-muted credit">
+                ©2014 - MCC Web Syllabus.
+            </p>
+        </div>
+    </div>
+
+    <script src="/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+    <script src="/Scripts/mcc.js?v=20190215"></script>
+    <script src="/Scripts/Grid.js"></script>
+    <script>
+      $.ajaxSetup({
+        cache: false
+      });
+    </script>
+    
+
+</body>
+</html>

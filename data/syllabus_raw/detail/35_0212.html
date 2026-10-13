@@ -1,0 +1,648 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+
+</title><link href="../Content/css/bootstrap.css" rel="stylesheet" type="text/css" /><link href="../Content/font-awesome.min.css" rel="stylesheet" type="text/css" /><link href="../Content/css/Grid.css" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc.css?_=20201215" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc_public_theme.css?_=20150406" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/jquery-3.7.1.min.js"></script>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-51403293-1', 'mccdemo.cloudapp.net');
+        ga('send', 'pageview');
+        
+    </script>
+    <script>
+
+        function searchThisSite() {
+
+            
+            $("#loadingModal")[0].style.visibility = "visible";
+            
+            $("#btnSearchThisSite")[0].blur();
+
+            var querys = getUrlVars();
+            var paramString = "";
+
+            querys.forEach(function (value, index, array) {
+
+                if (value != "keyword") {
+                    paramString += "&" + value + "=" + querys[value];
+                }
+            });
+
+            var keyword = $('#siteKeyword').val();
+            var encodeKeyword = encodeURIComponent(keyword);
+
+            var pageName =  getPageName();
+            if (pageName != "PublicSearchResult") {
+                paramString += "&before_page=" + pageName;
+            }
+
+            location.href = "/Pages/PublicSearchResult.aspx?keyword=" + encodeKeyword + paramString;
+        }
+
+        $(document).ready(function () {
+
+            
+            var langSelected = $('#langSelected');
+            langSelected.change(function () {
+                
+                var addQuery = '';
+                var hrefs = location.href.split('?');
+                if (hrefs.length > 1) {
+                    addQuery = cleanQuery(hrefs[1], 'lang');
+                }
+                if (addQuery != '') {
+                    addQuery = addQuery + '&';
+                }
+                location.href = hrefs[0] + '?' + addQuery + 'lang=' + $(this).val();
+            });
+
+            
+            $('#siteKeyword').tooltip();
+        });
+
+        function getPageName() {
+            var split = window.location.pathname.split('/');
+            return split[split.length - 1];
+        }
+
+        function getUrlVars() {
+            var vars = [], hash;
+
+            var split = window.location.href.split('?');
+            if (split.length != 2) {
+                // 要素無し
+                return vars;
+            }
+
+            var hashes = split[1].split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
+        function cleanQuery(query, target) {
+            var arr = [];
+            $.each(query.split('&'), function (i, param) {
+                if (param.split('=')[0] != target) { arr.push(param); }
+            });
+            return arr.join('&');
+        }
+
+    </script>
+
+    
+
+
+    <!-- for dodai -->
+    
+</head>
+<body>
+    
+    <div id="wrap">
+        <!-- Loading -->
+        <div class="modal-backdrop in" id="loadingModal" tabindex="-1" style="visibility:hidden;">
+             <div style="top: 1.5%; position: absolute; left: 50%;">
+                 <div id="loadingSearchPanel" class='loading'></div>
+             </div>
+        </div>
+        <div class="navbar navbar-default navbar-fixed-top header_area" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    
+                    <span class="navbar-brand"><i class="glyphicon glyphicon-home"></i>高専Webシラバス</span>
+                    <div class="navbar-text navbar-text-min-none">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+
+                    
+
+                    
+                    <table class="navbar-brand navbar-right" style="height:50px;">
+                        
+                        <tr id="SyllabusSearchBlankArea">
+	<td style="padding-top:6px;">
+                                 <input type="text" class="form-control" style="width:200px; visibility:hidden"/>
+                            </td>
+	<td style="padding-top:6px;">
+                                <button class="btn btn-default" style="visibility:hidden">検索</button>
+                            </td>
+</tr>
+
+                    </table>
+                    <div class="navbar-text navbar-text-min-none navbar-right">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                    <div class="navbar-collapse navbar-brand navbar-right">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="page-header">
+
+            <ol class="breadcrumb">
+                <li><a href="/Pages/PublicSchools?lang=ja"><i class="glyphicon glyphicon-home"></i>ホーム</a></li>
+                
+
+    <li>
+        <a href="./PublicDepartments?school_id=45&lang=ja">
+            北九州工業高等専門学校
+        </a>
+    </li>
+    <li>
+
+        
+        <a href="./PublicSubjects?school_id=45&department_id=35&year=2026&lang=ja">
+            生産デザイン工学科（物質化学コース） 
+        </a>
+        
+        
+    </li>
+    <li>
+        応用物理Ⅰ
+    </li>
+
+
+            </ol>
+            <div id="AlertMessage" class="alert alert-danger" style="display:none;">
+            </div>
+        </div>
+        <div class="container" style="margin-left:50px;margin-right:50px;width:90%;">
+            
+
+
+    <div class="mcc-title-bar">
+        <div class="row">
+            <div class="col-md-6">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1>応用物理Ⅰ</h1>
+                    </div>
+                    <div class="col-md-6"></div>
+                </div>
+
+            </div>
+
+            <div class="col-md-4 mcc-page-actions">
+                <div class="btn-group" style="margin-top:6px;">
+                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="height:auto;">
+                        PDF
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu text-left" role="menu">
+                        <li>
+                            <a class="" target="_blank" role="menuitem"
+                                href="/Pages/SyllabusPDF?school_id=45&department_id=35&subject_id=0212&year=2022&lang=ja&subject_code=&preview=False&type=start&attachment=false">
+                                表示
+                            </a>
+                        </li>
+                         <li>
+                             <a class="" target="_blank" role="menuitem"
+                                href="/Pages/SyllabusPDF?school_id=45&department_id=35&subject_id=0212&year=2022&lang=ja&subject_code=&preview=False&type=start&attachment=true">
+                                保存
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <form method="post" action="./PublicSyllabus?school_id=45&amp;department_id=35&amp;subject_id=0212&amp;year=2022&amp;lang=ja" id="asp_form">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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5YWx6YCa5Z+656SO44KS55CG6Kej44Gn44GN44KL44CCDGphYmVlXzFfb3BlbmQCAg8VAQ1qYWJlZV8xX2Nsb3NlZAICD2QWBmYPFQFySkFCRUUgU0HikaEg6Ieq5Li755qE44O757aZ57aa55qE44Gq5a2m57+S44KS6YCa44GY44Gm44CB5YWx6YCa5Z+656SO56eR55uu44Gr6Zai44GZ44KL5ZWP6aGM44KS6Kej5rG644Gn44GN44KL44CCZAIBDxUGB2phYmVlXzJySkFCRUUgU0HikaEg6Ieq5Li755qE44O757aZ57aa55qE44Gq5a2m57+S44KS6YCa44GY44Gm44CB5YWx6YCa5Z+656SO56eR55uu44Gr6Zai44GZ44KL5ZWP6aGM44KS6Kej5rG644Gn44GN44KL44CCZuiHquS4u+eahOODu+e2mee2mueahOOBquWtpue/kuOCkumAmuOBmOOBpuOAgeWFsemAmuWfuuekjuenkeebruOBq+mWouOBmeOCi+WVj+mhjOOCkuino+axuuOBp+OBjeOCi+OAgg9qYWJlZV8yX2Rpc3BsYXlySkFCRUUgU0HikaEg6Ieq5Li755qE44O757aZ57aa55qE44Gq5a2m57+S44KS6YCa44GY44Gm44CB5YWx6YCa5Z+656SO56eR55uu44Gr6Zai44GZ44KL5ZWP6aGM44KS6Kej5rG644Gn44GN44KL44CCDGphYmVlXzJfb3BlbmQCAg8VAQ1qYWJlZV8yX2Nsb3NlZAIDDw8WAh8BBd8C5pys5o6I5qWt44Gn44Gv5bqn5a2m44KS5Li744Go44GX44CB5Y2K5bCO5L2T44O75Yqb5a2m44O75YWJ5a2m44O76YeP5a2Q6KuW44O75Y6f5a2Q5qC444Gr44GK44GR44KL5Z+65pys55+l6K2YLCDln7rmnKznmoTlrp/pqJPjga7ljp/nkIbjgpLorJvnvqnjgZnjgovjgILjgb7jgZ/jgIEg5b6M5pyf5b+c55So54mp55CGSUnjgavjgYrjgZHjgovlkITlrp/pqJPjgafnlKjjgYTjgovlrp/pqJPlmajlhbfjga7kvb/nlKjmlrnms5XjgIHjg4fjg7zjgr/jga7ln7rmnKznmoTop6PmnpDmlrnms5XjgoLlrabnv5LjgZfjgIHniannkIblrp/pqJPjga7ln7rmnKznmoTmioDms5Xjga7nv5LlvpfjgoLnm67mjIfjgZnjgIIgZGQCBA8PFgIfAQXrAeW6p+WtpuOCkuS4reW/g+OBq+aOiOalreOCkumAsuOCgeOCi+OAguaVmeenkeabuOOCgueUqOOBhOOCi+OBjCwg44Km44Kn44OW44Gn6Zay6Kan5Y+v6IO96LOH5paZ44KS5L2/55So44GX44Gm44GL44Gq44KK5pep44GE44Oa44O844K544Gn5o6I5qWt44KS6KGM44GGLiDmm7TjgavoqbPjgZfjgY/lrabjgbPjgZ/jgYTlrabnlJ/jga7jgZ/jgoHjgavmlofnjK7jga/mjojmpa3kuK3jgavntLnku4vjgZnjgovjgIJkZAIFDw8WAh8BBYMB5a2m5L+u54q25rOB44Gu56K66KqN44Gu44Gf44KB44CBIOWumuacn+eahOOBq+iqsumhjOOCkuWHuuOBl+OAgeaOiOalreS4reOBq+ihjOOBhua8lOe/kuOCguiqsumhjOOBqOOBl+OBpuaPkOWHuuOBl+OBpuOCguOCieOBhuOAgiBkZAIGDw8WAh8BZWRkAgcPDxYCHwFlZGQCCA8QDxYCHgdDaGVja2VkZ2RkZGQCCQ8QDxYCHwZnZGRkZAIKDxAPFgIfBmdkZGRkAgsPEA8WAh8GaGRkZGQCDA8PFgQfAWUeCU1heExlbmd0aAIFZGQCDQ9kFgRmD2QWIGYPDxYCHwEFJeOCrOOCpOODgOODs+OCuQrlrabnv5LlhoXlrrnjga7norroqo1kZAIBDw8WAh8BBU/np5Hnm67otqPml6jjg7votqPml6gsIOS6iOe/kuW+qee/kiwg6Kqy6aGM44G444Gu5a++5b+c44Gr44Gk44GE44Gm55CG6Kej44GZ44KLZGQCAw8PFgIfAQUn5Y2K5bCO5L2T44Gu5Z+656SO44CB44OQ44Oz44OJ5qeL6YCg44CBZGQCBA8PFgIfAQWQAeWNiuWwjuS9k+OBrueJqeeQhu+8iOemgeWItuW4r+OAgeS+oembu+WtkOW4r+OBqOS8neWwjuW4r+OAgeODleOCp+ODq+ODn+a6luS9jeOAgeecn+aAp+WNiuWwjuS9k+OBqOS4jee0lOeJqeWNiuWwjuS9k++8ieOBq+OBpOOBhOOBpueQhuino+OBmeOCi2RkAgYPDxYCHwEFV+ODgOOCpOOCquODvOODieOBqFBO5o6l5ZCI44CB5pW05rWB5L2c55SoCuODiOODqeODs+OCuOOCueOCv+KRoOOAgOWfuuacrOani+mAoOOBqOWOn+eQhmRkAgcPDxYCHwEFqwHvvY7lnovljYrlsI7kvZPjgahw5Z6L5Y2K5bCO5L2T44CBUE7mjqXlkIjjgIHnqbrkuY/lsaTjgIHmlbTmtYHkvZznlKjjgavjgaTjgYTjgabnkIbop6PjgZnjgovjgILjg4jjg6njg7Pjgrjjgrnjgr/jga7ln7rmnKzmp4vpgKDjgajli5XkvZzljp/nkIbjgavjgaTjgYTjgabnkIbop6PjgZnjgovjgIJkZAIJDw8WAh8BBS3jg4jjg6njg7Pjgrjjgrnjgr/ikaHjgIDlopfluYXkvZznlKjjgajlv5znlKhkZAIKDw8WAh8BBVLjg4jjg6njg7Pjgrjjgrnjgr/jga7ln7rmnKzljp/nkIbjgIHlopfluYXkvZznlKjjgajjgZ3jga7lv5znlKjjgpLnkIbop6PjgZnjgovjgIIKZGQCDA8PFgIfAQU55Yqb5a2m4pGg44CACuizqueCueOBruWKm+Wtpu+8iOS4pumAsumBi+WLlSwg5YaG6YGL5YuV77yJZGQCDQ8PFgIfAQVZ6LOq54K544Gu5Lim6YCy6YGL5YuVLCDlhobpgYvli5Xjga7pgYvli5XmlrnnqIvlvI/jgpLlvq7liIbjgpLnlKjjgYTjgaboqIjnrpfjgafjgY3jgovjgIJkZAIPDw8WAh8BBVDlipvlrabikaEK5Ymb5L2T44Gu5Yqb5a2m77yI5oWj5oCn44Oi44O844Oh44Oz44OI44Go77yS5a6a55CG44CB6KeS6YGL5YuV6YePTO+8iWRkAhAPDxYCHwEFTOinkumBi+WLlemHjywg5oWj5oCn44Oi44O844Oh44Oz44OI44Gr44Gk44GE44Gm55CG6Kej44GXLCDoqIjnrpfjgafjgY3jgovjgIJkZAISDw8WAh8BBVvlipvlrabikaIK5Zue6Lui6YGL5YuV44Go6Kq/5ZKM5oyv5YuV5a2Q44CB54mp55CG5oyv44KK5a2Q44Gr44KI44KL6YeN5Yqb5Yqg6YCf5bqm44Gu5ris5a6aZGQCEw8PFgIfAQVy5Zue6Lui6YGL5YuV44CB6Kq/5ZKM5oyv5YuV5a2Q44CB54mp55CG5oyv44KK5a2Q44KS55So44GE44Gf6YeN5Yqb5Yqg6YCf5bqm5ris5a6a44Gu5a6f6aiT5Y6f55CG44KS55CG6Kej44GZ44KL44CCZGQCFQ8PFgIfAQUN5Lit6ZaT6Kmm6aiTCWRkAhYPDxYCHwEFUOWtpue/kuWGheWuueOBjOeQhuino+OBp+OBjeOBpuOBhOOBpiwg56K66KqN5ZWP6aGM44KS6Kej44GP44GT44Go44GM44Gn44GN44KL44CCZGQCAQ9kFiBmDw8WAh8BBUPlhYnjga7niannkIbnmoTmgKfos6oK5YWJ44Gu44K544Oa44Kv44OI44Or44CB5YWJ44Gu5Zue5oqY44Go5bmy5riJZGQCAQ8PFgIfAQXyAeWFieOBrueJqeeQhueahOaAp+izquOAgeWbnuaKmOOBqOW5sua4ieOBq+OBpOOBhOOBpueQhuino+OBlywg57Ch5Y2Y44Gq56K66KqN5ZWP6aGM44KS6Kej44GP44GT44Go44GM44Gn44GN44KL44CC5LqM6YeN44K544Oq44OD44OI44Gr44KI44KL5bmy5riJ57ie44CB44OL44Ol44O844OI44Oz44Oq44Oz44Kw44KS55So44GE44Gf5YWJ44Gu5rOi6ZW35ris5a6a44Gu5a6f6aiT44Gu5Y6f55CG44KS55CG6Kej44GZ44KL44CCZGQCAw8PFgIfAQUl6Zu75a2Q44Gu5q+U6Zu76I23ZS9t44Go6Zu75rCX57Sg6YePZWRkAgQPDxYCHwEFiAHpm7vlrZDjga7nmbropovjgIHpm7vlrZDjga7mgKfos6rjgavjgaTjgYTjgabnkIbop6PjgZfjgIHmr5Tpm7vojbfjgIEg6LOq6YeP44CB6Zu76I2344Gu5ris5a6a5a6f6aiT44Gu5Y6f55CG44Gr44Gk44GE44Gm55CG6Kej44GZ44KL44CCZGQCBg8PFgIfAQUe5YWJ44Gu57KS5a2Q5oCn44Go5YWJ6Zu75Yq55p6cZGQCBw8PFgIfAQW/AeWFieOBruazoueahOaAp+izquOBqOeykuWtkOeahOaAp+izquOCkueQhuino+OBmeOCi+OAguWFiembu+WKueaenOOChOOCs+ODs+ODl+ODiOODs+aVo+S5seOCkueQhuino+OBmeOCiy4g44OX44Op44Oz44Kv5a6a5pWw44CB5YWJ5a2Q44Gu44Ko44ON44Or44Ku44O85ris5a6a5a6f6aiT44Gu5Y6f55CG44KS55CG6Kej44GZ44KL44CCZGQCCQ8PFgIfAQVG44Oc44O844Ki44Gu5Y6f5a2Q5qih5Z6L44Go44Ko44ON44Or44Ku44O85rqW5L2N4pGgCumbu+WtkOOBruazouWLleaAp2RkAgoPDxYCHwEFaeODnOODvOOCouOBrumHj+WtkOadoeS7tuOAgeODieODu+ODluODreODvOOCpOazouOAgeWOn+WtkOS4reOBrumbu+WtkOOBrueKtuaFi+OBq+OBpOOBhOOBpueQhuino+OBmeOCi+OAgmRkAgwPDxYCHwEFUuODnOODvOOCouOBruWOn+WtkOaooeWei+OBqOOCqOODjeODq+OCruODvOa6luS9jeKRoArmsLTntKDljp/lrZDjga7jgrnjg5rjgq/jg4jjg6tkZAINDw8WAh8BBasB44Oc44O844Ki44Gu5Y6f5a2Q5qih5Z6LLCDmsLTntKDljp/lrZDjga7jgqjjg43jg6vjgq7jg7zmupbkvY0sIOi8nee3miwg44Oq44Ol44O844OJ44OZ44Oq44Gu6Zai5L+C5byP44CB44OV44Op44Oz44Kv44OY44Or44OE44Gu5a6f6aiT44Gu5Y6f55CG44Gr44Gk44GE44Gm55CG6Kej44GZ44KL44CCZGQCDw8PFgIfAQVb5Y6f5a2Q5qC444Go5pS+5bCE57ea4pGgCuWOn+WtkOaguOOBruani+aIkOOAgeW0qeWjiuOAgeWOn+WtkOaguOWPjeW/nOOBqOaguOOCqOODjeODq+OCruODvGRkAhAPDxYCHwEFvAHljp/lrZDmoLjjga7mp4vmiJDjgIHmoLjlipvjgIHntZDlkIjjgqjjg43jg6vjgq7jg7zjgavjgaTjgYTjgabnkIbop6PjgZnjgosuIOWOn+WtkOaguOOBruW0qeWjiiwg5Y2K5rib5pyf44CB5a6J5a6a5oCn44Gq44KJ44Gz44Gr5bm05Luj5ris5a6a44Gq44Gp44Gu6Kqs5piO44KE57Ch5Y2Y44Gq6KiI566X44GM44Gn44GN44KLLmRkAhIPDxYCHwEFKOWOn+WtkOaguOOBqOaUvuWwhOe3muKRoQrmlL7lsITnt5rmuKzlrppkZAITDw8WAh8BBYEB6Zyn566x44CB44Ks44Kk44Ks44O844Kr44Km44Oz44K/44O8562J44Gu5pS+5bCE57ea5ris5a6a44Gu5a6f6aiT44Gu5Y6f55CG44Go5pS+5bCE57ea6YGu6JS944CB6Ziy6K2344Gu5Z+656SO44KS55CG6Kej44GZ44KL44CCZGQCFQ8PFgIfAQUb5a6a5pyf6Kmm6aiT6L+U5Y2044O76Kej6KqsZGQCFg8PFgIfAQVO5a2m57+S5YaF5a6544GM55CG6Kej44Gn44GN44Gm44GE44GmLCDnorroqo3llY/poYzjgpLop6PjgY/jgZPjgajjgYzjgafjgY3jgosuZGQCDg8WAh8AaBYEZg8WAh8AaBYwZg8PFgIfAQUo44Ks44Kk44OA44Oz44K5CuODrOODmeODq+eiuuiqjeODhuOCueODiGRkAgEPDxYCHwEFUeenkeebrui2o+aXqOODu+i2o+aXqCwg5LqI57+S5b6p57+SLCDoqrLpoYzjgbjjga7lr77lv5zjgavjgaTjgYTjgabnkIbop6PjgZnjgosuIGRkAgIPFgIeBVZhbHVlZWQCAw8PFgIfAQUS5Y2K5bCO5L2T44Gu5Z+656SOZGQCBA8PFgIfAQUz5Y2K5bCO5L2T44Gu5oCn6LOq44Go5pW05rWB5L2c55So44KS55CG6Kej44GZ44KL77yOZGQCBQ8WAh8IZWQCBg8PFgIfAQUl44OA44Kk44Kq44O844OJCuODiOODqeODs+OCuOOCueOCv+KRoGRkAgcPDxYCHwEFXuODgOOCpOOCquODvOODieOBruaAp+izquOCkueQhuino+OBmeOCi++8jgrjg4jjg6njg7Pjgrjjgrnjgr/jga7ln7rmnKzljp/nkIbjgpLnkIbop6PjgZnjgovvvI5kZAIIDxYCHwhlZAIJDw8WAh8BBRXjg4jjg6njg7Pjgrjjgrnjgr/ikaFkZAIKDw8WAh8BBTPjg4jjg6njg7Pjgrjjgrnjgr/jga7lopfluYXkvZznlKjjgpLnkIbop6PjgZnjgovvvI5kZAILDxYCHwhlZAIMDw8WAh8BBTblipvlrabikaAK6LOq54K544Gu5Yqb5a2m77yI5Lim6YCy6YGL5YuVLCDlhobpgYvli5XvvIlkZAINDw8WAh8BBVjos6rngrnjga7kuKbpgLLpgYvli5UsIOWGhumBi+WLleOBrumBi+WLleaWueeoi+W8j+OCkuW+ruWIhuOCkueUqOOBhOOBpuioiOeul+OBp+OBjeOCiy4gZGQCDg8WAh8IZWQCDw8PFgIfAQU05Yqb5a2m4pGhCuWJm+S9k+OBruWKm+Wtpu+8iOaFo+aAp+ODouODvOODoeODs+ODiO+8iWRkAhAPDxYCHwEFS+inkumBi+WLlemHjywg5oWj5oCn44Oi44O844Oh44Oz44OI44Gr44Gk44GE44Gm55CG6Kej44GXLCDoqIjnrpfjgafjgY3jgosuIGRkAhEPFgIfCGVkAhIPDxYCHwEFNOWKm+WtpuKRogrph43lipvliqDpgJ/luqbmuKzlrprjgIHliZvmgKfnjofjga7muKzlrppkZAITDw8WAh8BBXbmjK/lrZDjgpLnlKjjgYTjgZ/ph43lipvliqDpgJ/luqbjga7lrp/pqJPjga7ljp/nkIbjgpLnkIbop6PjgZnjgosuIOWJm+aAp+eOh+OBrua4rOWumuWun+mok+OBruWOn+eQhuOCkueQhuino+OBmeOCiy4gZGQCFA8WAh8IZWQCFQ8PFgIfAQUM5Lit6ZaT6Kmm6aiTZGQCFg8PFgIfAQVP5a2m57+S5YaF5a6544GM55CG6Kej44Gn44GN44Gm44GE44GmLCDnorroqo3llY/poYzjgpLop6PjgY/jgZPjgajjgYzjgafjgY3jgosuIGRkAhcPFgIfCGVkAgEPFgIfAGgWMGYPDxYCHwEFMeWFiQrlhYnjga7jgrnjg5rjgq/jg4jjg6vjgIHlhYnjga7lm57mipjjgajlubLmuIlkZAIBDw8WAh8BBbcB5YWJ44Gu5Zue5oqY44Go5bmy5riJ44Gr44Gk44GE44Gm55CG6Kej44GXLCDnsKHljZjjgarnorroqo3llY/poYzjgpLop6PjgY/jgZPjgajjgYzjgafjgY3jgosuIOODi+ODpeODvOODiOODs+ODquODs+OCsOOCkueUqOOBhOOBn+WFieOBruazoumVt+a4rOWumuOBruWun+mok+OBruWOn+eQhuOCkueQhuino+OBmeOCiy4gZGQCAg8WAh8IZWQCAw8PFgIfAQU16Zu75a2QCuavlOmbu+iNt2UvbeOBrua4rOWumuOAgembu+awl+e0oOmHj2Xjga7muKzlrppkZAIEDw8WAh8BBVHpm7vlrZDjga7mgKfos6osIOizqumHjywg6Zu76I2344Gu5ris5a6a5a6f6aiT44Gu5Y6f55CG44Gr44Gk44GE44Gm55CG6Kej44GZ44KLLiBkZAIFDxYCHwhlZAIGDw8WAh8BBRzlhYnjga7nspLlrZDmgKcK5YWJ6Zu75Yq55p6cZGQCBw8PFgIfAQWiAeWFieOBruazoueahOaAp+izquOBqOeykuWtkOeahOaAp+izquOCkueQhuino+OBmeOCiy4g5YWJ6Zu75Yq55p6c44KE44Kz44Oz44OX44OI44Oz5pWj5Lmx44KS55CG6Kej44GZ44KLLiDjg5fjg6njg7Pjgq/lrprmlbDmuKzlrprlrp/pqJPjga7ljp/nkIbjgpLnkIbop6PjgZnjgosuIGRkAggPFgIfCGVkAgkPDxYCHwEFVuODnOODvOOCouOBruWOn+WtkOaooeWei+OAgeWOn+WtkOOBruOCueODmuOCr+ODiOODqwrjg6rjg6Xjg7zjg4njg5njg6rlrprmlbDjga7muKzlrpoKZGQCCg8PFgIfAQWAAeODnOODvOOCouOBruWOn+WtkOaooeWeiywg5rC057Sg5Y6f5a2Q44Gu44Ko44ON44Or44Ku44O85rqW5L2NLCDovJ3nt5osIOODquODpeODvOODieODmeODquOBrumWouS/guW8j+OBq+OBpOOBhOOBpueQhuino+OBmeOCiy4gZGQCCw8WAh8IZWQCDA8PFgIfAQUe44OV44Op44Oz44Kv44OY44Or44OE44Gu5a6f6aiTZGQCDQ8PFgIfAQWgAeWOn+WtkOOBruOCqOODjeODq+OCruODvOa6luS9jeOBqOWKsei1t+ODu+aUvuWwhOOBq+OBpOOBhOOBpuewoeWNmOOBquWVj+mhjOOCkuino+OBj+OBk+OBqOOBjOOBp+OBjeOCiy4g44OV44Op44Oz44Kv44OY44Or44OE44Gu5a6f6aiT44Gu5Y6f55CG44KS55CG6Kej44GZ44KLLiBkZAIODxYCHwhlZAIPDw8WAh8BBVzljp/lrZDmoLjjgajmlL7lsITnt5rikaAK5Y6f5a2Q5qC444Gu5qeL5oiQ44CB5bSp5aOK44CB5Y6f5a2Q5qC45Y+N5b+c44Go5ZCE44Ko44ON44Or44Ku44O8CmRkAhAPDxYCHwEFvQHljp/lrZDmoLjjga7mp4vmiJDjgIHmoLjlipvjgIHntZDlkIjjgqjjg43jg6vjgq7jg7zjgavjgaTjgYTjgabnkIbop6PjgZnjgosuIOWOn+WtkOaguOOBruW0qeWjiiwg5Y2K5rib5pyf44CB5a6J5a6a5oCn44Gq44KJ44Gz44Gr5bm05Luj5ris5a6a44Gq44Gp44Gu6Kqs5piO44KE57Ch5Y2Y44Gq6KiI566X44GM44Gn44GN44KLLiBkZAIRDxYCHwhlZAISDw8WAh8BBSjljp/lrZDmoLjjgajmlL7lsITnt5rikaAK5pS+5bCE57ea5ris5a6aZGQCEw8PFgIfAQUy5pS+5bCE57ea5ris5a6a44Gu5a6f6aiT44Gu5Y6f55CG44KS55CG6Kej44GZ44KLLiBkZAIUDxYCHwhlZAIVDw8WAh8BBRvlrprmnJ/oqabpqJPov5TljbTjg7vop6PoqqxkZAIWDw8WAh8BZWRkAhcPFgIfCGVkAg8PDxYEHwIFH3RhYmxlIHRhYmxlLWJvcmRlcmVkIG5vLXBhZGRpbmcfAwICFgIfBAUXYmFja2dyb3VuZC1jb2xvcjp3aGl0ZTsWBAIBD2QWCGYPDxYCHgdSb3dTcGFuAg5kZAIBDw8WAh8JAg5kZAICDw8WAh8JAg5kZAIDDw8WAh8JAgpkZAILD2QWAmYPDxYCHwkCBGRkAhAPDxYEHwIFH3RhYmxlIHRhYmxlLWJvcmRlcmVkIG5vLXBhZGRpbmcfAwICFgIfBAUdc3R5bGU6YmFja2dyb3VuZC1jb2xvcjp3aGl0ZTtkGAEFHl9fQ29udHJvbHNSZXF1aXJlUG9zdEJhY2tLZXlfXxYEBTJjdGwwMCRNYWluQ29udGVudCRTdWJqZWN0U3lsbGFidXMkaXNBY3RpdmVMZWFybmluZwUuY3RsMDAkTWFpbkNvbnRlbnQkU3ViamVjdFN5bGxhYnVzJGlzQWlkZWRCeUlDVAU8Y3RsMDAkTWFpbkNvbnRlbnQkU3ViamVjdFN5bGxhYnVzJGlzQXBwbGljYWJsZUZvclJlbW90ZUNsYXNzBUdjdGwwMCRNYWluQ29udGVudCRTdWJqZWN0U3lsbGFidXMkaXNJbnN0cnVjdG9yUHJvZmVzc2lvbmFsbHlFeHBlcmllbmNlZFokeORtb0eJJf4DBNEBpgjeies6ObjPYbVKPOV8ENM5" />
+
+
+<script src="../Scripts/WebForms/MsAjax/MicrosoftAjax.js" type="text/javascript"></script>
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="DBEB7810" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdABU90AVEZS4KCi7ZWcFhK/9RR7L3wySogUAl7PijvtwaUSsm8nTXGaHoUVtfjM0rCZj22oJ4VQ24ZYDTOYTZUrP5vtB5q2NRcavKnoOwBU+gOFuZNgbutiT/9QNQ8KAQQUmuUSB1iQXvm8kYo0aR42WIvdrGE9S+MFljAcAMyN35TqiPob/uxh50k4d9Otx1edKQFYf7ktK+pg/fRBarI9curvAtRO7k0YSfR52jbyiJEdL7EgSHU2NR/GkMooHyn2eKyBfV8NWUDOOq4zAH9eL6mUONb4p+LK5GOAgfiK6zu66xvUPoV+07Y4KVVOkYZtprK3AwxJNHjIL3LHLUH8OSpUaMufwC1vLmd5p4NCmxTnO3TIpLIbrZrG1ZA0Rpm5hNXM8Wg+fXjJVwKa/aE/8oQ8IRHTJvwSirmyK9c5RaMxGk6gOHn7ndkVsOPsFb8m7sJZKWyXPiRYrJNojdVWk4G+usZSqhA6k2HqBt16lGzg==" />
+        
+    <div style="width:100%;float:left;">
+        
+
+<script type="text/javascript">
+    $(function () {
+        $('.missionOpenBtn').click(function (e) {
+            var parent = $(this).parent('div');
+            var info = parent.data('info');
+            var item_name = parent.data('item_name');
+            var key = parent.data('key');
+            var str = info + ' ' + item_name;
+            $('#' + key + '_open').addClass('hide');
+            $('#' + key + '_close').removeClass('hide');
+            $('#' + key + "_display").text(str);
+
+        });
+        $('.missionCloseBtn').click(function (e) {
+            var parent = $(this).parent('div');
+            var info = parent.data('info');
+            var key = parent.data('key');
+            $('#' + key + '_open').removeClass('hide');
+            $('#' + key + '_close').addClass('hide');
+            $('#' + key + "_display").text(info);
+
+        });
+    })
+</script>
+
+<div id="MainContent_SubjectSyllabus_UpdatePanelSyllabus">
+	
+
+<div>
+    <div>
+        <span id="MainContent_SubjectSyllabus_LabelInfo" class="text-danger"><font size="5"></font></span>
+    </div>
+
+    <h3 class="bg-info text-center">科目基礎情報</h3>
+    <table class="table table-bordered no-padding" style="background-color:white;">
+        <tr>
+            <th>学校</th>
+            <td >北九州工業高等専門学校</td>
+            <th >開講年度</th>
+            <td >令和08年度 (2026年度)</td>
+        </tr>
+        <tr>
+            <th>授業科目</th>
+            <td colspan="3">応用物理Ⅰ</td>
+        </tr>
+        <tr>
+            <th>科目番号</th>
+            <td>0212</td>
+            <th>科目区分</th>
+            <td>専門 / 必修</td>
+        </tr>
+        <tr>
+            <th>授業形態</th>
+            <td>講義</td>
+            <th>単位の種別と単位数</th>
+            <td>履修単位: 1</td>
+        </tr>
+        <tr>
+            <th>開設学科</th>
+            <td>生産デザイン工学科（物質化学コース）</td>
+            <th>対象学年</th>
+            <td>5</td>
+        </tr>
+        <tr>
+            <th>開設期</th>
+            <td>前期</td>
+            <th>週時間数</th>
+            <td>2</td>
+        </tr>
+        <tr>
+            <th>教科書/教材</th>
+            <td colspan="3">
+                「高専の応用物理 (第2版)」 宮本 止戈雄, 大野 秀樹, 竹内 彰継, 小暮 陽三	(森北出版株式会社)<br />「総合物理2」植松恒夫，酒井啓司，下田正（啓林館）
+            </td>
+        </tr>
+        <tr>
+            <th>担当教員</th>
+            <td colspan="3">
+                <span id="Teachers">坪田 雅功</span>
+            </td>
+        </tr>
+    </table>
+
+    <div id="MainContent_SubjectSyllabus_syllabusContent">
+
+    <h3 class="bg-info text-center">到達目標</h3>
+    <div style="background-color:white;">
+        ・半導体・力学・光学・量子論・原子核における基本知識を学び、応用物理実験の原理を理解する.<br />・応用物理IIの実験で用いる実験器具の使用方法, データの解析方法を習得する.  <br />
+    </div>
+
+    <h3 class="bg-info text-center">ルーブリック</h3>
+
+    
+
+    <div style="overflow:auto">
+    <table id="MainContent_SubjectSyllabus_hyouka" class="table table-bordered no-padding" style="style:background-color:white;">
+		<tr class="bg-success">
+			<td></td><th>理想的な到達レベルの目安</th><th>標準的な到達レベルの目安</th><th>未到達レベルの目安</th>
+		</tr><tr id="rubricItemRow_1">
+			<th>実験の元となる各分野の理論、事項の理解と適用
+
+</th><td>半導体・力学・光学・量子論・原子核における基本事項を理解し、式や図を用いて応用問題に答えることができ、応用例などを説明することができる。</td><td>半導体・力学・光学・量子論・原子核における基本事項を理解し、式や図を用いて基本的な問題に答えることができる。</td><td>半導体・力学・光学・量子論・原子核における基本事項の理解が不十分であり、これらの説明や簡単な確認問題に答えることができない。</td>
+		</tr><tr id="rubricItemRow_2">
+			<th>実験原理、方法、データ分析、解析</th><td>実験器具の使用方法を理解し、実験原理を理解し、実験器具の使用、実験方法について説明できる。与えられた実験データの必要な計算と解析を基に、実験結果に関して論ずることができる。</td><td>実験原理を理解して、実験器具の使用、実験方法を概ね説明できる。与えられた実験データの物理的意味の説明と必要な計算を行うことができる。</td><td>実験原理の理解が十分でなく、実験器具の使用、実験方法について説明することができない。また、与えられた実験結果のデータの意味を説明できない。</td>
+		</tr>
+	</table>
+    </div>
+
+    <h3 class="bg-info text-center">学科の到達目標項目との関係</h3>
+    <div style="background-color:white;">
+        
+                
+                    <div>
+                        JABEE SA 技術内容の高度化に対応できる基礎学力（数学、自然科学、情報）と自己学習能力を持つ技術者
+                    </div>
+                
+                
+                    <div>
+                        JABEE SA① 数学・物理・化学などの自然科学、情報技術に関する共通基礎を理解できる。
+                    </div>
+                
+                
+                    <div>
+                        JABEE SA② 自主的・継続的な学習を通じて、共通基礎科目に関する問題を解決できる。
+                    </div>
+                
+
+    </div>
+
+    <h3 class="bg-info text-center">教育方法等</h3>
+    <div style="background-color:white;">
+      <b style="font-size: 15px">概要:</b><br />
+      <div>
+          本授業では座学を主とし、半導体・力学・光学・量子論・原子核における基本知識, 基本的実験の原理を講義する。また、 後期応用物理IIにおける各実験で用いる実験器具の使用方法、データの基本的解析方法も学習し、物理実験の基本的技法の習得も目指す。 
+      </div>
+      <b style="font-size:15px">授業の進め方・方法:</b><br />
+      <div>
+          座学を中心に授業を進める。教科書も用いるが, ウェブで閲覧可能資料を使用してかなり早いペースで授業を行う. 更に詳しく学びたい学生のために文献は授業中に紹介する。
+      </div>
+      <b style="font-size:15px">注意点:</b><br />
+      <div>
+          学修状況の確認のため、 定期的に課題を出し、授業中に行う演習も課題として提出してもらう。 
+      </div>
+    </div>
+
+        
+    <h3 class="bg-info text-center">授業の属性・履修上の区分</h3>
+    <div style="background-color:white;">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isActiveLearning" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isActiveLearning" checked="checked" />
+                            アクティブラーニング
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isAidedByICT" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isAidedByICT" checked="checked" />
+                            ICT 利用
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isApplicableForRemoteClass" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isApplicableForRemoteClass" checked="checked" />
+                            遠隔授業対応
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isInstructorProfessionallyExperienced" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isInstructorProfessionallyExperienced" />
+                            実務経験のある教員による授業
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="border: 0px none;">
+                        <div class="">
+                            
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <h3 class="bg-info text-center">授業計画</h3>
+    <table class="table table-bordered no-padding" style="background-color:white;" id="lessonsTable">
+        <tr class="bg-success">
+            <th></th>
+            <th></th>
+            <th>週</th>
+            <th>授業内容</th>
+            <th>週ごとの到達目標</th>
+        </tr>
+        
+            <tr>
+                <th rowspan="19" class="bg-primary">前期</th>
+            </tr>
+            
+                <tr>
+                    <th rowspan="9" class="bg-" style="width:60px;">1stQ</th>
+                </tr>
+                <tr class="bg-">
+                    <th class="week_number">1週</th>
+                    <td>ガイダンス<br />学習内容の確認</td>
+                    <td>科目趣旨・趣旨, 予習復習, 課題への対応について理解する<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget1" id="MainContent_SubjectSyllabus_hiddenLessonTarget1" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">2週</th>
+                    <td>半導体の基礎、バンド構造、</td>
+                    <td>半導体の物理（禁制帯、価電子帯と伝導帯、フェルミ準位、真性半導体と不純物半導体）について理解する<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget2" id="MainContent_SubjectSyllabus_hiddenLessonTarget2" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">3週</th>
+                    <td>ダイオードとPN接合、整流作用<br />トランジスタ①　基本構造と原理</td>
+                    <td>ｎ型半導体とp型半導体、PN接合、空乏層、整流作用について理解する。トランジスタの基本構造と動作原理について理解する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget3" id="MainContent_SubjectSyllabus_hiddenLessonTarget3" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">4週</th>
+                    <td>トランジスタ②　増幅作用と応用</td>
+                    <td>トランジスタの基本原理、増幅作用とその応用を理解する。<br /><input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget4" id="MainContent_SubjectSyllabus_hiddenLessonTarget4" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">5週</th>
+                    <td>力学①　<br />質点の力学（並進運動, 円運動）</td>
+                    <td>質点の並進運動, 円運動の運動方程式を微分を用いて計算できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget5" id="MainContent_SubjectSyllabus_hiddenLessonTarget5" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">6週</th>
+                    <td>力学②<br />剛体の力学（慣性モーメントと２定理、角運動量L）</td>
+                    <td>角運動量, 慣性モーメントについて理解し, 計算できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget6" id="MainContent_SubjectSyllabus_hiddenLessonTarget6" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">7週</th>
+                    <td>力学③<br />回転運動と調和振動子、物理振り子による重力加速度の測定</td>
+                    <td>回転運動、調和振動子、物理振り子を用いた重力加速度測定の実験原理を理解する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget7" id="MainContent_SubjectSyllabus_hiddenLessonTarget7" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">8週</th>
+                    <td>中間試験	</td>
+                    <td>学習内容が理解できていて, 確認問題を解くことができる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget8" id="MainContent_SubjectSyllabus_hiddenLessonTarget8" />
+                    </td>
+                </tr>
+            
+                <tr>
+                    <th rowspan="9" class="bg-" style="width:60px;">2ndQ</th>
+                </tr>
+                <tr>
+                    <th class="week_number">9週</th>
+                    <td>光の物理的性質<br />光のスペクトル、光の回折と干渉</td>
+                    <td>光の物理的性質、回折と干渉について理解し, 簡単な確認問題を解くことができる。二重スリットによる干渉縞、ニュートンリングを用いた光の波長測定の実験の原理を理解する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget9" id="MainContent_SubjectSyllabus_hiddenLessonTarget9" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">10週</th>
+                    <td>電子の比電荷e/mと電気素量e</td>
+                    <td>電子の発見、電子の性質について理解し、比電荷、 質量、電荷の測定実験の原理について理解する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget10" id="MainContent_SubjectSyllabus_hiddenLessonTarget10" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">11週</th>
+                    <td>光の粒子性と光電効果</td>
+                    <td>光の波的性質と粒子的性質を理解する。光電効果やコンプトン散乱を理解する. プランク定数、光子のエネルギー測定実験の原理を理解する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget11" id="MainContent_SubjectSyllabus_hiddenLessonTarget11" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">12週</th>
+                    <td>ボーアの原子模型とエネルギー準位①<br />電子の波動性</td>
+                    <td>ボーアの量子条件、ド・ブローイ波、原子中の電子の状態について理解する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget12" id="MainContent_SubjectSyllabus_hiddenLessonTarget12" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">13週</th>
+                    <td>ボーアの原子模型とエネルギー準位①<br />水素原子のスペクトル</td>
+                    <td>ボーアの原子模型, 水素原子のエネルギー準位, 輝線, リュードベリの関係式、フランクヘルツの実験の原理について理解する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget13" id="MainContent_SubjectSyllabus_hiddenLessonTarget13" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">14週</th>
+                    <td>原子核と放射線①<br />原子核の構成、崩壊、原子核反応と核エネルギー</td>
+                    <td>原子核の構成、核力、結合エネルギーについて理解する. 原子核の崩壊, 半減期、安定性ならびに年代測定などの説明や簡単な計算ができる.<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget14" id="MainContent_SubjectSyllabus_hiddenLessonTarget14" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">15週</th>
+                    <td>原子核と放射線②<br />放射線測定</td>
+                    <td>霧箱、ガイガーカウンター等の放射線測定の実験の原理と放射線遮蔽、防護の基礎を理解する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget15" id="MainContent_SubjectSyllabus_hiddenLessonTarget15" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">16週</th>
+                    <td>定期試験返却・解説</td>
+                    <td>学習内容が理解できていて, 確認問題を解くことができる.<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget16" id="MainContent_SubjectSyllabus_hiddenLessonTarget16" />
+                    </td>
+                </tr>
+            
+        
+    </table>
+
+        
+
+        <h3 class="bg-info text-center">モデルコアカリキュラムの学習内容と到達目標</h3>
+
+        <table id="MainContent_SubjectSyllabus_mccTable" class="table table-bordered no-padding" style="background-color:white;">
+		<tr class="bg-success">
+			<th colspan="2">分類</th><th>分野</th><th>学習内容</th><th>学習内容の到達目標</th><th>到達レベル</th><th>授業週</th>
+		</tr><tr>
+			<td rowspan="14">基礎的能力</td><td rowspan="14">自然科学</td><td rowspan="14">物理</td><td rowspan="10">力学</td><td>周期、振動数など単振動を特徴づける諸量を求めることができる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td>単振動における変位、速度、加速度、力の関係を説明できる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td>等速円運動をする物体の速度、角速度、加速度、向心力に関する計算ができる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td>力のモーメントを求めることができる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td>角運動量を求めることができる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td>角運動量保存則について具体的な例を挙げて説明できる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td>剛体における力のつり合いに関する計算ができる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td>重心に関する計算ができる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td>一様な棒などの簡単な形状に対する慣性モーメントを求めることができる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td>剛体の回転運動について、回転の運動方程式を立てて解くことができる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td rowspan="4">波動</td><td>波の重ね合わせの原理について説明できる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td>波の独立性について説明できる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td>2つの波が干渉するとき、互いに強めあう条件と弱めあう条件について計算できる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td>定常波の特徴(節、腹の振動のようすなど)を説明できる。</td><td>3</td><td></td>
+		</tr>
+	</table>
+
+        
+    
+    <h3 class="bg-info text-center">評価割合</h3>
+
+    <div style="overflow:auto">
+       <table id="MainContent_SubjectSyllabus_wariaiTable" class="table table-bordered no-padding" style="style:background-color:white;">
+		<tr class="bg-success">
+			<td></td><th>試験</th><th>課題・演習・レポート</th><th>合計</th>
+		</tr><tr>
+			<th>総合評価割合</th><td><b>60</b></td><td><b>40</b></td><td><b>100</b></td>
+		</tr><tr>
+			<th>基礎的能力</th><td>60</td><td>40</td><td><b>100</b></td>
+		</tr><tr>
+			<th>専門的能力</th><td>0</td><td>0</td><td><b>0</b></td>
+		</tr><tr>
+			<th>分野横断的能力</th><td>0</td><td>0</td><td><b>0</b></td>
+		</tr>
+	</table>
+    </div>
+
+    </div>
+
+  </div>
+
+
+</div>
+
+    </div>
+    
+
+<script type="text/javascript">
+//<![CDATA[
+if(typeof initSyllabusScript == 'function'){ initSyllabusScript();}//]]>
+</script>
+</form>
+
+        </div>
+    </div>
+
+    <div id="footer">
+        <br />
+        <br />
+        <div class="container">
+            <p class="text-muted credit">
+                ©2014 - MCC Web Syllabus.
+            </p>
+        </div>
+    </div>
+
+    <script src="/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+    <script src="/Scripts/mcc.js?v=20190215"></script>
+    <script src="/Scripts/Grid.js"></script>
+    <script>
+      $.ajaxSetup({
+        cache: false
+      });
+    </script>
+    
+    <script>
+      $(document).ready(function () {
+          initSyllabusScript();
+      });
+    </script>
+
+
+</body>
+</html>

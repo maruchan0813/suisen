@@ -1,0 +1,676 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+
+</title><link href="../Content/css/bootstrap.css" rel="stylesheet" type="text/css" /><link href="../Content/font-awesome.min.css" rel="stylesheet" type="text/css" /><link href="../Content/css/Grid.css" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc.css?_=20201215" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc_public_theme.css?_=20150406" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/jquery-3.7.1.min.js"></script>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-51403293-1', 'mccdemo.cloudapp.net');
+        ga('send', 'pageview');
+        
+    </script>
+    <script>
+
+        function searchThisSite() {
+
+            
+            $("#loadingModal")[0].style.visibility = "visible";
+            
+            $("#btnSearchThisSite")[0].blur();
+
+            var querys = getUrlVars();
+            var paramString = "";
+
+            querys.forEach(function (value, index, array) {
+
+                if (value != "keyword") {
+                    paramString += "&" + value + "=" + querys[value];
+                }
+            });
+
+            var keyword = $('#siteKeyword').val();
+            var encodeKeyword = encodeURIComponent(keyword);
+
+            var pageName =  getPageName();
+            if (pageName != "PublicSearchResult") {
+                paramString += "&before_page=" + pageName;
+            }
+
+            location.href = "/Pages/PublicSearchResult.aspx?keyword=" + encodeKeyword + paramString;
+        }
+
+        $(document).ready(function () {
+
+            
+            var langSelected = $('#langSelected');
+            langSelected.change(function () {
+                
+                var addQuery = '';
+                var hrefs = location.href.split('?');
+                if (hrefs.length > 1) {
+                    addQuery = cleanQuery(hrefs[1], 'lang');
+                }
+                if (addQuery != '') {
+                    addQuery = addQuery + '&';
+                }
+                location.href = hrefs[0] + '?' + addQuery + 'lang=' + $(this).val();
+            });
+
+            
+            $('#siteKeyword').tooltip();
+        });
+
+        function getPageName() {
+            var split = window.location.pathname.split('/');
+            return split[split.length - 1];
+        }
+
+        function getUrlVars() {
+            var vars = [], hash;
+
+            var split = window.location.href.split('?');
+            if (split.length != 2) {
+                // 要素無し
+                return vars;
+            }
+
+            var hashes = split[1].split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
+        function cleanQuery(query, target) {
+            var arr = [];
+            $.each(query.split('&'), function (i, param) {
+                if (param.split('=')[0] != target) { arr.push(param); }
+            });
+            return arr.join('&');
+        }
+
+    </script>
+
+    
+
+
+    <!-- for dodai -->
+    
+</head>
+<body>
+    
+    <div id="wrap">
+        <!-- Loading -->
+        <div class="modal-backdrop in" id="loadingModal" tabindex="-1" style="visibility:hidden;">
+             <div style="top: 1.5%; position: absolute; left: 50%;">
+                 <div id="loadingSearchPanel" class='loading'></div>
+             </div>
+        </div>
+        <div class="navbar navbar-default navbar-fixed-top header_area" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    
+                    <span class="navbar-brand"><i class="glyphicon glyphicon-home"></i>高専Webシラバス</span>
+                    <div class="navbar-text navbar-text-min-none">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+
+                    
+
+                    
+                    <table class="navbar-brand navbar-right" style="height:50px;">
+                        
+                        <tr id="SyllabusSearchBlankArea">
+	<td style="padding-top:6px;">
+                                 <input type="text" class="form-control" style="width:200px; visibility:hidden"/>
+                            </td>
+	<td style="padding-top:6px;">
+                                <button class="btn btn-default" style="visibility:hidden">検索</button>
+                            </td>
+</tr>
+
+                    </table>
+                    <div class="navbar-text navbar-text-min-none navbar-right">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                    <div class="navbar-collapse navbar-brand navbar-right">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="page-header">
+
+            <ol class="breadcrumb">
+                <li><a href="/Pages/PublicSchools?lang=ja"><i class="glyphicon glyphicon-home"></i>ホーム</a></li>
+                
+
+    <li>
+        <a href="./PublicDepartments?school_id=45&lang=ja">
+            北九州工業高等専門学校
+        </a>
+    </li>
+    <li>
+
+        
+        <a href="./PublicSubjects?school_id=45&department_id=32&year=2026&lang=ja">
+            生産デザイン工学科（知能ロボットシステムコース） 
+        </a>
+        
+        
+    </li>
+    <li>
+        プロジェクト演習
+    </li>
+
+
+            </ol>
+            <div id="AlertMessage" class="alert alert-danger" style="display:none;">
+            </div>
+        </div>
+        <div class="container" style="margin-left:50px;margin-right:50px;width:90%;">
+            
+
+
+    <div class="mcc-title-bar">
+        <div class="row">
+            <div class="col-md-6">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1>プロジェクト演習</h1>
+                    </div>
+                    <div class="col-md-6"></div>
+                </div>
+
+            </div>
+
+            <div class="col-md-4 mcc-page-actions">
+                <div class="btn-group" style="margin-top:6px;">
+                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="height:auto;">
+                        PDF
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu text-left" role="menu">
+                        <li>
+                            <a class="" target="_blank" role="menuitem"
+                                href="/Pages/SyllabusPDF?school_id=45&department_id=32&subject_id=0138&year=2023&lang=ja&subject_code=&preview=False&type=start&attachment=false">
+                                表示
+                            </a>
+                        </li>
+                         <li>
+                             <a class="" target="_blank" role="menuitem"
+                                href="/Pages/SyllabusPDF?school_id=45&department_id=32&subject_id=0138&year=2023&lang=ja&subject_code=&preview=False&type=start&attachment=true">
+                                保存
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <form method="post" action="./PublicSyllabus?school_id=45&amp;department_id=32&amp;subject_id=0138&amp;year=2023&amp;lang=ja" id="asp_form">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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44GL44KJ6YGp5YiH44Gq5Zuz44KE6KGo44KS5L2c44KK44CB5bCC6ZaA5bel5a2m55+l6K2Y44KS44KC44Go44Gr5YiG5p6Q44GX44CB57WQ6KuW44KS5bCO44GN5Ye644Gb44KL44CCD2phYmVlXzNfZGlzcGxheYcBSkFCRUXoqZXkvqEgU0PikaIg5a6f6aiT57WQ5p6c44GL44KJ6YGp5YiH44Gq5Zuz44KE6KGo44KS5L2c44KK44CB5bCC6ZaA5bel5a2m55+l6K2Y44KS44KC44Go44Gr5YiG5p6Q44GX44CB57WQ6KuW44KS5bCO44GN5Ye644Gb44KL44CCDGphYmVlXzNfb3BlbmQCAg8VAQ1qYWJlZV8zX2Nsb3NlZAIED2QWBmYPFQFySkFCRUXoqZXkvqEgU0PikaMg5a6f6aiT44KE5a6f57+S44Gr44Gk44GE44Gm44CB5pa55rOV44O757WQ5p6c44O76ICD5a+f44KS55qE56K644Gr44G+44Go44KB44CB5aCx5ZGK44Gn44GN44KL44CCZAIBDxUGB2phYmVlXzRySkFCRUXoqZXkvqEgU0PikaMg5a6f6aiT44KE5a6f57+S44Gr44Gk44GE44Gm44CB5pa55rOV44O757WQ5p6c44O76ICD5a+f44KS55qE56K644Gr44G+44Go44KB44CB5aCx5ZGK44Gn44GN44KL44CCYOWun+mok+OChOWun+e/kuOBq+OBpOOBhOOBpuOAgeaWueazleODu+e1kOaenOODu+iAg+Wvn+OCkueahOeiuuOBq+OBvuOBqOOCgeOAgeWgseWRiuOBp+OBjeOCi+OAgg9qYWJlZV80X2Rpc3BsYXlySkFCRUXoqZXkvqEgU0PikaMg5a6f6aiT44KE5a6f57+S44Gr44Gk44GE44Gm44CB5pa55rOV44O757WQ5p6c44O76ICD5a+f44KS55qE56K644Gr44G+44Go44KB44CB5aCx5ZGK44Gn44GN44KL44CCDGphYmVlXzRfb3BlbmQCAg8VAQ1qYWJlZV80X2Nsb3NlZAIFD2QWBmYPFQHMAUpBQkVF6KmV5L6hIFNEIOW5heW6g+OBhOimlumHjuOBi+OCieWVj+mhjOOCkuaNieOBiOOAgeikh+aVsOWIhumHjuOBruW3peWtpuefpeitmOODu+aKgOihk+OCkuacieapn+eahOOBq+e1kOOBs+S7mOOBkeOAgee3j+WQiOeahOOBq+WVj+mhjOOCkuino+axuuOBmeOCi+e0oOmkiu+8iOODh+OCtuOCpOODs+iDveWKm++8ieOCkuacieOBmeOCi+aKgOihk+iAhWQCAQ8VBgdqYWJlZV81zAFKQUJFReipleS+oSBTRCDluYXluoPjgYToppbph47jgYvjgonllY/poYzjgpLmjYnjgYjjgIHopIfmlbDliIbph47jga7lt6Xlrabnn6XorZjjg7vmioDooZPjgpLmnInmqZ/nmoTjgavntZDjgbPku5jjgZHjgIHnt4/lkIjnmoTjgavllY/poYzjgpLop6PmsbrjgZnjgovntKDppIrvvIjjg4fjgrbjgqTjg7Pog73lipvvvInjgpLmnInjgZnjgovmioDooZPogIW9AeW5heW6g+OBhOimlumHjuOBi+OCieWVj+mhjOOCkuaNieOBiOOAgeikh+aVsOWIhumHjuOBruW3peWtpuefpeitmOODu+aKgOihk+OCkuacieapn+eahOOBq+e1kOOBs+S7mOOBkeOAgee3j+WQiOeahOOBq+WVj+mhjOOCkuino+axuuOBmeOCi+e0oOmkiu+8iOODh+OCtuOCpOODs+iDveWKm++8ieOCkuacieOBmeOCi+aKgOihk+iAhQ9qYWJlZV81X2Rpc3BsYXnMAUpBQkVF6KmV5L6hIFNEIOW5heW6g+OBhOimlumHjuOBi+OCieWVj+mhjOOCkuaNieOBiOOAgeikh+aVsOWIhumHjuOBruW3peWtpuefpeitmOODu+aKgOihk+OCkuacieapn+eahOOBq+e1kOOBs+S7mOOBkeOAgee3j+WQiOeahOOBq+WVj+mhjOOCkuino+axuuOBmeOCi+e0oOmkiu+8iOODh+OCtuOCpOODs+iDveWKm++8ieOCkuacieOBmeOCi+aKgOihk+iAhQxqYWJlZV81X29wZW5kAgIPFQENamFiZWVfNV9jbG9zZWQCBg9kFgZmDxUBhwFKQUJFReipleS+oSBTROKRpCDlt6Xlrabnn6XorZjjgoTmioDooZPjgpLntbHlkIjjgZfjgIHoqrLpoYzop6Pmsbrjga7jgZ/jgoHjga7ntZDmnpzjga7mlbTnkIbjg7vliIbmnpDjg7vogIPlr5/jg7vloLHlkYrjgYzjgafjgY3jgovjgIJkAgEPFQYHamFiZWVfNocBSkFCRUXoqZXkvqEgU0TikaQg5bel5a2m55+l6K2Y44KE5oqA6KGT44KS57Wx5ZCI44GX44CB6Kqy6aGM6Kej5rG644Gu44Gf44KB44Gu57WQ5p6c44Gu5pW055CG44O75YiG5p6Q44O76ICD5a+f44O75aCx5ZGK44GM44Gn44GN44KL44CCdeW3peWtpuefpeitmOOChOaKgOihk+OCkue1seWQiOOBl+OAgeiqsumhjOino+axuuOBruOBn+OCgeOBrue1kOaenOOBruaVtOeQhuODu+WIhuaekOODu+iAg+Wvn+ODu+WgseWRiuOBjOOBp+OBjeOCi+OAgg9qYWJlZV82X2Rpc3BsYXmHAUpBQkVF6KmV5L6hIFNE4pGkIOW3peWtpuefpeitmOOChOaKgOihk+OCkue1seWQiOOBl+OAgeiqsumhjOino+axuuOBruOBn+OCgeOBrue1kOaenOOBruaVtOeQhuODu+WIhuaekOODu+iAg+Wvn+ODu+WgseWRiuOBjOOBp+OBjeOCi+OAggxqYWJlZV82X29wZW5kAgIPFQENamFiZWVfNl9jbG9zZWQCBw9kFgZmDxUBmQFKQUJFReipleS+oSBTRSDlpJrmp5jjgarmlofljJbjgpLnkIbop6PjgZnjgovog73lipvjgpLmjIHjgaHjgIHml6XmnKzoqp7jgYrjgojjgbPlpJblm73oqp7jgavjgojjgovjgrPjg5/jg6Xjg4vjgrHjg7zjgrfjg6fjg7Pog73lipvjgpLmnInjgZnjgovmioDooZPogIVkAgEPFQYHamFiZWVfN5kBSkFCRUXoqZXkvqEgU0Ug5aSa5qeY44Gq5paH5YyW44KS55CG6Kej44GZ44KL6IO95Yqb44KS5oyB44Gh44CB5pel5pys6Kqe44GK44KI44Gz5aSW5Zu96Kqe44Gr44KI44KL44Kz44Of44Ol44OL44Kx44O844K344On44Oz6IO95Yqb44KS5pyJ44GZ44KL5oqA6KGT6ICFigHlpJrmp5jjgarmlofljJbjgpLnkIbop6PjgZnjgovog73lipvjgpLmjIHjgaHjgIHml6XmnKzoqp7jgYrjgojjgbPlpJblm73oqp7jgavjgojjgovjgrPjg5/jg6Xjg4vjgrHjg7zjgrfjg6fjg7Pog73lipvjgpLmnInjgZnjgovmioDooZPogIUPamFiZWVfN19kaXNwbGF5mQFKQUJFReipleS+oSBTRSDlpJrmp5jjgarmlofljJbjgpLnkIbop6PjgZnjgovog73lipvjgpLmjIHjgaHjgIHml6XmnKzoqp7jgYrjgojjgbPlpJblm73oqp7jgavjgojjgovjgrPjg5/jg6Xjg4vjgrHjg7zjgrfjg6fjg7Pog73lipvjgpLmnInjgZnjgovmioDooZPogIUMamFiZWVfN19vcGVuZAICDxUBDWphYmVlXzdfY2xvc2VkAggPZBYGZg8VAYcBSkFCRUXoqZXkvqEgU0XikaEg5a6f6aiT44O75a6f57+S44O76Kq/5p+744O756CU56m25YaF5a6544Gr44Gk44GE44Gm44CB5pel5pys6Kqe44Gn6KuW55CG55qE44Gr6KiY6L+w44GX44CB5aCx5ZGK44O76KiO6KuW44Gn44GN44KL44CCZAIBDxUGB2phYmVlXziHAUpBQkVF6KmV5L6hIFNF4pGhIOWun+mok+ODu+Wun+e/kuODu+iqv+afu+ODu+eglOeptuWGheWuueOBq+OBpOOBhOOBpuOAgeaXpeacrOiqnuOBp+irlueQhueahOOBq+iomOi/sOOBl+OAgeWgseWRiuODu+iojuirluOBp+OBjeOCi+OAgnXlrp/pqJPjg7vlrp/nv5Ljg7voqr/mn7vjg7vnoJTnqbblhoXlrrnjgavjgaTjgYTjgabjgIHml6XmnKzoqp7jgafoq5bnkIbnmoTjgavoqJjov7DjgZfjgIHloLHlkYrjg7voqI7oq5bjgafjgY3jgovjgIIPamFiZWVfOF9kaXNwbGF5hwFKQUJFReipleS+oSBTReKRoSDlrp/pqJPjg7vlrp/nv5Ljg7voqr/mn7vjg7vnoJTnqbblhoXlrrnjgavjgaTjgYTjgabjgIHml6XmnKzoqp7jgafoq5bnkIbnmoTjgavoqJjov7DjgZfjgIHloLHlkYrjg7voqI7oq5bjgafjgY3jgovjgIIMamFiZWVfOF9vcGVuZAICDxUBDWphYmVlXzhfY2xvc2VkAgkPZBYGZg8VAaUBSkFCRUXoqZXkvqEgU0Yg5q205Y+y44O75paH5YyW44O756S+5Lya44Gr6Zai44GZ44KL5pWZ6aSK44Go6aCR5YGl44Gq5b+D6Lqr44KS5oyB44Gh44CB5oqA6KGT44Gu56S+5Lya44O755Kw5aKD44Go44Gu6Zai44KP44KK44KS6ICD44GI44KL44GT44Go44Gu44Gn44GN44KL5oqA6KGT6ICFZAIBDxUGB2phYmVlXzmlAUpBQkVF6KmV5L6hIFNGIOattOWPsuODu+aWh+WMluODu+ekvuS8muOBq+mWouOBmeOCi+aVmemkiuOBqOmgkeWBpeOBquW/g+i6q+OCkuaMgeOBoeOAgeaKgOihk+OBruekvuS8muODu+eSsOWig+OBqOOBrumWouOCj+OCiuOCkuiAg+OBiOOCi+OBk+OBqOOBruOBp+OBjeOCi+aKgOihk+iAhZYB5q205Y+y44O75paH5YyW44O756S+5Lya44Gr6Zai44GZ44KL5pWZ6aSK44Go6aCR5YGl44Gq5b+D6Lqr44KS5oyB44Gh44CB5oqA6KGT44Gu56S+5Lya44O755Kw5aKD44Go44Gu6Zai44KP44KK44KS6ICD44GI44KL44GT44Go44Gu44Gn44GN44KL5oqA6KGT6ICFD2phYmVlXzlfZGlzcGxheaUBSkFCRUXoqZXkvqEgU0Yg5q205Y+y44O75paH5YyW44O756S+5Lya44Gr6Zai44GZ44KL5pWZ6aSK44Go6aCR5YGl44Gq5b+D6Lqr44KS5oyB44Gh44CB5oqA6KGT44Gu56S+5Lya44O755Kw5aKD44Go44Gu6Zai44KP44KK44KS6ICD44GI44KL44GT44Go44Gu44Gn44GN44KL5oqA6KGT6ICFDGphYmVlXzlfb3BlbmQCAg8VAQ1qYWJlZV85X2Nsb3NlZAIKD2QWBmYPFQGHAUpBQkVF6KmV5L6hIFNG4pGhIOW3pealreaKgOihk+OBqOekvuS8muODu+eSsOWig+OBqOOBrumWouOCj+OCiuOCkueQhuino+OBl+OAgeekvuS8muODu+eSsOWig+OBuOOBruWKueaenOOBqOW9semfv+OCkuiqrOaYjuOBp+OBjeOCi+OAgmQCAQ8VBghqYWJlZV8xMIcBSkFCRUXoqZXkvqEgU0bikaEg5bel5qWt5oqA6KGT44Go56S+5Lya44O755Kw5aKD44Go44Gu6Zai44KP44KK44KS55CG6Kej44GX44CB56S+5Lya44O755Kw5aKD44G444Gu5Yq55p6c44Go5b2x6Z+/44KS6Kqs5piO44Gn44GN44KL44CCdeW3pealreaKgOihk+OBqOekvuS8muODu+eSsOWig+OBqOOBrumWouOCj+OCiuOCkueQhuino+OBl+OAgeekvuS8muODu+eSsOWig+OBuOOBruWKueaenOOBqOW9semfv+OCkuiqrOaYjuOBp+OBjeOCi+OAghBqYWJlZV8xMF9kaXNwbGF5hwFKQUJFReipleS+oSBTRuKRoSDlt6Xmpa3mioDooZPjgajnpL7kvJrjg7vnkrDlooPjgajjga7plqLjgo/jgorjgpLnkIbop6PjgZfjgIHnpL7kvJrjg7vnkrDlooPjgbjjga7lirnmnpzjgajlvbHpn7/jgpLoqqzmmI7jgafjgY3jgovjgIINamFiZWVfMTBfb3BlbmQCAg8VAQ5qYWJlZV8xMF9jbG9zZWQCCw9kFgZmDxUBaUpBQkVF6KmV5L6hIFNHIOWkmuanmOaAp+OBruOBguOCi+ODgeODvOODoOOBruS4reOBp+OAgeaIkOaenOOCkuS4iuOBkuOCi+OBn+OCgeOBq+ihjOWLleOBp+OBjeOCi+aKgOihk+iAhWQCAQ8VBghqYWJlZV8xMWlKQUJFReipleS+oSBTRyDlpJrmp5jmgKfjga7jgYLjgovjg4Hjg7zjg6Djga7kuK3jgafjgIHmiJDmnpzjgpLkuIrjgZLjgovjgZ/jgoHjgavooYzli5XjgafjgY3jgovmioDooZPogIVa5aSa5qeY5oCn44Gu44GC44KL44OB44O844Og44Gu5Lit44Gn44CB5oiQ5p6c44KS5LiK44GS44KL44Gf44KB44Gr6KGM5YuV44Gn44GN44KL5oqA6KGT6ICFEGphYmVlXzExX2Rpc3BsYXlpSkFCRUXoqZXkvqEgU0cg5aSa5qeY5oCn44Gu44GC44KL44OB44O844Og44Gu5Lit44Gn44CB5oiQ5p6c44KS5LiK44GS44KL44Gf44KB44Gr6KGM5YuV44Gn44GN44KL5oqA6KGT6ICFDWphYmVlXzExX29wZW5kAgIPFQEOamFiZWVfMTFfY2xvc2VkAgwPZBYGZg8VAWNKQUJFReipleS+oSBTR+KRoCDjg6Hjg7Pjg5Djg7zjgajjgZfjgabjgIHoh6rlt7Hjga7jgarjgZnjgbnjgY3ooYzli5XjgpLliKTmlq3jgZflrp/ooYzjgafjgY3jgovjgIJkAgEPFQYIamFiZWVfMTJjSkFCRUXoqZXkvqEgU0fikaAg44Oh44Oz44OQ44O844Go44GX44Gm44CB6Ieq5bex44Gu44Gq44GZ44G544GN6KGM5YuV44KS5Yik5pat44GX5a6f6KGM44Gn44GN44KL44CCUeODoeODs+ODkOODvOOBqOOBl+OBpuOAgeiHquW3seOBruOBquOBmeOBueOBjeihjOWLleOCkuWIpOaWreOBl+Wun+ihjOOBp+OBjeOCi+OAghBqYWJlZV8xMl9kaXNwbGF5Y0pBQkVF6KmV5L6hIFNH4pGgIOODoeODs+ODkOODvOOBqOOBl+OBpuOAgeiHquW3seOBruOBquOBmeOBueOBjeihjOWLleOCkuWIpOaWreOBl+Wun+ihjOOBp+OBjeOCi+OAgg1qYWJlZV8xMl9vcGVuZAICDxUBDmphYmVlXzEyX2Nsb3NlZAIND2QWBmYPFQGZAUpBQkVF6KmV5L6hIFNH4pGhIOODquODvOODgOODvOOBqOOBl+OBpuOAgeS7luiAheOBruWPluOCi+OBueOBjeihjOWLleOCkuWIpOaWreOBl+OAgemBqeWIh+OBq+ihjOWLleOBleOBm+OCi+OCiOOBhuOBq+WDjeOBjeOBi+OBkeOCi+OBk+OBqOOBjOOBp+OBjeOCi+OAgmQCAQ8VBghqYWJlZV8xM5kBSkFCRUXoqZXkvqEgU0fikaEg44Oq44O844OA44O844Go44GX44Gm44CB5LuW6ICF44Gu5Y+W44KL44G544GN6KGM5YuV44KS5Yik5pat44GX44CB6YGp5YiH44Gr6KGM5YuV44GV44Gb44KL44KI44GG44Gr5YON44GN44GL44GR44KL44GT44Go44GM44Gn44GN44KL44CChwHjg6rjg7zjg4Djg7zjgajjgZfjgabjgIHku5bogIXjga7lj5bjgovjgbnjgY3ooYzli5XjgpLliKTmlq3jgZfjgIHpganliIfjgavooYzli5XjgZXjgZvjgovjgojjgYbjgavlg43jgY3jgYvjgZHjgovjgZPjgajjgYzjgafjgY3jgovjgIIQamFiZWVfMTNfZGlzcGxheZkBSkFCRUXoqZXkvqEgU0fikaEg44Oq44O844OA44O844Go44GX44Gm44CB5LuW6ICF44Gu5Y+W44KL44G544GN6KGM5YuV44KS5Yik5pat44GX44CB6YGp5YiH44Gr6KGM5YuV44GV44Gb44KL44KI44GG44Gr5YON44GN44GL44GR44KL44GT44Go44GM44Gn44GN44KL44CCDWphYmVlXzEzX29wZW5kAgIPFQEOamFiZWVfMTNfY2xvc2VkAgMPDxYCHwEF2ATmnKzmjojmpa3jga/jgIHjg5njg7Pjg4Djg7zjgIHjgrfjgrnjg4bjg6DjgqTjg7Pjg4bjgrDjg6zjg7zjgr/jg7zjgIHoo73pgKDmpa3jgarjganjgIHjgoLjga7jgaXjgY/jgorjgavplqLjgo/jgovlpJrmp5jjgarkvIHmpa3jga7lrp/oqrLpoYzjgpLjgoLjgajjgavjgIHoqrLpoYzoqK3lrprlipvjgpLph43oppbjgZfjgZ/lrp/ot7XnmoTjgarmlZnogrLjgpLooYzjgYbjgILjgqLjgqTjg4fjgqLjga7libXlh7rjg7vmpJzoqLzjg7vnmbrooajjgpLnubDjgorov5TjgZnjgZPjgajjgafjgIHoq5bnkIbnmoTmgJ3ogIPlipvjgoTjg4Hjg7zjg6Djgafjga7ljZTlg43lipvjgpLppIrjgYTjgIHmnIDntYLnmoTjgavlrp/nj77lj6/og73jgarmj5DmoYjjgpLooYzjgYjjgovjgojjgYbjgavjgarjgovjgILjgZPjga7np5Hnm67jga/jgIHkvIHmpa3jgajljZTlg43jgZfjgIHkvIHmpa3lrp/li5njgafjga7ntYzpqJPjgpLmtLvjgYvjgZfjgabjgIHkvIHmpa3jgoTmpa3nlYzjga7oqrLpoYzjgavjgaTjgYTjgabjgIHorJvnvqnjg7vjg6/jg7zjgq/jgrfjg6fjg4Pjg5fjg7vnmbrooajlvaLlvI/jgafmjojmpa3jgZnjgovjgoLjga7jgafjgYLjgovjgIJkZAIEDw8WAh8BBbkF5pys5o6I5qWt44Gn44Gv44CB44Kk44OO44OZ44O844K344On44Oz44Gr5Y+W44KK57WE44KA5LyB5qWt44Go5Y2U5YON44GX44CB5a6f6Le155qE44Gq5pWZ6IKy44KS6KGM44GG44CC5ZCE5Zue44Gu5o6I5qWt44Gn44Gv44CB5LyB5qWt44GM55u06Z2i44GZ44KL5a6f6Kqy6aGM44KS44KC44Go44Gr44CB5Lul5LiL44Gu44OX44Ot44K744K544KS57mw44KK6L+U44GX44Gq44GM44KJ5a2m44Gz44KS5rex44KB44KL44CCCuiqsumhjOOBruaPkOekuuOBqOeQhuino++8iOS8gealreOBi+OCieaPkOS+m+OBleOCjOOBn+iqsumhjOOBruiDjOaZr+OChOebrueahOOCkuaKiuaPoeOBl+OAgeino+axuuOBruaWueWQkeaAp+OCkuaknOiojuOBmeOCi+OAgu+8iQrjgqLjgqTjg4fjgqLlibXlh7rjgajorbDoq5bvvIjjgrDjg6vjg7zjg5fjg6/jg7zjgq/jgpLpgJrjgZjjgabjgIHlpJrop5LnmoTjgaroppbngrnjgYvjgonoqrLpoYzop6Pmsbrjga7jgqLjgqTjg4fjgqLjgpLnmbrmg7PjgZfjgIHmpJzoqI7jgZnjgovjgILvvIkK44OX44Os44K844Oz44OG44O844K344On44Oz44Go44OV44Kj44O844OJ44OQ44OD44Kv77yI5ZCE44Kw44Or44O844OX44GM44Ki44Kk44OH44Ki44KS55m66KGo44GX44CB6Kyb5bir44KE5LyB5qWt5ouF5b2T6ICF44GL44KJ44Gu44OV44Kj44O844OJ44OQ44OD44Kv44KS5Y+X44GR44KL44CC77yJCmRkAgUPDxYCHwEFigTmnKzmjojmpa3jgafjga/jgIHlkITlm57jga7mjojmpa3lvozjgavjgqLjg7PjgrHjg7zjg4jjgpLlrp/mlr3jgZfjgIHjgIzmjojmpa3jga7jg4bjg7zjg57jgI3jgIzmjojmpa3jga7mp4vmiJDjg7vlhoXlrrnjgI3jgIzjgrPjg7Pjg4bjg7Pjg4TjgoTmmYLplpPphY3liIbjgI3jgIzpgLLooYzjga7jgrnjg6Djg7zjgrrjgZXjgI3jgarjganjgavjgaTjgYTjgabmhI/opovjgpLlj47pm4bjgZnjgovjgILmjojmpa3lhoXlrrnjgoTpgLLooYzmlrnms5Xjga7mlLnlloTjgpLlm7PjgovjgZ/jgoHjgIHjgqLjg7PjgrHjg7zjg4jjga7lm57nrZTjga/njofnm7TjgYvjgaTlhbfkvZPnmoTjgavoqJjlhaXjgZnjgovjgZPjgajjgYzmnJvjgb7jgZfjgYTjgILjgb7jgZ/jgIHmjojmpa3jgbjjga7nqY3mpbXnmoTjgarlj4LliqDjgpLpgJrjgZjjgabjgIHjgojjgorlirnmnpznmoTjgarlrabjgbPjga7loLTjgpLlhbHjgavkvZzjgorkuIrjgZLjgovmhI/orZjjgpLmjIHjgaTjgZPjgajjgYzph43opoHjgafjgYLjgovjgIJkZAIGDw8WAh8BZWRkAgcPDxYCHwFlZGQCCA8QDxYCHgdDaGVja2VkZ2RkZGQCCQ8QDxYCHwZnZGRkZAIKDxAPFgIfBmdkZGRkAgsPEA8WAh8GZ2RkZGQCDA8PFgQfAWUeCU1heExlbmd0aAIFZGQCDQ8WAh8AaBYEZg8WAh8AaBYwZg8PFgIfAWVkZAIBDw8WAh8BZWRkAgIPFgIeBVZhbHVlZWQCAw8PFgIfAWVkZAIEDw8WAh8BZWRkAgUPFgIfCGVkAgYPDxYCHwFlZGQCBw8PFgIfAWVkZAIIDxYCHwhlZAIJDw8WAh8BZWRkAgoPDxYCHwFlZGQCCw8WAh8IZWQCDA8PFgIfAWVkZAINDw8WAh8BZWRkAg4PFgIfCGVkAg8PDxYCHwFlZGQCEA8PFgIfAWVkZAIRDxYCHwhlZAISDw8WAh8BZWRkAhMPDxYCHwFlZGQCFA8WAh8IZWQCFQ8PFgIfAWVkZAIWDw8WAh8BZWRkAhcPFgIfCGVkAgEPFgIfAGgWMGYPDxYCHwFlZGQCAQ8PFgIfAWVkZAICDxYCHwhlZAIDDw8WAh8BZWRkAgQPDxYCHwFlZGQCBQ8WAh8IZWQCBg8PFgIfAWVkZAIHDw8WAh8BZWRkAggPFgIfCGVkAgkPDxYCHwFlZGQCCg8PFgIfAWVkZAILDxYCHwhlZAIMDw8WAh8BZWRkAg0PDxYCHwFlZGQCDg8WAh8IZWQCDw8PFgIfAWVkZAIQDw8WAh8BZWRkAhEPFgIfCGVkAhIPDxYCHwFlZGQCEw8PFgIfAWVkZAIUDxYCHwhlZAIVDw8WAh8BZWRkAhYPDxYCHwFlZGQCFw8WAh8IZWQCDg9kFgRmD2QWIGYPDxYCHwEF5gHkvIHmpa3oqrLpoYzjga7oqqzmmI7vvIjoqrLpoYzjga7og4zmma/jgoTnm67nmoTjgavjgaTjgYTjgabop6PoqqzvvIkK44Ov44O844Kv44K344On44OD44OX77yI6Kqy6aGM6Kej5rG644Gr5ZCR44GR44Gf44Kw44Or44O844OX44Ov44O844Kv44O744OH44Kj44K544Kr44OD44K344On44Oz77yJCueZuuihqO+8iOaIkOaenOeJqeOBruWFseacieOBiuOCiOOBs+ODleOCo+ODvOODieODkOODg+OCr++8iWRkAgEPDxYCHwEFcuS8gealreiqsumhjOOBruiDjOaZr+OCkueQhuino+OBl+OAgeOCsOODq+ODvOODl+ODr+ODvOOCr+OCkumAmuOBmOOBpuiqsumhjOino+axuuOBruODl+ODreOCu+OCueOCkuWun+i3teOBmeOCi+OAgmRkAgMPDxYCHwEF5gHkvIHmpa3oqrLpoYzjga7oqqzmmI7vvIjoqrLpoYzjga7og4zmma/jgoTnm67nmoTjgavjgaTjgYTjgabop6PoqqzvvIkK44Ov44O844Kv44K344On44OD44OX77yI6Kqy6aGM6Kej5rG644Gr5ZCR44GR44Gf44Kw44Or44O844OX44Ov44O844Kv44O744OH44Kj44K544Kr44OD44K344On44Oz77yJCueZuuihqO+8iOaIkOaenOeJqeOBruWFseacieOBiuOCiOOBs+ODleOCo+ODvOODieODkOODg+OCr++8iWRkAgQPDxYCHwEFcuS8gealreiqsumhjOOBruiDjOaZr+OCkueQhuino+OBl+OAgeOCsOODq+ODvOODl+ODr+ODvOOCr+OCkumAmuOBmOOBpuiqsumhjOino+axuuOBruODl+ODreOCu+OCueOCkuWun+i3teOBmeOCi+OAgmRkAgYPDxYCHwEF5gHkvIHmpa3oqrLpoYzjga7oqqzmmI7vvIjoqrLpoYzjga7og4zmma/jgoTnm67nmoTjgavjgaTjgYTjgabop6PoqqzvvIkK44Ov44O844Kv44K344On44OD44OX77yI6Kqy6aGM6Kej5rG644Gr5ZCR44GR44Gf44Kw44Or44O844OX44Ov44O844Kv44O744OH44Kj44K544Kr44OD44K344On44Oz77yJCueZuuihqO+8iOaIkOaenOeJqeOBruWFseacieOBiuOCiOOBs+ODleOCo+ODvOODieODkOODg+OCr++8iWRkAgcPDxYCHwEFcuS8gealreiqsumhjOOBruiDjOaZr+OCkueQhuino+OBl+OAgeOCsOODq+ODvOODl+ODr+ODvOOCr+OCkumAmuOBmOOBpuiqsumhjOino+axuuOBruODl+ODreOCu+OCueOCkuWun+i3teOBmeOCi+OAgmRkAgkPDxYCHwEF5gHkvIHmpa3oqrLpoYzjga7oqqzmmI7vvIjoqrLpoYzjga7og4zmma/jgoTnm67nmoTjgavjgaTjgYTjgabop6PoqqzvvIkK44Ov44O844Kv44K344On44OD44OX77yI6Kqy6aGM6Kej5rG644Gr5ZCR44GR44Gf44Kw44Or44O844OX44Ov44O844Kv44O744OH44Kj44K544Kr44OD44K344On44Oz77yJCueZuuihqO+8iOaIkOaenOeJqeOBruWFseacieOBiuOCiOOBs+ODleOCo+ODvOODieODkOODg+OCr++8iWRkAgoPDxYCHwEFcuS8gealreiqsumhjOOBruiDjOaZr+OCkueQhuino+OBl+OAgeOCsOODq+ODvOODl+ODr+ODvOOCr+OCkumAmuOBmOOBpuiqsumhjOino+axuuOBruODl+ODreOCu+OCueOCkuWun+i3teOBmeOCi+OAgmRkAgwPDxYCHwEF5gHkvIHmpa3oqrLpoYzjga7oqqzmmI7vvIjoqrLpoYzjga7og4zmma/jgoTnm67nmoTjgavjgaTjgYTjgabop6PoqqzvvIkK44Ov44O844Kv44K344On44OD44OX77yI6Kqy6aGM6Kej5rG644Gr5ZCR44GR44Gf44Kw44Or44O844OX44Ov44O844Kv44O744OH44Kj44K544Kr44OD44K344On44Oz77yJCueZuuihqO+8iOaIkOaenOeJqeOBruWFseacieOBiuOCiOOBs+ODleOCo+ODvOODieODkOODg+OCr++8iWRkAg0PDxYCHwEFcuS8gealreiqsumhjOOBruiDjOaZr+OCkueQhuino+OBl+OAgeOCsOODq+ODvOODl+ODr+ODvOOCr+OCkumAmuOBmOOBpuiqsumhjOino+axuuOBruODl+ODreOCu+OCueOCkuWun+i3teOBmeOCi+OAgmRkAg8PDxYCHwEF5gHkvIHmpa3oqrLpoYzjga7oqqzmmI7vvIjoqrLpoYzjga7og4zmma/jgoTnm67nmoTjgavjgaTjgYTjgabop6PoqqzvvIkK44Ov44O844Kv44K344On44OD44OX77yI6Kqy6aGM6Kej5rG644Gr5ZCR44GR44Gf44Kw44Or44O844OX44Ov44O844Kv44O744OH44Kj44K544Kr44OD44K344On44Oz77yJCueZuuihqO+8iOaIkOaenOeJqeOBruWFseacieOBiuOCiOOBs+ODleOCo+ODvOODieODkOODg+OCr++8iWRkAhAPDxYCHwEFcuS8gealreiqsumhjOOBruiDjOaZr+OCkueQhuino+OBl+OAgeOCsOODq+ODvOODl+ODr+ODvOOCr+OCkumAmuOBmOOBpuiqsumhjOino+axuuOBruODl+ODreOCu+OCueOCkuWun+i3teOBmeOCi+OAgmRkAhIPDxYCHwEF5wHkvIHmpa3oqrLpoYzjga7oqqzmmI7vvIjoqrLpoYzjga7og4zmma/jgoTnm67nmoTjgavjgaTjgYTjgabop6PoqqzvvIkK44Ov44O844Kv44K344On44OD44OX77yI6Kqy6aGM6Kej5rG644Gr5ZCR44GR44Gf44Kw44Or44O844OX44Ov44O844Kv44O744OH44Kj44K544Kr44OD44K344On44Oz77yJCueZuuihqO+8iOaIkOaenOeJqeOBruWFseacieOBiuOCiOOBs+ODleOCo+ODvOODieODkOODg+OCr++8iQpkZAITDw8WAh8BBXLkvIHmpa3oqrLpoYzjga7og4zmma/jgpLnkIbop6PjgZfjgIHjgrDjg6vjg7zjg5fjg6/jg7zjgq/jgpLpgJrjgZjjgaboqrLpoYzop6Pmsbrjga7jg5fjg63jgrvjgrnjgpLlrp/ot7XjgZnjgovjgIJkZAIVDw8WAh8BBecB5LyB5qWt6Kqy6aGM44Gu6Kqs5piO77yI6Kqy6aGM44Gu6IOM5pmv44KE55uu55qE44Gr44Gk44GE44Gm6Kej6Kqs77yJCuODr+ODvOOCr+OCt+ODp+ODg+ODl++8iOiqsumhjOino+axuuOBq+WQkeOBkeOBn+OCsOODq+ODvOODl+ODr+ODvOOCr+ODu+ODh+OCo+OCueOCq+ODg+OCt+ODp+ODs++8iQrnmbrooajvvIjmiJDmnpznianjga7lhbHmnInjgYrjgojjgbPjg5XjgqPjg7zjg4njg5Djg4Pjgq/vvIkKZGQCFg8PFgIfAQVy5LyB5qWt6Kqy6aGM44Gu6IOM5pmv44KS55CG6Kej44GX44CB44Kw44Or44O844OX44Ov44O844Kv44KS6YCa44GY44Gm6Kqy6aGM6Kej5rG644Gu44OX44Ot44K744K544KS5a6f6Le144GZ44KL44CCZGQCAQ9kFiBmDw8WAh8BBecB5LyB5qWt6Kqy6aGM44Gu6Kqs5piO77yI6Kqy6aGM44Gu6IOM5pmv44KE55uu55qE44Gr44Gk44GE44Gm6Kej6Kqs77yJCuODr+ODvOOCr+OCt+ODp+ODg+ODl++8iOiqsumhjOino+axuuOBq+WQkeOBkeOBn+OCsOODq+ODvOODl+ODr+ODvOOCr+ODu+ODh+OCo+OCueOCq+ODg+OCt+ODp+ODs++8iQrnmbrooajvvIjmiJDmnpznianjga7lhbHmnInjgYrjgojjgbPjg5XjgqPjg7zjg4njg5Djg4Pjgq/vvIkKZGQCAQ8PFgIfAQVy5LyB5qWt6Kqy6aGM44Gu6IOM5pmv44KS55CG6Kej44GX44CB44Kw44Or44O844OX44Ov44O844Kv44KS6YCa44GY44Gm6Kqy6aGM6Kej5rG644Gu44OX44Ot44K744K544KS5a6f6Le144GZ44KL44CCZGQCAw8PFgIfAQXnAeS8gealreiqsumhjOOBruiqrOaYju+8iOiqsumhjOOBruiDjOaZr+OChOebrueahOOBq+OBpOOBhOOBpuino+iqrO+8iQrjg6/jg7zjgq/jgrfjg6fjg4Pjg5fvvIjoqrLpoYzop6PmsbrjgavlkJHjgZHjgZ/jgrDjg6vjg7zjg5fjg6/jg7zjgq/jg7vjg4fjgqPjgrnjgqvjg4Pjgrfjg6fjg7PvvIkK55m66KGo77yI5oiQ5p6c54mp44Gu5YWx5pyJ44GK44KI44Gz44OV44Kj44O844OJ44OQ44OD44Kv77yJCmRkAgQPDxYCHwEFcuS8gealreiqsumhjOOBruiDjOaZr+OCkueQhuino+OBl+OAgeOCsOODq+ODvOODl+ODr+ODvOOCr+OCkumAmuOBmOOBpuiqsumhjOino+axuuOBruODl+ODreOCu+OCueOCkuWun+i3teOBmeOCi+OAgmRkAgYPDxYCHwEF5wHkvIHmpa3oqrLpoYzjga7oqqzmmI7vvIjoqrLpoYzjga7og4zmma/jgoTnm67nmoTjgavjgaTjgYTjgabop6PoqqzvvIkK44Ov44O844Kv44K344On44OD44OX77yI6Kqy6aGM6Kej5rG644Gr5ZCR44GR44Gf44Kw44Or44O844OX44Ov44O844Kv44O744OH44Kj44K544Kr44OD44K344On44Oz77yJCueZuuihqO+8iOaIkOaenOeJqeOBruWFseacieOBiuOCiOOBs+ODleOCo+ODvOODieODkOODg+OCr++8iQpkZAIHDw8WAh8BBXLkvIHmpa3oqrLpoYzjga7og4zmma/jgpLnkIbop6PjgZfjgIHjgrDjg6vjg7zjg5fjg6/jg7zjgq/jgpLpgJrjgZjjgaboqrLpoYzop6Pmsbrjga7jg5fjg63jgrvjgrnjgpLlrp/ot7XjgZnjgovjgIJkZAIJDw8WAh8BBeYB5LyB5qWt6Kqy6aGM44Gu6Kqs5piO77yI6Kqy6aGM44Gu6IOM5pmv44KE55uu55qE44Gr44Gk44GE44Gm6Kej6Kqs77yJCuODr+ODvOOCr+OCt+ODp+ODg+ODl++8iOiqsumhjOino+axuuOBq+WQkeOBkeOBn+OCsOODq+ODvOODl+ODr+ODvOOCr+ODu+ODh+OCo+OCueOCq+ODg+OCt+ODp+ODs++8iQrnmbrooajvvIjmiJDmnpznianjga7lhbHmnInjgYrjgojjgbPjg5XjgqPjg7zjg4njg5Djg4Pjgq/vvIlkZAIKDw8WAh8BBXLkvIHmpa3oqrLpoYzjga7og4zmma/jgpLnkIbop6PjgZfjgIHjgrDjg6vjg7zjg5fjg6/jg7zjgq/jgpLpgJrjgZjjgaboqrLpoYzop6Pmsbrjga7jg5fjg63jgrvjgrnjgpLlrp/ot7XjgZnjgovjgIJkZAIMDw8WAh8BBeYB5LyB5qWt6Kqy6aGM44Gu6Kqs5piO77yI6Kqy6aGM44Gu6IOM5pmv44KE55uu55qE44Gr44Gk44GE44Gm6Kej6Kqs77yJCuODr+ODvOOCr+OCt+ODp+ODg+ODl++8iOiqsumhjOino+axuuOBq+WQkeOBkeOBn+OCsOODq+ODvOODl+ODr+ODvOOCr+ODu+ODh+OCo+OCueOCq+ODg+OCt+ODp+ODs++8iQrnmbrooajvvIjmiJDmnpznianjga7lhbHmnInjgYrjgojjgbPjg5XjgqPjg7zjg4njg5Djg4Pjgq/vvIlkZAINDw8WAh8BBXLkvIHmpa3oqrLpoYzjga7og4zmma/jgpLnkIbop6PjgZfjgIHjgrDjg6vjg7zjg5fjg6/jg7zjgq/jgpLpgJrjgZjjgaboqrLpoYzop6Pmsbrjga7jg5fjg63jgrvjgrnjgpLlrp/ot7XjgZnjgovjgIJkZAIPDw8WAh8BBeYB5LyB5qWt6Kqy6aGM44Gu6Kqs5piO77yI6Kqy6aGM44Gu6IOM5pmv44KE55uu55qE44Gr44Gk44GE44Gm6Kej6Kqs77yJCuODr+ODvOOCr+OCt+ODp+ODg+ODl++8iOiqsumhjOino+axuuOBq+WQkeOBkeOBn+OCsOODq+ODvOODl+ODr+ODvOOCr+ODu+ODh+OCo+OCueOCq+ODg+OCt+ODp+ODs++8iQrnmbrooajvvIjmiJDmnpznianjga7lhbHmnInjgYrjgojjgbPjg5XjgqPjg7zjg4njg5Djg4Pjgq/vvIlkZAIQDw8WAh8BBXLkvIHmpa3oqrLpoYzjga7og4zmma/jgpLnkIbop6PjgZfjgIHjgrDjg6vjg7zjg5fjg6/jg7zjgq/jgpLpgJrjgZjjgaboqrLpoYzop6Pmsbrjga7jg5fjg63jgrvjgrnjgpLlrp/ot7XjgZnjgovjgIJkZAISDw8WAh8BBeYB5LyB5qWt6Kqy6aGM44Gu6Kqs5piO77yI6Kqy6aGM44Gu6IOM5pmv44KE55uu55qE44Gr44Gk44GE44Gm6Kej6Kqs77yJCuODr+ODvOOCr+OCt+ODp+ODg+ODl++8iOiqsumhjOino+axuuOBq+WQkeOBkeOBn+OCsOODq+ODvOODl+ODr+ODvOOCr+ODu+ODh+OCo+OCueOCq+ODg+OCt+ODp+ODs++8iQrnmbrooajvvIjmiJDmnpznianjga7lhbHmnInjgYrjgojjgbPjg5XjgqPjg7zjg4njg5Djg4Pjgq/vvIlkZAITDw8WAh8BBXLkvIHmpa3oqrLpoYzjga7og4zmma/jgpLnkIbop6PjgZfjgIHjgrDjg6vjg7zjg5fjg6/jg7zjgq/jgpLpgJrjgZjjgaboqrLpoYzop6Pmsbrjga7jg5fjg63jgrvjgrnjgpLlrp/ot7XjgZnjgovjgIJkZAIVDw8WAh8BZWRkAhYPDxYCHwFlZGQCDw8PFgQfAgUfdGFibGUgdGFibGUtYm9yZGVyZWQgbm8tcGFkZGluZx8DAgIWAh8EBRdiYWNrZ3JvdW5kLWNvbG9yOndoaXRlO2QCEA8PFgQfAgUfdGFibGUgdGFibGUtYm9yZGVyZWQgbm8tcGFkZGluZx8DAgIWAh8EBR1zdHlsZTpiYWNrZ3JvdW5kLWNvbG9yOndoaXRlO2QYAQUeX19Db250cm9sc1JlcXVpcmVQb3N0QmFja0tleV9fFgQFMmN0bDAwJE1haW5Db250ZW50JFN1YmplY3RTeWxsYWJ1cyRpc0FjdGl2ZUxlYXJuaW5nBS5jdGwwMCRNYWluQ29udGVudCRTdWJqZWN0U3lsbGFidXMkaXNBaWRlZEJ5SUNUBTxjdGwwMCRNYWluQ29udGVudCRTdWJqZWN0U3lsbGFidXMkaXNBcHBsaWNhYmxlRm9yUmVtb3RlQ2xhc3MFR2N0bDAwJE1haW5Db250ZW50JFN1YmplY3RTeWxsYWJ1cyRpc0luc3RydWN0b3JQcm9mZXNzaW9uYWxseUV4cGVyaWVuY2VkDvvy5kEkRcBaJoyfILUxbGDSnMKidw3Viw79aFHburQ=" />
+
+
+<script src="../Scripts/WebForms/MsAjax/MicrosoftAjax.js" type="text/javascript"></script>
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="DBEB7810" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdABXIt/MeysDEW+11qH/k/soMR7L3wySogUAl7PijvtwaUSsm8nTXGaHoUVtfjM0rCZj22oJ4VQ24ZYDTOYTZUrP5vtB5q2NRcavKnoOwBU+gOA64SVEnPyPScYYkpSuU0xW2L4Jve6H60KdcbqEngomYYAGK+IWmF40J3t6o3zJYQj3DsjWHDc/cKA2KFUkqXvhopB6nlbzlu7nJWavaBjuezSQ3X2CP5vn0hjBBJbTLvz3CGZ9Cu8Hncxu1Mzz13m3V7gpVpizzZerj5lK8GW+8vLrFU9WtRM9R2nxmAWJZWhHFXp5SXO+z24qW7wHAsQemku3WtiEWR1FYGon8mnk41yO2HHE1YguYPkDLvX/psMZQL1ESWpI/XcFGLFInH1feb0T4IWniJZEt0XI1iJVuCry12SX7zfqSJ7S/DRiQgIbYsULENMzw4TU3uWFsunQGEk5BuB7gBBC2t2P+5eY3SMJJHCNOyb3vEz5LGYsaqg==" />
+        
+    <div style="width:100%;float:left;">
+        
+
+<script type="text/javascript">
+    $(function () {
+        $('.missionOpenBtn').click(function (e) {
+            var parent = $(this).parent('div');
+            var info = parent.data('info');
+            var item_name = parent.data('item_name');
+            var key = parent.data('key');
+            var str = info + ' ' + item_name;
+            $('#' + key + '_open').addClass('hide');
+            $('#' + key + '_close').removeClass('hide');
+            $('#' + key + "_display").text(str);
+
+        });
+        $('.missionCloseBtn').click(function (e) {
+            var parent = $(this).parent('div');
+            var info = parent.data('info');
+            var key = parent.data('key');
+            $('#' + key + '_open').removeClass('hide');
+            $('#' + key + '_close').addClass('hide');
+            $('#' + key + "_display").text(info);
+
+        });
+    })
+</script>
+
+<div id="MainContent_SubjectSyllabus_UpdatePanelSyllabus">
+	
+
+<div>
+    <div>
+        <span id="MainContent_SubjectSyllabus_LabelInfo" class="text-danger"><font size="5"></font></span>
+    </div>
+
+    <h3 class="bg-info text-center">科目基礎情報</h3>
+    <table class="table table-bordered no-padding" style="background-color:white;">
+        <tr>
+            <th>学校</th>
+            <td >北九州工業高等専門学校</td>
+            <th >開講年度</th>
+            <td >令和08年度 (2026年度)</td>
+        </tr>
+        <tr>
+            <th>授業科目</th>
+            <td colspan="3">プロジェクト演習</td>
+        </tr>
+        <tr>
+            <th>科目番号</th>
+            <td>0138</td>
+            <th>科目区分</th>
+            <td>専門 / 選択</td>
+        </tr>
+        <tr>
+            <th>授業形態</th>
+            <td>演習</td>
+            <th>単位の種別と単位数</th>
+            <td>履修単位: 3</td>
+        </tr>
+        <tr>
+            <th>開設学科</th>
+            <td>生産デザイン工学科（知能ロボットシステムコース）</td>
+            <th>対象学年</th>
+            <td>4</td>
+        </tr>
+        <tr>
+            <th>開設期</th>
+            <td>後期</td>
+            <th>週時間数</th>
+            <td>6</td>
+        </tr>
+        <tr>
+            <th>教科書/教材</th>
+            <td colspan="3">
+                配布
+            </td>
+        </tr>
+        <tr>
+            <th>担当教員</th>
+            <td colspan="3">
+                <span id="Teachers">久池井 茂</span>
+            </td>
+        </tr>
+    </table>
+
+    <div id="MainContent_SubjectSyllabus_syllabusContent">
+
+    <h3 class="bg-info text-center">到達目標</h3>
+    <div style="background-color:white;">
+        1. デジタルものづくりの全体像、キーワード・ユースケースの理解することができる。<br />2. イノベーション思考法、課題設定力、コラボレーションによる課題解決方法を実施できる。<br />3. アイデアの具体化、仮想空間での３次元データ活用、サイバーフィジカルシステム（仮想空間と物理空間の融合）の概念を習得できる。
+    </div>
+
+    <h3 class="bg-info text-center">ルーブリック</h3>
+
+    
+
+    <div style="overflow:auto">
+    <table id="MainContent_SubjectSyllabus_hyouka" class="table table-bordered no-padding" style="style:background-color:white;">
+		<tr class="bg-success">
+			<td></td><th>理想的な到達レベルの目安</th><th>標準的な到達レベルの目安</th><th>未到達レベルの目安</th>
+		</tr><tr id="rubricItemRow_1">
+			<th>評価項目１
+</th><td>デジタルものづくりの全体像、キーワード・ユースケースを説明できる。</td><td>デジタルものづくりの全体像、キーワード・ユースケースがわかる。</td><td>デジタルものづくりの全体像、キーワード・ユースケースを説明できない。</td>
+		</tr><tr id="rubricItemRow_2">
+			<th>評価項目２</th><td>イノベーション思考法、課題設定力、コラボレーションによる課題解決方法を実現できる。</td><td>イノベーション思考法、課題設定力、コラボレーションによる課題解決方法がわかる。</td><td>イノベーション思考法、課題設定力、コラボレーションによる課題解決方法を実現できない。</td>
+		</tr><tr id="rubricItemRow_3">
+			<th>評価項目３</th><td>アイデアの具体化、仮想空間での３次元データ活用、サイバーフィジカルシステム（仮想空間と物理空間の融合）の概念を説明できる。</td><td>アイデアの具体化、仮想空間での３次元データ活用、サイバーフィジカルシステム（仮想空間と物理空間の融合）の概念がわかる。</td><td>アイデアの具体化、仮想空間での３次元データ活用、サイバーフィジカルシステム（仮想空間と物理空間の融合）の概念を説明できない。</td>
+		</tr>
+	</table>
+    </div>
+
+    <h3 class="bg-info text-center">学科の到達目標項目との関係</h3>
+    <div style="background-color:white;">
+        
+                
+                    <div>
+                        JABEE評価 SC 専門工学知識の上に「生産」に関わる実践的技術を身に付けた技術者
+                    </div>
+                
+                
+                    <div>
+                        JABEE評価 SC① 専門工学の実践に必要な知識を深め、実験や実習を通じて、問題解決の経験を積む。
+                    </div>
+                
+                
+                    <div>
+                        JABEE評価 SC② 機器類（装置・計測器・コンピュータなど）を用いて、データを収集し、処理できる。
+                    </div>
+                
+                
+                    <div>
+                        JABEE評価 SC③ 実験結果から適切な図や表を作り、専門工学知識をもとに分析し、結論を導き出せる。
+                    </div>
+                
+                
+                    <div>
+                        JABEE評価 SC④ 実験や実習について、方法・結果・考察を的確にまとめ、報告できる。
+                    </div>
+                
+                
+                    <div>
+                        JABEE評価 SD 幅広い視野から問題を捉え、複数分野の工学知識・技術を有機的に結び付け、総合的に問題を解決する素養（デザイン能力）を有する技術者
+                    </div>
+                
+                
+                    <div>
+                        JABEE評価 SD⑤ 工学知識や技術を統合し、課題解決のための結果の整理・分析・考察・報告ができる。
+                    </div>
+                
+                
+                    <div>
+                        JABEE評価 SE 多様な文化を理解する能力を持ち、日本語および外国語によるコミュニケーション能力を有する技術者
+                    </div>
+                
+                
+                    <div>
+                        JABEE評価 SE② 実験・実習・調査・研究内容について、日本語で論理的に記述し、報告・討論できる。
+                    </div>
+                
+                
+                    <div>
+                        JABEE評価 SF 歴史・文化・社会に関する教養と頑健な心身を持ち、技術の社会・環境との関わりを考えることのできる技術者
+                    </div>
+                
+                
+                    <div>
+                        JABEE評価 SF② 工業技術と社会・環境との関わりを理解し、社会・環境への効果と影響を説明できる。
+                    </div>
+                
+                
+                    <div>
+                        JABEE評価 SG 多様性のあるチームの中で、成果を上げるために行動できる技術者
+                    </div>
+                
+                
+                    <div>
+                        JABEE評価 SG① メンバーとして、自己のなすべき行動を判断し実行できる。
+                    </div>
+                
+                
+                    <div>
+                        JABEE評価 SG② リーダーとして、他者の取るべき行動を判断し、適切に行動させるように働きかけることができる。
+                    </div>
+                
+
+    </div>
+
+    <h3 class="bg-info text-center">教育方法等</h3>
+    <div style="background-color:white;">
+      <b style="font-size: 15px">概要:</b><br />
+      <div>
+          本授業は、ベンダー、システムインテグレーター、製造業など、ものづくりに関わる多様な企業の実課題をもとに、課題設定力を重視した実践的な教育を行う。アイデアの創出・検証・発表を繰り返すことで、論理的思考力やチームでの協働力を養い、最終的に実現可能な提案を行えるようになる。この科目は、企業と協働し、企業実務での経験を活かして、企業や業界の課題について、講義・ワークショップ・発表形式で授業するものである。
+      </div>
+      <b style="font-size:15px">授業の進め方・方法:</b><br />
+      <div>
+          本授業では、イノベーションに取り組む企業と協働し、実践的な教育を行う。各回の授業では、企業が直面する実課題をもとに、以下のプロセスを繰り返しながら学びを深める。<br />課題の提示と理解（企業から提供された課題の背景や目的を把握し、解決の方向性を検討する。）<br />アイデア創出と議論（グループワークを通じて、多角的な視点から課題解決のアイデアを発想し、検討する。）<br />プレゼンテーションとフィードバック（各グループがアイデアを発表し、講師や企業担当者からのフィードバックを受ける。）<br />
+      </div>
+      <b style="font-size:15px">注意点:</b><br />
+      <div>
+          本授業では、各回の授業後にアンケートを実施し、「授業のテーマ」「授業の構成・内容」「コンテンツや時間配分」「進行のスムーズさ」などについて意見を収集する。授業内容や進行方法の改善を図るため、アンケートの回答は率直かつ具体的に記入することが望ましい。また、授業への積極的な参加を通じて、より効果的な学びの場を共に作り上げる意識を持つことが重要である。
+      </div>
+    </div>
+
+        
+    <h3 class="bg-info text-center">授業の属性・履修上の区分</h3>
+    <div style="background-color:white;">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isActiveLearning" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isActiveLearning" checked="checked" />
+                            アクティブラーニング
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isAidedByICT" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isAidedByICT" checked="checked" />
+                            ICT 利用
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isApplicableForRemoteClass" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isApplicableForRemoteClass" checked="checked" />
+                            遠隔授業対応
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isInstructorProfessionallyExperienced" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isInstructorProfessionallyExperienced" checked="checked" />
+                            実務経験のある教員による授業
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="border: 0px none;">
+                        <div class="">
+                            
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <h3 class="bg-info text-center">授業計画</h3>
+    <table class="table table-bordered no-padding" style="background-color:white;" id="lessonsTable">
+        <tr class="bg-success">
+            <th></th>
+            <th></th>
+            <th>週</th>
+            <th>授業内容</th>
+            <th>週ごとの到達目標</th>
+        </tr>
+        
+        
+            <tr>
+                <th rowspan="19" class="bg-danger">後期</th>
+            </tr>
+            
+                <tr>
+                    <th rowspan="9" class="bg-" style="width:60px;">3rdQ</th>
+                </tr>
+                <tr>
+                    <th class="week_number">1週</th>
+                    <td>企業課題の説明（課題の背景や目的について解説）<br />ワークショップ（課題解決に向けたグループワーク・ディスカッション）<br />発表（成果物の共有およびフィードバック）</td>
+                    <td>企業課題の背景を理解し、グループワークを通じて課題解決のプロセスを実践する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget17" id="MainContent_SubjectSyllabus_hiddenLessonTarget17" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">2週</th>
+                    <td>企業課題の説明（課題の背景や目的について解説）<br />ワークショップ（課題解決に向けたグループワーク・ディスカッション）<br />発表（成果物の共有およびフィードバック）</td>
+                    <td>企業課題の背景を理解し、グループワークを通じて課題解決のプロセスを実践する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget18" id="MainContent_SubjectSyllabus_hiddenLessonTarget18" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">3週</th>
+                    <td>企業課題の説明（課題の背景や目的について解説）<br />ワークショップ（課題解決に向けたグループワーク・ディスカッション）<br />発表（成果物の共有およびフィードバック）</td>
+                    <td>企業課題の背景を理解し、グループワークを通じて課題解決のプロセスを実践する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget19" id="MainContent_SubjectSyllabus_hiddenLessonTarget19" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">4週</th>
+                    <td>企業課題の説明（課題の背景や目的について解説）<br />ワークショップ（課題解決に向けたグループワーク・ディスカッション）<br />発表（成果物の共有およびフィードバック）</td>
+                    <td>企業課題の背景を理解し、グループワークを通じて課題解決のプロセスを実践する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget20" id="MainContent_SubjectSyllabus_hiddenLessonTarget20" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">5週</th>
+                    <td>企業課題の説明（課題の背景や目的について解説）<br />ワークショップ（課題解決に向けたグループワーク・ディスカッション）<br />発表（成果物の共有およびフィードバック）</td>
+                    <td>企業課題の背景を理解し、グループワークを通じて課題解決のプロセスを実践する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget21" id="MainContent_SubjectSyllabus_hiddenLessonTarget21" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">6週</th>
+                    <td>企業課題の説明（課題の背景や目的について解説）<br />ワークショップ（課題解決に向けたグループワーク・ディスカッション）<br />発表（成果物の共有およびフィードバック）</td>
+                    <td>企業課題の背景を理解し、グループワークを通じて課題解決のプロセスを実践する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget22" id="MainContent_SubjectSyllabus_hiddenLessonTarget22" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">7週</th>
+                    <td>企業課題の説明（課題の背景や目的について解説）<br />ワークショップ（課題解決に向けたグループワーク・ディスカッション）<br />発表（成果物の共有およびフィードバック）<br /></td>
+                    <td>企業課題の背景を理解し、グループワークを通じて課題解決のプロセスを実践する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget23" id="MainContent_SubjectSyllabus_hiddenLessonTarget23" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">8週</th>
+                    <td>企業課題の説明（課題の背景や目的について解説）<br />ワークショップ（課題解決に向けたグループワーク・ディスカッション）<br />発表（成果物の共有およびフィードバック）<br /></td>
+                    <td>企業課題の背景を理解し、グループワークを通じて課題解決のプロセスを実践する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget24" id="MainContent_SubjectSyllabus_hiddenLessonTarget24" />
+                    </td>
+                </tr>
+            
+                <tr>
+                    <th rowspan="9" class="bg-" style="width:60px;">4thQ</th>
+                </tr>
+                <tr>
+                    <th class="week_number">9週</th>
+                    <td>企業課題の説明（課題の背景や目的について解説）<br />ワークショップ（課題解決に向けたグループワーク・ディスカッション）<br />発表（成果物の共有およびフィードバック）<br /></td>
+                    <td>企業課題の背景を理解し、グループワークを通じて課題解決のプロセスを実践する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget25" id="MainContent_SubjectSyllabus_hiddenLessonTarget25" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">10週</th>
+                    <td>企業課題の説明（課題の背景や目的について解説）<br />ワークショップ（課題解決に向けたグループワーク・ディスカッション）<br />発表（成果物の共有およびフィードバック）<br /></td>
+                    <td>企業課題の背景を理解し、グループワークを通じて課題解決のプロセスを実践する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget26" id="MainContent_SubjectSyllabus_hiddenLessonTarget26" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">11週</th>
+                    <td>企業課題の説明（課題の背景や目的について解説）<br />ワークショップ（課題解決に向けたグループワーク・ディスカッション）<br />発表（成果物の共有およびフィードバック）<br /></td>
+                    <td>企業課題の背景を理解し、グループワークを通じて課題解決のプロセスを実践する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget27" id="MainContent_SubjectSyllabus_hiddenLessonTarget27" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">12週</th>
+                    <td>企業課題の説明（課題の背景や目的について解説）<br />ワークショップ（課題解決に向けたグループワーク・ディスカッション）<br />発表（成果物の共有およびフィードバック）</td>
+                    <td>企業課題の背景を理解し、グループワークを通じて課題解決のプロセスを実践する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget28" id="MainContent_SubjectSyllabus_hiddenLessonTarget28" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">13週</th>
+                    <td>企業課題の説明（課題の背景や目的について解説）<br />ワークショップ（課題解決に向けたグループワーク・ディスカッション）<br />発表（成果物の共有およびフィードバック）</td>
+                    <td>企業課題の背景を理解し、グループワークを通じて課題解決のプロセスを実践する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget29" id="MainContent_SubjectSyllabus_hiddenLessonTarget29" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">14週</th>
+                    <td>企業課題の説明（課題の背景や目的について解説）<br />ワークショップ（課題解決に向けたグループワーク・ディスカッション）<br />発表（成果物の共有およびフィードバック）</td>
+                    <td>企業課題の背景を理解し、グループワークを通じて課題解決のプロセスを実践する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget30" id="MainContent_SubjectSyllabus_hiddenLessonTarget30" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">15週</th>
+                    <td>企業課題の説明（課題の背景や目的について解説）<br />ワークショップ（課題解決に向けたグループワーク・ディスカッション）<br />発表（成果物の共有およびフィードバック）</td>
+                    <td>企業課題の背景を理解し、グループワークを通じて課題解決のプロセスを実践する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget31" id="MainContent_SubjectSyllabus_hiddenLessonTarget31" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">16週</th>
+                    <td></td>
+                    <td><input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget32" id="MainContent_SubjectSyllabus_hiddenLessonTarget32" />
+                    </td>
+                </tr>
+            
+    </table>
+
+        
+
+        <h3 class="bg-info text-center">モデルコアカリキュラムの学習内容と到達目標</h3>
+
+        <table id="MainContent_SubjectSyllabus_mccTable" class="table table-bordered no-padding" style="background-color:white;">
+		<tr class="bg-success">
+			<th colspan="2">分類</th><th>分野</th><th>学習内容</th><th>学習内容の到達目標</th><th>到達レベル</th><th>授業週</th>
+		</tr>
+	</table>
+
+        
+    
+    <h3 class="bg-info text-center">評価割合</h3>
+
+    <div style="overflow:auto">
+       <table id="MainContent_SubjectSyllabus_wariaiTable" class="table table-bordered no-padding" style="style:background-color:white;">
+		<tr class="bg-success">
+			<td></td><th>演習・レポート</th><th>合計</th>
+		</tr><tr>
+			<th>総合評価割合</th><td><b>100</b></td><td><b>100</b></td>
+		</tr><tr>
+			<th>基礎的能力</th><td>0</td><td><b>0</b></td>
+		</tr><tr>
+			<th>専門的能力</th><td>100</td><td><b>100</b></td>
+		</tr><tr>
+			<th>分野横断的能力</th><td>0</td><td><b>0</b></td>
+		</tr>
+	</table>
+    </div>
+
+    </div>
+
+  </div>
+
+
+</div>
+
+    </div>
+    
+
+<script type="text/javascript">
+//<![CDATA[
+if(typeof initSyllabusScript == 'function'){ initSyllabusScript();}//]]>
+</script>
+</form>
+
+        </div>
+    </div>
+
+    <div id="footer">
+        <br />
+        <br />
+        <div class="container">
+            <p class="text-muted credit">
+                ©2014 - MCC Web Syllabus.
+            </p>
+        </div>
+    </div>
+
+    <script src="/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+    <script src="/Scripts/mcc.js?v=20190215"></script>
+    <script src="/Scripts/Grid.js"></script>
+    <script>
+      $.ajaxSetup({
+        cache: false
+      });
+    </script>
+    
+    <script>
+      $(document).ready(function () {
+          initSyllabusScript();
+      });
+    </script>
+
+
+</body>
+</html>

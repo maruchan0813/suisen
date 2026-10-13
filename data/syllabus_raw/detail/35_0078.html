@@ -1,0 +1,621 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+
+</title><link href="../Content/css/bootstrap.css" rel="stylesheet" type="text/css" /><link href="../Content/font-awesome.min.css" rel="stylesheet" type="text/css" /><link href="../Content/css/Grid.css" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc.css?_=20201215" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc_public_theme.css?_=20150406" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/jquery-3.7.1.min.js"></script>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-51403293-1', 'mccdemo.cloudapp.net');
+        ga('send', 'pageview');
+        
+    </script>
+    <script>
+
+        function searchThisSite() {
+
+            
+            $("#loadingModal")[0].style.visibility = "visible";
+            
+            $("#btnSearchThisSite")[0].blur();
+
+            var querys = getUrlVars();
+            var paramString = "";
+
+            querys.forEach(function (value, index, array) {
+
+                if (value != "keyword") {
+                    paramString += "&" + value + "=" + querys[value];
+                }
+            });
+
+            var keyword = $('#siteKeyword').val();
+            var encodeKeyword = encodeURIComponent(keyword);
+
+            var pageName =  getPageName();
+            if (pageName != "PublicSearchResult") {
+                paramString += "&before_page=" + pageName;
+            }
+
+            location.href = "/Pages/PublicSearchResult.aspx?keyword=" + encodeKeyword + paramString;
+        }
+
+        $(document).ready(function () {
+
+            
+            var langSelected = $('#langSelected');
+            langSelected.change(function () {
+                
+                var addQuery = '';
+                var hrefs = location.href.split('?');
+                if (hrefs.length > 1) {
+                    addQuery = cleanQuery(hrefs[1], 'lang');
+                }
+                if (addQuery != '') {
+                    addQuery = addQuery + '&';
+                }
+                location.href = hrefs[0] + '?' + addQuery + 'lang=' + $(this).val();
+            });
+
+            
+            $('#siteKeyword').tooltip();
+        });
+
+        function getPageName() {
+            var split = window.location.pathname.split('/');
+            return split[split.length - 1];
+        }
+
+        function getUrlVars() {
+            var vars = [], hash;
+
+            var split = window.location.href.split('?');
+            if (split.length != 2) {
+                // 要素無し
+                return vars;
+            }
+
+            var hashes = split[1].split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
+        function cleanQuery(query, target) {
+            var arr = [];
+            $.each(query.split('&'), function (i, param) {
+                if (param.split('=')[0] != target) { arr.push(param); }
+            });
+            return arr.join('&');
+        }
+
+    </script>
+
+    
+
+
+    <!-- for dodai -->
+    
+</head>
+<body>
+    
+    <div id="wrap">
+        <!-- Loading -->
+        <div class="modal-backdrop in" id="loadingModal" tabindex="-1" style="visibility:hidden;">
+             <div style="top: 1.5%; position: absolute; left: 50%;">
+                 <div id="loadingSearchPanel" class='loading'></div>
+             </div>
+        </div>
+        <div class="navbar navbar-default navbar-fixed-top header_area" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    
+                    <span class="navbar-brand"><i class="glyphicon glyphicon-home"></i>高専Webシラバス</span>
+                    <div class="navbar-text navbar-text-min-none">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+
+                    
+
+                    
+                    <table class="navbar-brand navbar-right" style="height:50px;">
+                        
+                        <tr id="SyllabusSearchBlankArea">
+	<td style="padding-top:6px;">
+                                 <input type="text" class="form-control" style="width:200px; visibility:hidden"/>
+                            </td>
+	<td style="padding-top:6px;">
+                                <button class="btn btn-default" style="visibility:hidden">検索</button>
+                            </td>
+</tr>
+
+                    </table>
+                    <div class="navbar-text navbar-text-min-none navbar-right">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                    <div class="navbar-collapse navbar-brand navbar-right">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="page-header">
+
+            <ol class="breadcrumb">
+                <li><a href="/Pages/PublicSchools?lang=ja"><i class="glyphicon glyphicon-home"></i>ホーム</a></li>
+                
+
+    <li>
+        <a href="./PublicDepartments?school_id=45&lang=ja">
+            北九州工業高等専門学校
+        </a>
+    </li>
+    <li>
+
+        
+        <a href="./PublicSubjects?school_id=45&department_id=35&year=2026&lang=ja">
+            生産デザイン工学科（物質化学コース） 
+        </a>
+        
+        
+    </li>
+    <li>
+        分析化学Ⅱ
+    </li>
+
+
+            </ol>
+            <div id="AlertMessage" class="alert alert-danger" style="display:none;">
+            </div>
+        </div>
+        <div class="container" style="margin-left:50px;margin-right:50px;width:90%;">
+            
+
+
+    <div class="mcc-title-bar">
+        <div class="row">
+            <div class="col-md-6">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1>分析化学Ⅱ</h1>
+                    </div>
+                    <div class="col-md-6"></div>
+                </div>
+
+            </div>
+
+            <div class="col-md-4 mcc-page-actions">
+                <div class="btn-group" style="margin-top:6px;">
+                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="height:auto;">
+                        PDF
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu text-left" role="menu">
+                        <li>
+                            <a class="" target="_blank" role="menuitem"
+                                href="/Pages/SyllabusPDF?school_id=45&department_id=35&subject_id=0078&year=2024&lang=ja&subject_code=&preview=False&type=start&attachment=false">
+                                表示
+                            </a>
+                        </li>
+                         <li>
+                             <a class="" target="_blank" role="menuitem"
+                                href="/Pages/SyllabusPDF?school_id=45&department_id=35&subject_id=0078&year=2024&lang=ja&subject_code=&preview=False&type=start&attachment=true">
+                                保存
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <form method="post" action="./PublicSyllabus?school_id=45&amp;department_id=35&amp;subject_id=0078&amp;year=2024&amp;lang=ja" id="asp_form">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTQ3NTA3ODgwNg9kFgJmD2QWCAIBDxYCHgdWaXNpYmxlaBYCZg9kFgICAQ9kFgJmDxBkZBQrAQFmZAICDxYCHwBoZAIDDxYCHwBnZAIHD2QWAmYPZBYCAgMPZBYCAgEPZBYCZg9kFgQCAg8PFgIeBFRleHQFmQHjgIzln7rnpI7jgYvjgonjgo/jgYvjgovliIbmnpDljJblrabjgI3liqDol6TmraPnm7TjgIHloZrljp/ogaHlhbHokZfjgIHmo67ljJflh7rniYgsIOOAjOaWsOeJiCDln7rnpI7liIbmnpDljJblrabmvJTnv5LjgI3oj4Xljp/mraPpm4TokZfjgIHkuInlhbHlh7rniYhkZAIDD2QWImYPDxYCHwEFvwTvvJHvvI7pjK/kvZPjga7nlJ/miJDjgavjgaTjgYTjgabnkIbop6PjgafjgY3jgovjgIJC4pGgCu+8ku+8juOCreODrOODvOODiOa7tOWumuOBq+OBpOOBhOOBpuOBruWOn+eQhuOCkueQhuino+OBl+OAgemHkeWxnuOCpOOCquODs+OBrua/g+W6puioiOeul+OBjOOBp+OBjeOCi+OAgkLikaAK77yT77yO5rq25aqS5oq95Ye644KS5Yip55So44GX44Gf54mp6LOq44Gu5YiG6Zui44Gr44Gk44GE44Gm55CG6Kej44Gn44GN44KL44CCQuKRoArvvJTvvI7jg43jg6vjg7Pjgrnjg4jjga7lvI/jgYvjgonpm7vkvY3jgpLoqIjnrpfjgafjgY3jgovjgILpm7vkvY3jgajphbjljJbpgoTlhYPlubPooaHjga7plqLkv4LjgpLnkIbop6PjgafjgY3jgovjgIJC4pGgCu+8le+8jumFuOWMlumChOWFg+a7tOWumuOBq+OBpOOBhOOBpuWOn+eQhuOCkueQhuino+OBl+OAgemFuOWMluWJpOOBiuOCiOOBs+mChOWFg+WJpOOBrua/g+W6puioiOeul+OBjOOBp+OBjeOCi+OAgkLikaAK77yW77yO44Kk44Kq44Oz5Lqk5o+b44Gr44KI44KL5YiG6Zui5pa55rOV44Gr44Gk44GE44Gm5qaC55Wl44KS55CG6Kej44Gn44GN44KL44CCQuKRoGRkAgEPDxYEHghDc3NDbGFzcwUfdGFibGUgdGFibGUtYm9yZGVyZWQgbm8tcGFkZGluZx4EXyFTQgICFgIeBXN0eWxlBR1zdHlsZTpiYWNrZ3JvdW5kLWNvbG9yOndoaXRlO2QCAg8WAh4LXyFJdGVtQ291bnRmZAIDDw8WAh8BBfkD5Luj6KGo55qE44Gq5YyW5a2m5Y+N5b+c44Gu5LiA44Gk44Gn44GC44KL6Yyv55Sf5oiQ5Y+N5b+c44KS6YCa44GX44Gm44CB5YiG5p6Q5YyW5a2mSeOBp+WtpuOCk+OBoOWMluWtpuW5s+ihoeOBq+OBpOOBhOOBpuOBrueQhuino+OCkua3seOCgeOAgeawtOa6tua2suS4reOBruWMluWtpueorua/g+W6puOCkuioiOeul+OBmeOCi+aWueazleOCkueQhuino+OBleOBm+OCi+OAguOBvuOBn+OAgemFuOWMlumChOWFg+W5s+ihoeOBqOmbu+S9jeOBrumWouS/guOCkuWtpuOBs+OAgeODjeODq+ODs+OCueODiOOBruW8j+OCkuS9v+OBo+OBn+mbu+S9jeOBruioiOeul+aWueazleOCkueQhuino+OBleOBm+OCi+OAguOBleOCieOBq+WuuemHj+WIhuaekO+8iOOCreODrOODvOODiOa7tOWumuOAgemFuOWMlumChOWFg+a7tOWumu+8ieOChOOBneOBruS7luOBruWIhuaekOaWueazle+8iOa6tuWqkuaKveWHuuOAgeOCpOOCquODs+S6pOaPm++8ieOBruWOn+eQhuOCkueQhuino+OBleOBm+OCi+OAgmRkAgQPDxYCHwEFtAHmlZnnp5Hmm7jjgavmsr/jgaPjgaborJvnvqnjgpLooYzjgYbjgILljp/nkIbjga7oqqzmmI7jgYzkuK3lv4PjgajjgarjgovjgILmjojmpa3jga7jgb/jgafjga/mvJTnv5Lph4/jgYzkuI3otrPjgZfjgYzjgaHjgarjga7jgafjgIHlrprmnJ/nmoTjgavoh6rlraboh6rnv5LnlKjjga7oqrLpoYzjgpLoqrLjgZnjgIJkZAIFDw8WAh8BBaYB5YiG5p6Q5YyW5a2mSeOBp+WxpeS/ruOBl+OBn+WMluWtpuW5s+ihoeOBruWfuuacrOeahOOBqueQhuirluOAgeeJueOBq+eJqeizquWPjuaUr+OChOmbu+iNt+WPjuaUr+OAgeW5s+ihoeWumuaVsOOCkueUqOOBhOOBn+ioiOeul+aWueazleOCkuW+qee/kuOBl+OBpuOBiuOBj+OBk+OBqOOAgmRkAgYPDxYCHwFlZGQCBw8PFgIfAWVkZAIIDxAPFgIeB0NoZWNrZWRoZGRkZAIJDxAPFgIfBmdkZGRkAgoPEA8WAh8GaGRkZGQCCw8QDxYCHwZoZGRkZAIMDw8WBB8BZR4JTWF4TGVuZ3RoAgVkZAINDxYCHwBoFgRmDxYCHwBoFjBmDw8WAh8BZWRkAgEPDxYCHwFlZGQCAg8WAh4FVmFsdWVlZAIDDw8WAh8BZWRkAgQPDxYCHwFlZGQCBQ8WAh8IZWQCBg8PFgIfAWVkZAIHDw8WAh8BZWRkAggPFgIfCGVkAgkPDxYCHwFlZGQCCg8PFgIfAWVkZAILDxYCHwhlZAIMDw8WAh8BZWRkAg0PDxYCHwFlZGQCDg8WAh8IZWQCDw8PFgIfAWVkZAIQDw8WAh8BZWRkAhEPFgIfCGVkAhIPDxYCHwFlZGQCEw8PFgIfAWVkZAIUDxYCHwhlZAIVDw8WAh8BZWRkAhYPDxYCHwFlZGQCFw8WAh8IZWQCAQ8WAh8AaBYwZg8PFgIfAWVkZAIBDw8WAh8BZWRkAgIPFgIfCGVkAgMPDxYCHwFlZGQCBA8PFgIfAWVkZAIFDxYCHwhlZAIGDw8WAh8BZWRkAgcPDxYCHwFlZGQCCA8WAh8IZWQCCQ8PFgIfAWVkZAIKDw8WAh8BZWRkAgsPFgIfCGVkAgwPDxYCHwFlZGQCDQ8PFgIfAWVkZAIODxYCHwhlZAIPDw8WAh8BZWRkAhAPDxYCHwFlZGQCEQ8WAh8IZWQCEg8PFgIfAWVkZAITDw8WAh8BZWRkAhQPFgIfCGVkAhUPDxYCHwFlZGQCFg8PFgIfAWVkZAIXDxYCHwhlZAIOD2QWBGYPZBYgZg8PFgIfAQUP6Yyv5L2T44Gu55Sf5oiQZGQCAQ8PFgIfAQVI6Yyv5L2T44Gu55Sf5oiQ44KE44Gd44KM44Gr6Zai44GZ44KL55So6Kqe44Gr44Gk44GE44Gm6Kqs5piO44Gn44GN44KL44CCZGQCAw8PFgIfAQU66Yyv55Sf5oiQ5a6a5pWwCuWtmOWcqOWMluWtpueoruOBrumFjeS9jeWtkOa/g+W6puS+neWtmOaAp2RkAgQPDxYCHwEFfumMr+eUn+aIkOW5s+ihoeOBqOmMr+eUn+aIkOWumuaVsOOBrumWouS/guOCkueQhuino+OBl+OAgeWtmOWcqOWMluWtpueoruOBjOmFjeS9jeWtkOa/g+W6puOBq+S+neWtmOOBmeOCi+OBk+OBqOOCkuekuuOBm+OCi+OAgmRkAgYPDxYCHwEFIOmMr+eUn+aIkOOBq+WvvuOBmeOCi3BI44Gu5b2x6Z+/ZGQCBw8PFgIfAQVc6Yyv55Sf5oiQ44Gr5LiO44GI44KLcEjjga7lvbHpn7/jgpLoqqzmmI7jgafjgY3jgovjgILmnaHku7bnlJ/miJDlrprmlbDjgpLnkIbop6PjgafjgY3jgovjgIJkZAIJDw8WAh8BBSTph5HlsZ7mjIfnpLrolqzjgajjgq3jg6zjg7zjg4jmu7TlrppkZAIKDw8WAh8BBWbku6PooajnmoTjgarph5HlsZ7mjIfnpLrolqzjga7nibnlvrTjgpLoqqzmmI7jgafjgY3jgovjgILph5HlsZ7jgqTjgqrjg7Pjga7mv4PluqboqIjnrpfjgYzjgafjgY3jgovjgIJkZAIMDw8WAh8BBSHpjK/nlJ/miJDjgavjgojjgovmsojmrr/jga7murbop6NkZAINDw8WAh8BBUjpjK/nlJ/miJDjgavjgojjgormsojmrr/jga7murbop6PjgYzotbfjgZPjgovjgZPjgajjgpLnkIbop6PjgafjgY3jgovjgIJkZAIPDw8WAh8BBSIy55u46ZaT5YiG6YWN5bmz6KGh44Go5rq25aqS5oq95Ye6ZGQCEA8PFgIfAQVe5rq25aqS5oq95Ye644Gu5Z+65pys44KS55CG6Kej44GX44CBMuebuOmWk+WIhumFjeW5s+ihoeOBq+mWouOBmeOCi+eUqOiqnuOCkuiqrOaYjuOBp+OBjeOCi+OAgmRkAhIPDxYCHwEFLuacieapn+mFuOOBruWIhumFjQrph5HlsZ7pjK/kvZPjga7liIbphY3lubPooaFkZAITDw8WAh8BBUXmnInmqZ/phbjjgoTph5HlsZ7pjK/kvZPjga7murblqpLmir3lh7rjgavjgaTjgYTjgaboqqzmmI7jgafjgY3jgovjgIJkZAIVDw8WAh8BBQzkuK3plpPoqabpqJNkZAIWDw8WAh8BBVkx772eN+mAseOBvuOBp+OBruWGheWuueOCkue2sue+heOBl+OBn+ippumok+OBq+OCiOOCiuOAgeaOiOalreWGheWuueOBruWumuedgOOCkuWbs+OCi+OAgmRkAgEPZBYgZg8PFgIfAQU06Kmm6aiT5YaF5a6544Gr44Gk44GE44Gm44Gu6Kej6KqsCumbu+axoOOBqOi1t+mbu+WKm2RkAgEPDxYCHwEFbeS4remWk+ippumok+OBruWGheWuueOCkueQhuino+OBmeOCi+OAggrjgqTjgqrjg7PljJblgr7lkJHjgoTpm7vmsaDjga7mp4vmiJDjgIHotbfpm7vlipvjgpLoqqzmmI7jgafjgY3jgovjgIJkZAIDDw8WAh8BBTrmqJnmupbphbjljJbpgoTlhYPpm7vkvY0K44ON44Or44Oz44K544OI44Gu5byP44Go6LW36Zu75YqbZGQCBA8PFgIfAQWNAeWNiuWPjeW/nOOBqOaomea6lumFuOWMlumChOWFg+mbu+S9jeOBq+OBpOOBhOOBpueQhuino+OBp+OBjeOCi+OAguODjeODq+ODs+OCueODiOOBruW8j+OCkuS9v+OBo+OBpuOAgeWNiuWPjeW/nOOBrumbu+S9jeOCkuioiOeul+OBp+OBjeOCi+OAgmRkAgYPDxYCHwEFHui1t+mbu+WKm+OBqOmFuOWMlumChOWFg+W5s+ihoWRkAgcPDxYCHwEFfui1t+mbu+WKm+OBqOmFuOWMlumChOWFg+W5s+ihoeOBrumWouS/guOCkueQhuino+OBl+OAgeODjeODq+ODs+OCueODiOOBruW8j+OBi+OCiemFuOWMlumChOWFg+W5s+ihoeWumuaVsOOCkuioiOeul+OBp+OBjeOCi+OAgmRkAgkPDxYCHwEFEumFuOWMlumChOWFg+a7tOWummRkAgoPDxYCHwEFY+mFuOWMlumChOWFg+a7tOWumuOBruWOn+eQhuOCkueQhuino+OBl+OAgemFuOWMluWJpOOBvuOBn+OBr+mChOWFg+WJpOOBrua/g+W6puOBjOioiOeul+OBp+OBjeOCi+OAgmRkAgwPDxYCHwEFQ+OCpOOCquODs+S6pOaPm+aoueiEguOBruWMluWtpuani+mAoOOBqOWIhumhngrjgqTjgqrjg7PkuqTmj5vlubPooaFkZAINDw8WAh8BBY0B5Luj6KGo55qE44Gq44Kk44Kq44Oz5Lqk5o+b5qi56ISC44Gu5YyW5a2m5qeL6YCg44KS55CG6Kej44GX44CB5YiG6aGe44Gn44GN44KL44CC44Kk44Kq44Oz5Lqk5o+b5bmz6KGh44Gr6Zai44GZ44KL55So6Kqe44KS6Kqs5piO44Gn44GN44KL44CCZGQCDw8PFgIfAQU644Kk44Kq44Oz5Lqk5o+b5qi56ISC44Gu54m55b60CuOCpOOCquODs+S6pOaPm+OBrumBqeeUqOS+i2RkAhAPDxYCHwEFkwHjgqTjgqrjg7PjgajjgqTjgqrjg7PkuqTmj5vmqLnohILjga7opqrlkozmgKfjgavplqLkv4LjgZnjgovjg5Hjg6njg6Hjg7zjgr/jgpLnkIbop6PjgafjgY3jgovjgILjgqTjgqrjg7PkuqTmj5vms5Xjga7pgannlKjkvovjgpLoqqzmmI7jgafjgY3jgovjgIJkZAISDw8WAh8BBRLoqabpqJPlr77nrZbmvJTnv5JkZAITDw8WAh8BBUg5772eMTTpgLHjgb7jgafjga7lhoXlrrnjgpLlvqnnv5LjgZfjgIHmjojmpa3lhoXlrrnjga7lrprnnYDjgpLlm7PjgovjgIJkZAIVDw8WAh8BBQzlrprmnJ/oqabpqJNkZAIWDw8WAh8BBVo5772eMTTpgLHjgb7jgafjga7lhoXlrrnjgpLntrLnvoXjgZfjgZ/oqabpqJPjgavjgojjgorjgIHmjojmpa3lhoXlrrnjga7lrprnnYDjgpLlm7PjgovjgIJkZAIPDw8WBB8CBR90YWJsZSB0YWJsZS1ib3JkZXJlZCBuby1wYWRkaW5nHwMCAhYCHwQFF2JhY2tncm91bmQtY29sb3I6d2hpdGU7FgICAQ9kFghmDw8WAh4HUm93U3BhbgIFZGQCAQ8PFgIfCQIFZGQCAg8PFgIfCQIFZGQCAw8PFgIfCQIFZGQCEA8PFgQfAgUfdGFibGUgdGFibGUtYm9yZGVyZWQgbm8tcGFkZGluZx8DAgIWAh8EBR1zdHlsZTpiYWNrZ3JvdW5kLWNvbG9yOndoaXRlO2QYAQUeX19Db250cm9sc1JlcXVpcmVQb3N0QmFja0tleV9fFgQFMmN0bDAwJE1haW5Db250ZW50JFN1YmplY3RTeWxsYWJ1cyRpc0FjdGl2ZUxlYXJuaW5nBS5jdGwwMCRNYWluQ29udGVudCRTdWJqZWN0U3lsbGFidXMkaXNBaWRlZEJ5SUNUBTxjdGwwMCRNYWluQ29udGVudCRTdWJqZWN0U3lsbGFidXMkaXNBcHBsaWNhYmxlRm9yUmVtb3RlQ2xhc3MFR2N0bDAwJE1haW5Db250ZW50JFN1YmplY3RTeWxsYWJ1cyRpc0luc3RydWN0b3JQcm9mZXNzaW9uYWxseUV4cGVyaWVuY2VkS4h3jFjWwp8JQNPIIc7kZY+5TooJMTtOLtonZaSwtFM=" />
+
+
+<script src="../Scripts/WebForms/MsAjax/MicrosoftAjax.js" type="text/javascript"></script>
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="DBEB7810" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdABUahBzBtncmYqWBwMrUFp7vR7L3wySogUAl7PijvtwaUSsm8nTXGaHoUVtfjM0rCZj22oJ4VQ24ZYDTOYTZUrP5vtB5q2NRcavKnoOwBU+gOA64SVEnPyPScYYkpSuU0xW2L4Jve6H60KdcbqEngomYYAGK+IWmF40J3t6o3zJYQj3DsjWHDc/cKA2KFUkqXvhopB6nlbzlu7nJWavaBjuezSQ3X2CP5vn0hjBBJbTLvz3CGZ9Cu8Hncxu1Mzz13m3V7gpVpizzZerj5lK8GW+8vLrFU9WtRM9R2nxmAWJZWhHFXp5SXO+z24qW7wHAsQemku3WtiEWR1FYGon8mnk41yO2HHE1YguYPkDLvX/psMZQL1ESWpI/XcFGLFInH1feb0T4IWniJZEt0XI1iJVuCry12SX7zfqSJ7S/DRiQgIbYsULENMzw4TU3uWFsunRe1B71FXdqYMuz3Z+QKqbzXMrPEBbO07u3GMOzJJ+/KA==" />
+        
+    <div style="width:100%;float:left;">
+        
+
+<script type="text/javascript">
+    $(function () {
+        $('.missionOpenBtn').click(function (e) {
+            var parent = $(this).parent('div');
+            var info = parent.data('info');
+            var item_name = parent.data('item_name');
+            var key = parent.data('key');
+            var str = info + ' ' + item_name;
+            $('#' + key + '_open').addClass('hide');
+            $('#' + key + '_close').removeClass('hide');
+            $('#' + key + "_display").text(str);
+
+        });
+        $('.missionCloseBtn').click(function (e) {
+            var parent = $(this).parent('div');
+            var info = parent.data('info');
+            var key = parent.data('key');
+            $('#' + key + '_open').removeClass('hide');
+            $('#' + key + '_close').addClass('hide');
+            $('#' + key + "_display").text(info);
+
+        });
+    })
+</script>
+
+<div id="MainContent_SubjectSyllabus_UpdatePanelSyllabus">
+	
+
+<div>
+    <div>
+        <span id="MainContent_SubjectSyllabus_LabelInfo" class="text-danger"><font size="5"></font></span>
+    </div>
+
+    <h3 class="bg-info text-center">科目基礎情報</h3>
+    <table class="table table-bordered no-padding" style="background-color:white;">
+        <tr>
+            <th>学校</th>
+            <td >北九州工業高等専門学校</td>
+            <th >開講年度</th>
+            <td >令和08年度 (2026年度)</td>
+        </tr>
+        <tr>
+            <th>授業科目</th>
+            <td colspan="3">分析化学Ⅱ</td>
+        </tr>
+        <tr>
+            <th>科目番号</th>
+            <td>0078</td>
+            <th>科目区分</th>
+            <td>専門 / 必修</td>
+        </tr>
+        <tr>
+            <th>授業形態</th>
+            <td>講義</td>
+            <th>単位の種別と単位数</th>
+            <td>履修単位: 1</td>
+        </tr>
+        <tr>
+            <th>開設学科</th>
+            <td>生産デザイン工学科（物質化学コース）</td>
+            <th>対象学年</th>
+            <td>3</td>
+        </tr>
+        <tr>
+            <th>開設期</th>
+            <td>後期</td>
+            <th>週時間数</th>
+            <td>2</td>
+        </tr>
+        <tr>
+            <th>教科書/教材</th>
+            <td colspan="3">
+                「基礎からわかる分析化学」加藤正直、塚原聡共著、森北出版, 「新版 基礎分析化学演習」菅原正雄著、三共出版
+            </td>
+        </tr>
+        <tr>
+            <th>担当教員</th>
+            <td colspan="3">
+                <span id="Teachers">山本 和弥</span>
+            </td>
+        </tr>
+    </table>
+
+    <div id="MainContent_SubjectSyllabus_syllabusContent">
+
+    <h3 class="bg-info text-center">到達目標</h3>
+    <div style="background-color:white;">
+        １．錯体の生成について理解できる。B①<br />２．キレート滴定についての原理を理解し、金属イオンの濃度計算ができる。B①<br />３．溶媒抽出を利用した物質の分離について理解できる。B①<br />４．ネルンストの式から電位を計算できる。電位と酸化還元平衡の関係を理解できる。B①<br />５．酸化還元滴定について原理を理解し、酸化剤および還元剤の濃度計算ができる。B①<br />６．イオン交換による分離方法について概略を理解できる。B①
+    </div>
+
+    <h3 class="bg-info text-center">ルーブリック</h3>
+
+    
+
+    <div style="overflow:auto">
+    <table id="MainContent_SubjectSyllabus_hyouka" class="table table-bordered no-padding" style="style:background-color:white;">
+		<tr class="bg-success">
+			<td></td><th>理想的な到達レベルの目安</th><th>標準的な到達レベルの目安</th><th>未到達レベルの目安</th>
+		</tr><tr id="rubricItemRow_1">
+			<th>評価項目1</th><td>複雑な系においても錯体の生成について理解できる。</td><td>錯体の生成に関する基本的な事項を説明できる。</td><td>錯体の生成について理解できない。</td>
+		</tr><tr id="rubricItemRow_2">
+			<th>評価項目2</th><td>キレート滴定について十分に理解し、金属イオンの濃度計算ができる。</td><td>キレート滴定について金属イオンの濃度計算ができる程度に原理を理解できる。</td><td>キレート滴定について原理を理解できず、金属イオンの濃度計算ができない。</td>
+		</tr><tr id="rubricItemRow_3">
+			<th>評価項目3</th><td>複雑な系においても溶媒抽出を利用した物質の分離について理解できる。</td><td>溶媒抽出を利用した物質の分離について、基本的な事項を説明できる。</td><td>溶媒抽出を利用した物質の分離について理解できない。</td>
+		</tr><tr id="rubricItemRow_4">
+			<th>評価項目4</th><td>複雑な系でネルンストの式を適用できる。電位と酸化還元平衡の関係を十分に理解し、説明できる。</td><td>ネルンストの式を使った基本的な計算ができる。電位と酸化還元平衡の関係について基本的な事項を理解できる。</td><td>ネルンストの式から電位を計算できない。電位を使って酸化還元平衡が理解できない。</td>
+		</tr><tr id="rubricItemRow_5">
+			<th>評価項目5</th><td>酸化還元滴定について原理を十分に理解し、酸化剤および還元剤の濃度計算ができる。</td><td>酸化還元滴定について、酸化剤および還元剤の濃度計算ができる程度に原理を理解できる。</td><td>酸化還元滴定について原理を理解できず、酸化剤および還元剤の濃度計算ができない。</td>
+		</tr><tr id="rubricItemRow_6">
+			<th>評価項目6</th><td>イオン交換による分離方法について応用例も含め理解できる。</td><td>イオン交換による分離方法について概略を理解できる。</td><td>イオン交換による分離方法について概略を理解できない。</td>
+		</tr>
+	</table>
+    </div>
+
+    <h3 class="bg-info text-center">学科の到達目標項目との関係</h3>
+    <div style="background-color:white;">
+        
+
+    </div>
+
+    <h3 class="bg-info text-center">教育方法等</h3>
+    <div style="background-color:white;">
+      <b style="font-size: 15px">概要:</b><br />
+      <div>
+          代表的な化学反応の一つである錯生成反応を通して、分析化学Iで学んだ化学平衡についての理解を深め、水溶液中の化学種濃度を計算する方法を理解させる。また、酸化還元平衡と電位の関係を学び、ネルンストの式を使った電位の計算方法を理解させる。さらに容量分析（キレート滴定、酸化還元滴定）やその他の分析方法（溶媒抽出、イオン交換）の原理を理解させる。
+      </div>
+      <b style="font-size:15px">授業の進め方・方法:</b><br />
+      <div>
+          教科書に沿って講義を行う。原理の説明が中心となる。授業のみでは演習量が不足しがちなので、定期的に自学自習用の課題を課す。
+      </div>
+      <b style="font-size:15px">注意点:</b><br />
+      <div>
+          分析化学Iで履修した化学平衡の基本的な理論、特に物質収支や電荷収支、平衡定数を用いた計算方法を復習しておくこと。
+      </div>
+    </div>
+
+        
+    <h3 class="bg-info text-center">授業の属性・履修上の区分</h3>
+    <div style="background-color:white;">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isActiveLearning" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isActiveLearning" />
+                            アクティブラーニング
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isAidedByICT" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isAidedByICT" checked="checked" />
+                            ICT 利用
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isApplicableForRemoteClass" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isApplicableForRemoteClass" />
+                            遠隔授業対応
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isInstructorProfessionallyExperienced" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isInstructorProfessionallyExperienced" />
+                            実務経験のある教員による授業
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="border: 0px none;">
+                        <div class="">
+                            
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <h3 class="bg-info text-center">授業計画</h3>
+    <table class="table table-bordered no-padding" style="background-color:white;" id="lessonsTable">
+        <tr class="bg-success">
+            <th></th>
+            <th></th>
+            <th>週</th>
+            <th>授業内容</th>
+            <th>週ごとの到達目標</th>
+        </tr>
+        
+        
+            <tr>
+                <th rowspan="19" class="bg-danger">後期</th>
+            </tr>
+            
+                <tr>
+                    <th rowspan="9" class="bg-" style="width:60px;">3rdQ</th>
+                </tr>
+                <tr>
+                    <th class="week_number">1週</th>
+                    <td>錯体の生成</td>
+                    <td>錯体の生成やそれに関する用語について説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget17" id="MainContent_SubjectSyllabus_hiddenLessonTarget17" value=",055030207" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">2週</th>
+                    <td>錯生成定数<br />存在化学種の配位子濃度依存性</td>
+                    <td>錯生成平衡と錯生成定数の関係を理解し、存在化学種が配位子濃度に依存することを示せる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget18" id="MainContent_SubjectSyllabus_hiddenLessonTarget18" value=",055030207" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">3週</th>
+                    <td>錯生成に対するpHの影響</td>
+                    <td>錯生成に与えるpHの影響を説明できる。条件生成定数を理解できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget19" id="MainContent_SubjectSyllabus_hiddenLessonTarget19" value=",055030207" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">4週</th>
+                    <td>金属指示薬とキレート滴定</td>
+                    <td>代表的な金属指示薬の特徴を説明できる。金属イオンの濃度計算ができる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget20" id="MainContent_SubjectSyllabus_hiddenLessonTarget20" value=",055030304" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">5週</th>
+                    <td>錯生成による沈殿の溶解</td>
+                    <td>錯生成により沈殿の溶解が起こることを理解できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget21" id="MainContent_SubjectSyllabus_hiddenLessonTarget21" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">6週</th>
+                    <td>2相間分配平衡と溶媒抽出</td>
+                    <td>溶媒抽出の基本を理解し、2相間分配平衡に関する用語を説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget22" id="MainContent_SubjectSyllabus_hiddenLessonTarget22" value=",055030502" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">7週</th>
+                    <td>有機酸の分配<br />金属錯体の分配平衡</td>
+                    <td>有機酸や金属錯体の溶媒抽出について説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget23" id="MainContent_SubjectSyllabus_hiddenLessonTarget23" value=",055030502" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">8週</th>
+                    <td>中間試験</td>
+                    <td>1～7週までの内容を網羅した試験により、授業内容の定着を図る。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget24" id="MainContent_SubjectSyllabus_hiddenLessonTarget24" />
+                    </td>
+                </tr>
+            
+                <tr>
+                    <th rowspan="9" class="bg-" style="width:60px;">4thQ</th>
+                </tr>
+                <tr>
+                    <th class="week_number">9週</th>
+                    <td>試験内容についての解説<br />電池と起電力</td>
+                    <td>中間試験の内容を理解する。<br />イオン化傾向や電池の構成、起電力を説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget25" id="MainContent_SubjectSyllabus_hiddenLessonTarget25" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">10週</th>
+                    <td>標準酸化還元電位<br />ネルンストの式と起電力</td>
+                    <td>半反応と標準酸化還元電位について理解できる。ネルンストの式を使って、半反応の電位を計算できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget26" id="MainContent_SubjectSyllabus_hiddenLessonTarget26" value=",055030303" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">11週</th>
+                    <td>起電力と酸化還元平衡</td>
+                    <td>起電力と酸化還元平衡の関係を理解し、ネルンストの式から酸化還元平衡定数を計算できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget27" id="MainContent_SubjectSyllabus_hiddenLessonTarget27" value=",055030303" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">12週</th>
+                    <td>酸化還元滴定</td>
+                    <td>酸化還元滴定の原理を理解し、酸化剤または還元剤の濃度が計算できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget28" id="MainContent_SubjectSyllabus_hiddenLessonTarget28" value=",055030303" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">13週</th>
+                    <td>イオン交換樹脂の化学構造と分類<br />イオン交換平衡</td>
+                    <td>代表的なイオン交換樹脂の化学構造を理解し、分類できる。イオン交換平衡に関する用語を説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget29" id="MainContent_SubjectSyllabus_hiddenLessonTarget29" value=",055030501" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">14週</th>
+                    <td>イオン交換樹脂の特徴<br />イオン交換の適用例</td>
+                    <td>イオンとイオン交換樹脂の親和性に関係するパラメータを理解できる。イオン交換法の適用例を説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget30" id="MainContent_SubjectSyllabus_hiddenLessonTarget30" value=",055030501" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">15週</th>
+                    <td>試験対策演習</td>
+                    <td>9～14週までの内容を復習し、授業内容の定着を図る。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget31" id="MainContent_SubjectSyllabus_hiddenLessonTarget31" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">16週</th>
+                    <td>定期試験</td>
+                    <td>9～14週までの内容を網羅した試験により、授業内容の定着を図る。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget32" id="MainContent_SubjectSyllabus_hiddenLessonTarget32" />
+                    </td>
+                </tr>
+            
+    </table>
+
+        
+
+        <h3 class="bg-info text-center">モデルコアカリキュラムの学習内容と到達目標</h3>
+
+        <table id="MainContent_SubjectSyllabus_mccTable" class="table table-bordered no-padding" style="background-color:white;">
+		<tr class="bg-success">
+			<th colspan="2">分類</th><th>分野</th><th>学習内容</th><th>学習内容の到達目標</th><th>到達レベル</th><th>授業週</th>
+		</tr><tr>
+			<td rowspan="5">専門的能力</td><td rowspan="5">分野別の専門工学</td><td rowspan="5">化学・生物系分野</td><td rowspan="5">分析化学</td><td>錯体の生成について説明できる。</td><td>4</td><td>後1,後2,後3</td>
+		</tr><tr>
+			<td>酸化還元滴定についての原理を理解し、酸化剤及び還元剤の濃度計算ができる。</td><td>4</td><td>後10,後11,後12</td>
+		</tr><tr>
+			<td>キレート滴定についての原理を理解し、金属イオンの濃度計算ができる。</td><td>4</td><td>後4</td>
+		</tr><tr>
+			<td>イオン交換による分離方法についての概略を説明できる。</td><td>4</td><td>後13,後14</td>
+		</tr><tr>
+			<td>溶媒抽出を利用した分析法について説明できる。</td><td>4</td><td>後6,後7</td>
+		</tr>
+	</table>
+
+        
+    
+    <h3 class="bg-info text-center">評価割合</h3>
+
+    <div style="overflow:auto">
+       <table id="MainContent_SubjectSyllabus_wariaiTable" class="table table-bordered no-padding" style="style:background-color:white;">
+		<tr class="bg-success">
+			<td></td><th>試験</th><th>小テスト</th><th>演習・レポート</th><th>合計</th>
+		</tr><tr>
+			<th>総合評価割合</th><td><b>60</b></td><td><b>20</b></td><td><b>20</b></td><td><b>100</b></td>
+		</tr><tr>
+			<th>基礎的能力</th><td>0</td><td>0</td><td>0</td><td><b>0</b></td>
+		</tr><tr>
+			<th>専門的能力</th><td>60</td><td>20</td><td>20</td><td><b>100</b></td>
+		</tr><tr>
+			<th>分野横断的能力</th><td>0</td><td>0</td><td>0</td><td><b>0</b></td>
+		</tr>
+	</table>
+    </div>
+
+    </div>
+
+  </div>
+
+
+</div>
+
+    </div>
+    
+
+<script type="text/javascript">
+//<![CDATA[
+if(typeof initSyllabusScript == 'function'){ initSyllabusScript();}//]]>
+</script>
+</form>
+
+        </div>
+    </div>
+
+    <div id="footer">
+        <br />
+        <br />
+        <div class="container">
+            <p class="text-muted credit">
+                ©2014 - MCC Web Syllabus.
+            </p>
+        </div>
+    </div>
+
+    <script src="/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+    <script src="/Scripts/mcc.js?v=20190215"></script>
+    <script src="/Scripts/Grid.js"></script>
+    <script>
+      $.ajaxSetup({
+        cache: false
+      });
+    </script>
+    
+    <script>
+      $(document).ready(function () {
+          initSyllabusScript();
+      });
+    </script>
+
+
+</body>
+</html>

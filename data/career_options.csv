@@ -1,0 +1,31 @@
+course_code,career_type,destination
+mechanical,employment,自動車メーカー（設計職）
+mechanical,employment,産業機械メーカー（生産技術職）
+mechanical,employment,重工業メーカー（設備保全職）
+mechanical,employment,鉄鋼メーカー（設備技術職）
+mechanical,further_study,北九州高専 専攻科
+mechanical,further_study,国立大学 工学部 機械系（3年次編入）
+robotics,employment,産業用ロボットメーカー（制御設計職）
+robotics,employment,FA機器メーカー（開発職）
+robotics,employment,自動車部品メーカー（組込みソフト職）
+robotics,employment,電機メーカー（ロボットシステム開発職）
+robotics,further_study,北九州高専 専攻科
+robotics,further_study,国立大学 工学部 ロボティクス系（3年次編入）
+electrical,employment,電力会社（保守・運用職）
+electrical,employment,電機メーカー（回路設計職）
+electrical,employment,半導体メーカー（プロセス技術職）
+electrical,employment,鉄道会社（電気設備職）
+electrical,further_study,北九州高専 専攻科
+electrical,further_study,国立大学 工学部 電気電子系（3年次編入）
+information,employment,ソフトウェア開発会社（Web エンジニア）
+information,employment,通信会社（ネットワーク技術職）
+information,employment,電機メーカー（組込みソフト職）
+information,employment,システム開発会社（システムエンジニア）
+information,further_study,北九州高専 専攻科
+information,further_study,国立大学 工学部 情報系（3年次編入）
+chemistry,employment,化学メーカー（製造技術職）
+chemistry,employment,食品メーカー（品質管理職）
+chemistry,employment,製薬会社（分析職）
+chemistry,employment,素材メーカー（研究開発補助職）
+chemistry,further_study,北九州高専 専攻科
+chemistry,further_study,国立大学 工学部 応用化学系（3年次編入）

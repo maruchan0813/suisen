@@ -1,0 +1,609 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+
+</title><link href="../Content/css/bootstrap.css" rel="stylesheet" type="text/css" /><link href="../Content/font-awesome.min.css" rel="stylesheet" type="text/css" /><link href="../Content/css/Grid.css" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc.css?_=20201215" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc_public_theme.css?_=20150406" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/jquery-3.7.1.min.js"></script>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-51403293-1', 'mccdemo.cloudapp.net');
+        ga('send', 'pageview');
+        
+    </script>
+    <script>
+
+        function searchThisSite() {
+
+            
+            $("#loadingModal")[0].style.visibility = "visible";
+            
+            $("#btnSearchThisSite")[0].blur();
+
+            var querys = getUrlVars();
+            var paramString = "";
+
+            querys.forEach(function (value, index, array) {
+
+                if (value != "keyword") {
+                    paramString += "&" + value + "=" + querys[value];
+                }
+            });
+
+            var keyword = $('#siteKeyword').val();
+            var encodeKeyword = encodeURIComponent(keyword);
+
+            var pageName =  getPageName();
+            if (pageName != "PublicSearchResult") {
+                paramString += "&before_page=" + pageName;
+            }
+
+            location.href = "/Pages/PublicSearchResult.aspx?keyword=" + encodeKeyword + paramString;
+        }
+
+        $(document).ready(function () {
+
+            
+            var langSelected = $('#langSelected');
+            langSelected.change(function () {
+                
+                var addQuery = '';
+                var hrefs = location.href.split('?');
+                if (hrefs.length > 1) {
+                    addQuery = cleanQuery(hrefs[1], 'lang');
+                }
+                if (addQuery != '') {
+                    addQuery = addQuery + '&';
+                }
+                location.href = hrefs[0] + '?' + addQuery + 'lang=' + $(this).val();
+            });
+
+            
+            $('#siteKeyword').tooltip();
+        });
+
+        function getPageName() {
+            var split = window.location.pathname.split('/');
+            return split[split.length - 1];
+        }
+
+        function getUrlVars() {
+            var vars = [], hash;
+
+            var split = window.location.href.split('?');
+            if (split.length != 2) {
+                // 要素無し
+                return vars;
+            }
+
+            var hashes = split[1].split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
+        function cleanQuery(query, target) {
+            var arr = [];
+            $.each(query.split('&'), function (i, param) {
+                if (param.split('=')[0] != target) { arr.push(param); }
+            });
+            return arr.join('&');
+        }
+
+    </script>
+
+    
+
+
+    <!-- for dodai -->
+    
+</head>
+<body>
+    
+    <div id="wrap">
+        <!-- Loading -->
+        <div class="modal-backdrop in" id="loadingModal" tabindex="-1" style="visibility:hidden;">
+             <div style="top: 1.5%; position: absolute; left: 50%;">
+                 <div id="loadingSearchPanel" class='loading'></div>
+             </div>
+        </div>
+        <div class="navbar navbar-default navbar-fixed-top header_area" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    
+                    <span class="navbar-brand"><i class="glyphicon glyphicon-home"></i>高専Webシラバス</span>
+                    <div class="navbar-text navbar-text-min-none">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+
+                    
+
+                    
+                    <table class="navbar-brand navbar-right" style="height:50px;">
+                        
+                        <tr id="SyllabusSearchBlankArea">
+	<td style="padding-top:6px;">
+                                 <input type="text" class="form-control" style="width:200px; visibility:hidden"/>
+                            </td>
+	<td style="padding-top:6px;">
+                                <button class="btn btn-default" style="visibility:hidden">検索</button>
+                            </td>
+</tr>
+
+                    </table>
+                    <div class="navbar-text navbar-text-min-none navbar-right">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                    <div class="navbar-collapse navbar-brand navbar-right">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="page-header">
+
+            <ol class="breadcrumb">
+                <li><a href="/Pages/PublicSchools?lang=ja"><i class="glyphicon glyphicon-home"></i>ホーム</a></li>
+                
+
+    <li>
+        <a href="./PublicDepartments?school_id=45&lang=ja">
+            北九州工業高等専門学校
+        </a>
+    </li>
+    <li>
+
+        
+        <a href="./PublicSubjects?school_id=45&department_id=35&year=2026&lang=ja">
+            生産デザイン工学科（物質化学コース） 
+        </a>
+        
+        
+    </li>
+    <li>
+        基礎有機化学
+    </li>
+
+
+            </ol>
+            <div id="AlertMessage" class="alert alert-danger" style="display:none;">
+            </div>
+        </div>
+        <div class="container" style="margin-left:50px;margin-right:50px;width:90%;">
+            
+
+
+    <div class="mcc-title-bar">
+        <div class="row">
+            <div class="col-md-6">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1>基礎有機化学</h1>
+                    </div>
+                    <div class="col-md-6"></div>
+                </div>
+
+            </div>
+
+            <div class="col-md-4 mcc-page-actions">
+                <div class="btn-group" style="margin-top:6px;">
+                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="height:auto;">
+                        PDF
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu text-left" role="menu">
+                        <li>
+                            <a class="" target="_blank" role="menuitem"
+                                href="/Pages/SyllabusPDF?school_id=45&department_id=35&subject_id=0050&year=2025&lang=ja&subject_code=&preview=False&type=start&attachment=false">
+                                表示
+                            </a>
+                        </li>
+                         <li>
+                             <a class="" target="_blank" role="menuitem"
+                                href="/Pages/SyllabusPDF?school_id=45&department_id=35&subject_id=0050&year=2025&lang=ja&subject_code=&preview=False&type=start&attachment=true">
+                                保存
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <form method="post" action="./PublicSyllabus?school_id=45&amp;department_id=35&amp;subject_id=0050&amp;year=2025&amp;lang=ja" id="asp_form">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTQ3NTA3ODgwNg9kFgJmD2QWCAIBDxYCHgdWaXNpYmxlaBYCZg9kFgICAQ9kFgJmDxBkZBQrAQFmZAICDxYCHwBoZAIDDxYCHwBnZAIHD2QWAmYPZBYCAgMPZBYCAgEPZBYCZg9kFgQCAg8PFgIeBFRleHQF8wHvvaLjg57jgq/jg57jg6rjg7zmnInmqZ/ljJblrabmpoLoqqwo56ysN+eJiCnvvaNKb2huIE1jTXVycnnokZfjgIHmnbHkuqzljJblrablkIzkurov44CA772i44CO5pyJ5qmf5YyW5a2m44CP44Ov44O844Kv44OW44OD44Kv772j5aWl5bGxIOagvOiRl+OAgeS4uOWWhOWHuueJiC/jgIDjgIzjg4DjgqTjg4rjg5/jg4Pjgq/jg6/jgqTjg4nlm7PoqqzljJblrabjgI3jgIHnq7nlhoXmlazkurrnt6jokZfjgIHmnbHkuqzmm7jnsY1kZAIDD2QWImYPDxYCHwEF6gYxLiDmnInmqZ/nianjgYzngq3ntKDpqqjmoLzjgpLmjIHjgaTljJblkIjnianjgafjgYLjgovjgZPjgajjgpLoqqzmmI7jgafjgY3jgIHku6PooajnmoTjgarlrpjog73ln7rjgpLmnInjgZnjgovljJblkIjnianjgpLlkKvjgb/jgIFJVVBBQ+OBruWRveWQjeazleOBq+WfuuOBpeOBjeOAgeani+mAoOOBi+OCieWQjeWJjeOAgeWQjeWJjeOBi+OCieani+mAoOOBruWkieaPm+OBjOOBp+OBjeOCi+OAggoyLiDliIblrZDkuK3jga7ku7vmhI/jga7ljp/lrZDjga7mt7fmiJDjgpLnrZTjgYjjgovjgZPjgajjgYzjgafjgY3jgIHmt7fmiJDou4zpgZPjgpLnlKjjgYTjgabliIblrZDjga7lvaLjgpLoqqzmmI7jgafjgY3jgovjgIIKMy4gz4PntZDlkIjjgajPgOe1kOWQiOOBq+OBpOOBhOOBpuiqrOaYjuOBp+OBjeOAgc+D57WQ5ZCI44Goz4DntZDlkIjjga7pgZXjgYTjgpLliIblrZDou4zpgZPjgpLkvb/jgYToqqzmmI7jgafjgY3jgovjgIIKNC4g44Or44Kk44K55qeL6YCg44KS5pu444GP44GT44Go44GM44Gn44GN44CB44Gd44KM44KS5Yip55So44GX44Gm5Y+N5b+c44Gr57WQ44Gz44Gk44GR44KL44GT44Go44GM44Gn44GN44KL44CCCjUuIOiqmOi1t+WKueaenOOBqOWFsemztOWKueaenOOCkuiqrOaYjuOBp+OBjeOAgee1kOWQiOOBruWIhualteOCkuS6iOa4rOOBp+OBjeOCi+OAggo2LiDngq3ljJbmsLTntKDjga7nqK7poZ7jgajjgIHjgZ3jgozjgonjgavplqLjgZnjgovmgKfos6rjgYrjgojjgbPku6PooajnmoTjgarlj43lv5zjgpLoqqzmmI7jgafjgY3jgovjgIIKNy4g5YiG5a2Q44Gu5LiJ5qyh5YWD55qE44Gq5qeL6YCg44GM44Kk44Oh44O844K444Gn44GN44CB55Ww5oCn5L2T44Gr44Gk44GE44Gm6Kqs5piO44Gn44GN44KL44CCZGQCAQ8PFgQeCENzc0NsYXNzBR90YWJsZSB0YWJsZS1ib3JkZXJlZCBuby1wYWRkaW5nHgRfIVNCAgIWAh4Fc3R5bGUFHXN0eWxlOmJhY2tncm91bmQtY29sb3I6d2hpdGU7ZAICDxYCHgtfIUl0ZW1Db3VudGZkAgMPDxYCHwEFrAXjg5fjg6njgrnjg4Hjg4Pjgq/jgIHljLvolqzjg7vovrLolqzjgIHpppnmlpnjgIHnh4PmlpnnrYnjgajjgZfjgabliKnnlKjjgZXjgozjgIHjgb7jgZ/nlJ/lkb3np5Hlrabjga7nj77osaHjgpLnkIbop6PjgZnjgovjgZ/jgoHjga7ln7rnpI7jgajjgarjgovmnInmqZ/ljJblkIjnianjga7mp4vpgKDjgajjgZ3jga7mgKfos6rjg7vlj43lv5zjgavjgaTjgYTjgabjgIHkuIrntJrnlJ/jga7mnInmqZ/ljJblrabjgajlkIjjgo/jgZvjgabns7vntbHnmoTjgavlrabjgbbjgILliY3ljYrjgafjga/mnInmqZ/ljJblkIjnianjga7ln7rmnKzmp4vpgKDjgaggSVVQQUPlkI3jgYrjgojjgbPmnInmqZ/ljJblrabjgpLlrabjgbbkuIrjgaflv4XopoHjgarljJblrabntZDlkIjjgIHliIbmpbXjgIHmt7fmiJDou4zpgZPjga7mpoLlv7XjgpLkuK3lv4PjgavorJvnvqnjgZnjgovjgILlvozljYrjga/jgIHnq4vkvZPmp4vpgKDjgoTpm7vlrZDjga7lrZjlnKjkvY3nva7jgYvjgonjgIHml6Lnn6Xjga7mnInmqZ/ljJblkIjnianjga7ljJblrabnmoTjg7vniannkIbnmoTmgKfos6rjgpLoqqzmmI7jgIHjgYLjgovjgYTjga/mnKrnn6Xjg7vmlrDopo/jga7mnInmqZ/ljJblkIjnianjga7mgKfos6rjgpLkuojmg7PjgZnjgovjgZ/jgoHjga7ln7rmnKznmoTmiYvmrrXjgavjgaTjgYTjgaborJvnvqnjgZnjgovjgIJkZAIEDw8WAh8BBYYF6KaW6Kaa55qE44Gr55CG6Kej44KS5rex44KB44KL44Gf44KB44CB5YyW5a2m44Gn5L2/55So44GX44Gm44GE44KL44CM44OA44Kk44OK44Of44OD44Kv44Ov44Kk44OJ5Zuz6Kqs5YyW5a2m44CN44GM44GC44KL44Go44KI44GE44CC5YaF5a6544Gu55CG6Kej44KS5rex44KB44KL44Gf44KB5o6I5qWt6LOH5paZ44Gv5YWo44Gm5LqL5YmN44GrV2ViQ2xhc3PjgavmjrLovInjgZnjgovjga7jgafjgIHmjojmpa3plovlp4vjga7mmYLngrnjgaflrabnlJ/jga/ln7rmnKznmoTjgarnkIboq5bjgavjgaTjgYTjgabnkIbop6PjgZfjgZ/nirbmhYvjgafmjojmpa3jgavoh6jjgoDjgZPjgajjgILnkIbop6PluqbjgpLoh6rlt7HoqZXkvqHjgZnjgovjgZ/jgoHjgavjgIHmjojmpa3jgafjga/mvJTnv5LjgajjgZ3jga7op6PoqqzjgpLkuK3lv4PjgavorJvnvqnjgZnjgovjgILjgb7jgZ/jgIHkuK3plpPoqabpqJPjgIHlrprmnJ/oqabpqJMx6YCx6ZaT5YmN44GrMzDliIbnqIvluqbjga7lsI/jg4bjgrnjg4jjgpLlrp/mlr3jgZnjgovjgIJXZWJDbGFzc+S4iuOBq+ism+e+qeizh+aWmeOAgeiHque/kuWVj+mhjOOChOa8lOe/kuino+etlOetieOCkue9ruOBj+OBruOBp+iHquWtpuiH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Dw8WAh8BBb4B44Or44Kk44K55qeL6YCg44KS5pu444GP44GT44Go44GM44Gn44GN44CB44Gd44KM44KS5Yip55So44GX44Gm5Y+N5b+c44Gr57WQ44Gz44Gk44GR44KL44GT44Go44GM44Gn44GN44KL44CCCuiqmOi1t+WKueaenOOBqOWFsemztOWKueaenOOCkuiqrOaYjuOBp+OBjeOAgee1kOWQiOOBruWIhualteOCkuS6iOa4rOOBp+OBjeOCi+OAgmRkAhUPDxYCHwEFDOS4remWk+ippumok2RkAhYPDxYCHwFlZGQCAQ9kFiBmDw8WAh8BBVvmnInmqZ/ljJblkIjnianjga7mp4vpgKDjgajntZDlkIjvvIjvvJbvvIkK44OW44Os44Oz44K544OG44OD44OJ4oiS44Ot44O844Oq44O844Gu6YW45aGp5Z+6ZGQCAQ8PFgIfAQVR6KqY6LW35Yq55p6c44Go5YWx6bO05Yq55p6c44KS6Kqs5piO44Gn44GN44CB57WQ5ZCI44Gu5YiG5qW144KS5LqI5ris44Gn44GN44KL44CCZGQCAw8PFgIfAQVA5pyJ5qmf5YyW5ZCI54mp44Gu5qeL6YCg44Go57WQ5ZCI77yI77yX77yJCuODq+OCpOOCueOBrumFuOWhqeWfumRkAgQPDxYCHwEFUeiqmOi1t+WKueaenOOBqOWFsemztOWKueaenOOCkuiqrOaYjuOBp+OBjeOAgee1kOWQiOOBruWIhualteOCkuS6iOa4rOOBp+OBjeOCi+OAgmRkAgYPDxYCHwEFZOOCouODq+OCq+ODs+OAgOacieapn+WMluWQiOeJqeOBruaAp+izqu+8iO+8ke+8iQrjgqLjg6vjgqvjg7PjgajjgqLjg6vjgq3jg6vln7rjga7mp4vpgKDjgajnlbDmgKfkvZNkZAIHDw8WAh8BBcQB54Kt5YyW5rC057Sg44Gu56iu6aGe44Go44CB44Gd44KM44KJ44Gr6Zai44GZ44KL5oCn6LOq44GK44KI44Gz5Luj6KGo55qE44Gq5Y+N5b+c44KS6Kqs5piO44Gn44GN44KL44CCCuWIhuWtkOOBruS4ieasoeWFg+eahOOBquani+mAoOOBjOOCpOODoeODvOOCuOOBp+OBjeOAgeeVsOaAp+S9k+OBq+OB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" />
+
+
+<script src="../Scripts/WebForms/MsAjax/MicrosoftAjax.js" type="text/javascript"></script>
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="DBEB7810" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdABUIwVqlq/Mmy2uHub9sEsGAR7L3wySogUAl7PijvtwaUSsm8nTXGaHoUVtfjM0rCZj22oJ4VQ24ZYDTOYTZUrP5vtB5q2NRcavKnoOwBU+gOA64SVEnPyPScYYkpSuU0xW2L4Jve6H60KdcbqEngomYYAGK+IWmF40J3t6o3zJYQj3DsjWHDc/cKA2KFUkqXvhopB6nlbzlu7nJWavaBjuezSQ3X2CP5vn0hjBBJbTLvz3CGZ9Cu8Hncxu1Mzz13m3V7gpVpizzZerj5lK8GW+8vLrFU9WtRM9R2nxmAWJZWhHFXp5SXO+z24qW7wHAsQemku3WtiEWR1FYGon8mnk41yO2HHE1YguYPkDLvX/psMZQL1ESWpI/XcFGLFInH1feb0T4IWniJZEt0XI1iJVuCry12SX7zfqSJ7S/DRiQgIbYsULENMzw4TU3uWFsunRFQ7ESxsU86fB5xM8VCuONGhZLt+2kV6NzqDHAoVQ8IA==" />
+        
+    <div style="width:100%;float:left;">
+        
+
+<script type="text/javascript">
+    $(function () {
+        $('.missionOpenBtn').click(function (e) {
+            var parent = $(this).parent('div');
+            var info = parent.data('info');
+            var item_name = parent.data('item_name');
+            var key = parent.data('key');
+            var str = info + ' ' + item_name;
+            $('#' + key + '_open').addClass('hide');
+            $('#' + key + '_close').removeClass('hide');
+            $('#' + key + "_display").text(str);
+
+        });
+        $('.missionCloseBtn').click(function (e) {
+            var parent = $(this).parent('div');
+            var info = parent.data('info');
+            var key = parent.data('key');
+            $('#' + key + '_open').removeClass('hide');
+            $('#' + key + '_close').addClass('hide');
+            $('#' + key + "_display").text(info);
+
+        });
+    })
+</script>
+
+<div id="MainContent_SubjectSyllabus_UpdatePanelSyllabus">
+	
+
+<div>
+    <div>
+        <span id="MainContent_SubjectSyllabus_LabelInfo" class="text-danger"><font size="5"></font></span>
+    </div>
+
+    <h3 class="bg-info text-center">科目基礎情報</h3>
+    <table class="table table-bordered no-padding" style="background-color:white;">
+        <tr>
+            <th>学校</th>
+            <td >北九州工業高等専門学校</td>
+            <th >開講年度</th>
+            <td >令和08年度 (2026年度)</td>
+        </tr>
+        <tr>
+            <th>授業科目</th>
+            <td colspan="3">基礎有機化学</td>
+        </tr>
+        <tr>
+            <th>科目番号</th>
+            <td>0050</td>
+            <th>科目区分</th>
+            <td>専門 / 必修</td>
+        </tr>
+        <tr>
+            <th>授業形態</th>
+            <td>講義</td>
+            <th>単位の種別と単位数</th>
+            <td>履修単位: 1</td>
+        </tr>
+        <tr>
+            <th>開設学科</th>
+            <td>生産デザイン工学科（物質化学コース）</td>
+            <th>対象学年</th>
+            <td>2</td>
+        </tr>
+        <tr>
+            <th>開設期</th>
+            <td>後期</td>
+            <th>週時間数</th>
+            <td>2</td>
+        </tr>
+        <tr>
+            <th>教科書/教材</th>
+            <td colspan="3">
+                ｢マクマリー有機化学概説(第7版)｣John McMurry著、東京化学同人/　｢『有機化学』ワークブック｣奥山 格著、丸善出版/　「ダイナミックワイド図説化学」、竹内敬人編著、東京書籍
+            </td>
+        </tr>
+        <tr>
+            <th>担当教員</th>
+            <td colspan="3">
+                <span id="Teachers">大川原 徹</span>
+            </td>
+        </tr>
+    </table>
+
+    <div id="MainContent_SubjectSyllabus_syllabusContent">
+
+    <h3 class="bg-info text-center">到達目標</h3>
+    <div style="background-color:white;">
+        1. 有機物が炭素骨格を持つ化合物であることを説明でき、代表的な官能基を有する化合物を含み、IUPACの命名法に基づき、構造から名前、名前から構造の変換ができる。<br />2. 分子中の任意の原子の混成を答えることができ、混成軌道を用いて分子の形を説明できる。<br />3. σ結合とπ結合について説明でき、σ結合とπ結合の違いを分子軌道を使い説明できる。<br />4. ルイス構造を書くことができ、それを利用して反応に結びつけることができる。<br />5. 誘起効果と共鳴効果を説明でき、結合の分極を予測できる。<br />6. 炭化水素の種類と、それらに関する性質および代表的な反応を説明できる。<br />7. 分子の三次元的な構造がイメージでき、異性体について説明できる。
+    </div>
+
+    <h3 class="bg-info text-center">ルーブリック</h3>
+
+    
+
+    <div style="overflow:auto">
+    <table id="MainContent_SubjectSyllabus_hyouka" class="table table-bordered no-padding" style="style:background-color:white;">
+		<tr class="bg-success">
+			<td></td><th>理想的な到達レベルの目安</th><th>標準的な到達レベルの目安</th><th>未到達レベルの目安</th>
+		</tr><tr id="rubricItemRow_1">
+			<th>評価項目1</th><td>有機物が炭素骨格を持つ化合物であることを説明でき、代表的な官能基を有する化合物以外についても、IUPACの命名法に基づき、構造から名前、名前から構造の変換ができる。</td><td>有機物が炭素骨格を持つ化合物であることを説明でき、代表的な官能基を有する化合物を含み、IUPACの命名法に基づき、構造から名前、名前から構造の変換ができる。</td><td>有機物が炭素骨格を持つ化合物であることを説明できず、代表的な官能基を有する化合物を含み、IUPACの命名法に基づき、構造から名前、名前から構造の変換ができない。</td>
+		</tr><tr id="rubricItemRow_2">
+			<th>評価項目2</th><td>混成軌道の概念を用いて任意の立体構造を持つ分子を設計できる。</td><td>分子中の任意の原子の混成を答えることができ、混成軌道を用いて分子の形を説明できる。</td><td>分子中の任意の原子の混成を答えることができず、混成軌道を用いて分子の形を説明できない。</td>
+		</tr><tr id="rubricItemRow_3">
+			<th>評価項目3</th><td>σ結合とπ結合について説明でき、σ結合とπ結合の違いを分子軌道を使い説明でき、分子中の電子の分布について説明できる。</td><td>σ結合とπ結合について説明でき、σ結合とπ結合の違いを分子軌道を使い説明できる。</td><td>σ結合とπ結合について説明できず、σ結合とπ結合の違いを分子軌道で説明できない。</td>
+		</tr><tr id="rubricItemRow_4">
+			<th>評価項目4</th><td>ルイス構造、線結合構造、非共有電子対を書くことができ、それを利用して反応に結びつけることができる。</td><td>ルイス構造を書くことができ、それを利用して反応に結びつけることができる。</td><td>ルイス構造を書くことができず、それを利用して反応に結びつけることができない。</td>
+		</tr><tr id="rubricItemRow_5">
+			<th>評価項目5</th><td>誘起効果と共鳴効果を説明でき、結合の分極から物質の物理的、化学的性質を予測できる。</td><td>誘起効果と共鳴効果を説明でき、結合の分極を予測できる。</td><td>誘起効果と共鳴効果を説明できず、結合の分極を予測できない。</td>
+		</tr><tr id="rubricItemRow_6">
+			<th>評価項目6</th><td>炭化水素が原料、生成物として関わる反応経路を設計できる。</td><td>炭化水素の種類と、それらに関する性質および代表的な反応を説明できる。</td><td>炭化水素の種類と、それらに関する性質および代表的な反応を説明できない。</td>
+		</tr><tr id="rubricItemRow_7">
+			<th>評価項目7</th><td>分子の三次元的な構造がイメージでき、構造異性体、シス－トランス異性体、鏡像異性体などを説明できる。</td><td>分子の三次元的な構造がイメージでき、異性体について説明できる。</td><td>分子の三次元的な構造がイメージできず、異性体について説明できない。</td>
+		</tr>
+	</table>
+    </div>
+
+    <h3 class="bg-info text-center">学科の到達目標項目との関係</h3>
+    <div style="background-color:white;">
+        
+
+    </div>
+
+    <h3 class="bg-info text-center">教育方法等</h3>
+    <div style="background-color:white;">
+      <b style="font-size: 15px">概要:</b><br />
+      <div>
+          プラスチック、医薬・農薬、香料、燃料等として利用され、また生命科学の現象を理解するための基礎となる有機化合物の構造とその性質・反応について、上級生の有機化学と合わせて系統的に学ぶ。前半では有機化合物の基本構造と IUPAC名および有機化学を学ぶ上で必要な化学結合、分極、混成軌道の概念を中心に講義する。後半は、立体構造や電子の存在位置から、既知の有機化合物の化学的・物理的性質を説明、あるいは未知・新規の有機化合物の性質を予想するための基本的手段について講義する。
+      </div>
+      <b style="font-size:15px">授業の進め方・方法:</b><br />
+      <div>
+          視覚的に理解を深めるため、化学で使用している「ダイナミックワイド図説化学」があるとよい。内容の理解を深めるため授業資料は全て事前にWebClassに掲載するので、授業開始の時点で学生は基本的な理論について理解した状態で授業に臨むこと。理解度を自己評価するために、授業では演習とその解説を中心に講義する。また、中間試験、定期試験1週間前に30分程度の小テストを実施する。WebClass上に講義資料、自習問題や演習解答等を置くので自学自習の助けにして欲しい。
+      </div>
+      <b style="font-size:15px">注意点:</b><br />
+      <div>
+          基本的に放課後はいつでも質問を受け付けます。授業中の質問も歓迎します。講義資料と演習問題はWebClassまたはメールで配布するので、常に使用できるように準備をしておいてください。成績算出方法は以下の通りです。中間試験総合点＝(中間試験素点×0.6)+(中間試験前小テスト×0.2)+(中間試験前演習(の平均点)×0.2)、中間以降の総合点＝(定期試験素点×0.6)+(定期試験前小テスト×0.2)+(定期試験前演習(の平均点)×0.2))、最終総合点＝(中間試験総合点+中間以降の総合点)/2
+      </div>
+    </div>
+
+        
+    <h3 class="bg-info text-center">授業の属性・履修上の区分</h3>
+    <div style="background-color:white;">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isActiveLearning" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isActiveLearning" checked="checked" />
+                            アクティブラーニング
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isAidedByICT" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isAidedByICT" checked="checked" />
+                            ICT 利用
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isApplicableForRemoteClass" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isApplicableForRemoteClass" checked="checked" />
+                            遠隔授業対応
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isInstructorProfessionallyExperienced" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isInstructorProfessionallyExperienced" />
+                            実務経験のある教員による授業
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="border: 0px none;">
+                        <div class="">
+                            
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <h3 class="bg-info text-center">授業計画</h3>
+    <table class="table table-bordered no-padding" style="background-color:white;" id="lessonsTable">
+        <tr class="bg-success">
+            <th></th>
+            <th></th>
+            <th>週</th>
+            <th>授業内容</th>
+            <th>週ごとの到達目標</th>
+        </tr>
+        
+        
+            <tr>
+                <th rowspan="19" class="bg-danger">後期</th>
+            </tr>
+            
+                <tr>
+                    <th rowspan="9" class="bg-" style="width:60px;">3rdQ</th>
+                </tr>
+                <tr>
+                    <th class="week_number">1週</th>
+                    <td>ガイダンス、有機化合物の特徴、身近な有機化合物</td>
+                    <td>有機物が炭素骨格を持つ化合物であることを説明できる。<br /><input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget17" id="MainContent_SubjectSyllabus_hiddenLessonTarget17" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">2週</th>
+                    <td>官能基</td>
+                    <td>代表的な官能基を有する化合物を含み、IUPACの命名法に基づき、構造から名前、名前から構造の変換ができる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget18" id="MainContent_SubjectSyllabus_hiddenLessonTarget18" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">3週</th>
+                    <td>有機化合物の構造と結合（１）<br />原子構造、原子軌道と電子配置</td>
+                    <td>分子中の任意の原子の混成を答えることができ、混成軌道を用いて分子の形を説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget19" id="MainContent_SubjectSyllabus_hiddenLessonTarget19" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">4週</th>
+                    <td>有機化合物の構造と結合（２）<br />化学結合</td>
+                    <td>分子中の任意の原子の混成を答えることができ、混成軌道を用いて分子の形を説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget20" id="MainContent_SubjectSyllabus_hiddenLessonTarget20" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">5週</th>
+                    <td>有機化合物の構造と結合（３）<br />sp3混成軌道とメタン・エタンの構造</td>
+                    <td>σ結合とπ結合について説明でき、σ結合とπ結合の違いを分子軌道を使い説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget21" id="MainContent_SubjectSyllabus_hiddenLessonTarget21" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">6週</th>
+                    <td>有機化合物の構造と結合（４）<br />sp2およびsp混成軌道とエテン・エチンの構造, σ結合とπ結合</td>
+                    <td>σ結合とπ結合について説明でき、σ結合とπ結合の違いを分子軌道を使い説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget22" id="MainContent_SubjectSyllabus_hiddenLessonTarget22" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">7週</th>
+                    <td>有機化合物の構造と結合（５）<br />極性共有結合と誘起効果</td>
+                    <td>ルイス構造を書くことができ、それを利用して反応に結びつけることができる。<br />誘起効果と共鳴効果を説明でき、結合の分極を予測できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget23" id="MainContent_SubjectSyllabus_hiddenLessonTarget23" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">8週</th>
+                    <td>中間試験</td>
+                    <td><input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget24" id="MainContent_SubjectSyllabus_hiddenLessonTarget24" />
+                    </td>
+                </tr>
+            
+                <tr>
+                    <th rowspan="9" class="bg-" style="width:60px;">4thQ</th>
+                </tr>
+                <tr>
+                    <th class="week_number">9週</th>
+                    <td>有機化合物の構造と結合（６）<br />ブレンステッド−ローリーの酸塩基</td>
+                    <td>誘起効果と共鳴効果を説明でき、結合の分極を予測できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget25" id="MainContent_SubjectSyllabus_hiddenLessonTarget25" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">10週</th>
+                    <td>有機化合物の構造と結合（７）<br />ルイスの酸塩基</td>
+                    <td>誘起効果と共鳴効果を説明でき、結合の分極を予測できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget26" id="MainContent_SubjectSyllabus_hiddenLessonTarget26" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">11週</th>
+                    <td>アルカン　有機化合物の性質（１）<br />アルカンとアルキル基の構造と異性体</td>
+                    <td>炭化水素の種類と、それらに関する性質および代表的な反応を説明できる。<br />分子の三次元的な構造がイメージでき、異性体について説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget27" id="MainContent_SubjectSyllabus_hiddenLessonTarget27" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">12週</th>
+                    <td>アルカン　有機化合物の性質（２）<br />分枝アルカンの命名法（IUPAC命名法）</td>
+                    <td>炭化水素の種類と、それらに関する性質および代表的な反応を説明できる。<br />代表的な官能基を有する化合物を含み、IUPACの命名法に基づき、構造から名前、名前から構造の変換ができる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget28" id="MainContent_SubjectSyllabus_hiddenLessonTarget28" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">13週</th>
+                    <td>アルカン　有機化合物の性質（３）<br />アルカンの性質</td>
+                    <td>炭化水素の種類と、それらに関する性質および代表的な反応を説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget29" id="MainContent_SubjectSyllabus_hiddenLessonTarget29" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">14週</th>
+                    <td>アルカン　有機化合物の性質（４）<br />立体配座</td>
+                    <td>分子の三次元的な構造がイメージでき、異性体について説明できる。Newman投影式を書くことができる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget30" id="MainContent_SubjectSyllabus_hiddenLessonTarget30" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">15週</th>
+                    <td>アルカン　有機化合物の性質（５）<br />シクロアルカンの命名法およびシス-トランス異性</td>
+                    <td>炭化水素の種類と、それらに関する性質および代表的な反応を説明できる。<br />分子の三次元的な構造がイメージでき、異性体について説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget31" id="MainContent_SubjectSyllabus_hiddenLessonTarget31" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">16週</th>
+                    <td>定期試験</td>
+                    <td><input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget32" id="MainContent_SubjectSyllabus_hiddenLessonTarget32" />
+                    </td>
+                </tr>
+            
+    </table>
+
+        
+
+        <h3 class="bg-info text-center">モデルコアカリキュラムの学習内容と到達目標</h3>
+
+        <table id="MainContent_SubjectSyllabus_mccTable" class="table table-bordered no-padding" style="background-color:white;">
+		<tr class="bg-success">
+			<th colspan="2">分類</th><th>分野</th><th>学習内容</th><th>学習内容の到達目標</th><th>到達レベル</th><th>授業週</th>
+		</tr>
+	</table>
+
+        
+    
+    <h3 class="bg-info text-center">評価割合</h3>
+
+    <div style="overflow:auto">
+       <table id="MainContent_SubjectSyllabus_wariaiTable" class="table table-bordered no-padding" style="style:background-color:white;">
+		<tr class="bg-success">
+			<td></td><th>試験</th><th>小テスト</th><th>演習等</th><th>合計</th>
+		</tr><tr>
+			<th>総合評価割合</th><td><b>60</b></td><td><b>20</b></td><td><b>20</b></td><td><b>100</b></td>
+		</tr><tr>
+			<th>専門的能力</th><td>60</td><td>20</td><td>20</td><td><b>100</b></td>
+		</tr>
+	</table>
+    </div>
+
+    </div>
+
+  </div>
+
+
+</div>
+
+    </div>
+    
+
+<script type="text/javascript">
+//<![CDATA[
+if(typeof initSyllabusScript == 'function'){ initSyllabusScript();}//]]>
+</script>
+</form>
+
+        </div>
+    </div>
+
+    <div id="footer">
+        <br />
+        <br />
+        <div class="container">
+            <p class="text-muted credit">
+                ©2014 - MCC Web Syllabus.
+            </p>
+        </div>
+    </div>
+
+    <script src="/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+    <script src="/Scripts/mcc.js?v=20190215"></script>
+    <script src="/Scripts/Grid.js"></script>
+    <script>
+      $.ajaxSetup({
+        cache: false
+      });
+    </script>
+    
+    <script>
+      $(document).ready(function () {
+          initSyllabusScript();
+      });
+    </script>
+
+
+</body>
+</html>

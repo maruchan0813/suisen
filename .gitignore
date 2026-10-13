@@ -1,0 +1,9 @@
+/vendor/
+/config/env.php
+/storage/sessions/*
+!/storage/sessions/.gitkeep
+/storage/mail.log
+.phpunit.result.cache
+.DS_Store
+/frontend/node_modules/
+/.claude/

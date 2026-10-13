@@ -1,0 +1,638 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+
+</title><link href="../Content/css/bootstrap.css" rel="stylesheet" type="text/css" /><link href="../Content/font-awesome.min.css" rel="stylesheet" type="text/css" /><link href="../Content/css/Grid.css" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc.css?_=20201215" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc_public_theme.css?_=20150406" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/jquery-3.7.1.min.js"></script>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-51403293-1', 'mccdemo.cloudapp.net');
+        ga('send', 'pageview');
+        
+    </script>
+    <script>
+
+        function searchThisSite() {
+
+            
+            $("#loadingModal")[0].style.visibility = "visible";
+            
+            $("#btnSearchThisSite")[0].blur();
+
+            var querys = getUrlVars();
+            var paramString = "";
+
+            querys.forEach(function (value, index, array) {
+
+                if (value != "keyword") {
+                    paramString += "&" + value + "=" + querys[value];
+                }
+            });
+
+            var keyword = $('#siteKeyword').val();
+            var encodeKeyword = encodeURIComponent(keyword);
+
+            var pageName =  getPageName();
+            if (pageName != "PublicSearchResult") {
+                paramString += "&before_page=" + pageName;
+            }
+
+            location.href = "/Pages/PublicSearchResult.aspx?keyword=" + encodeKeyword + paramString;
+        }
+
+        $(document).ready(function () {
+
+            
+            var langSelected = $('#langSelected');
+            langSelected.change(function () {
+                
+                var addQuery = '';
+                var hrefs = location.href.split('?');
+                if (hrefs.length > 1) {
+                    addQuery = cleanQuery(hrefs[1], 'lang');
+                }
+                if (addQuery != '') {
+                    addQuery = addQuery + '&';
+                }
+                location.href = hrefs[0] + '?' + addQuery + 'lang=' + $(this).val();
+            });
+
+            
+            $('#siteKeyword').tooltip();
+        });
+
+        function getPageName() {
+            var split = window.location.pathname.split('/');
+            return split[split.length - 1];
+        }
+
+        function getUrlVars() {
+            var vars = [], hash;
+
+            var split = window.location.href.split('?');
+            if (split.length != 2) {
+                // 要素無し
+                return vars;
+            }
+
+            var hashes = split[1].split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
+        function cleanQuery(query, target) {
+            var arr = [];
+            $.each(query.split('&'), function (i, param) {
+                if (param.split('=')[0] != target) { arr.push(param); }
+            });
+            return arr.join('&');
+        }
+
+    </script>
+
+    
+
+
+    <!-- for dodai -->
+    
+</head>
+<body>
+    
+    <div id="wrap">
+        <!-- Loading -->
+        <div class="modal-backdrop in" id="loadingModal" tabindex="-1" style="visibility:hidden;">
+             <div style="top: 1.5%; position: absolute; left: 50%;">
+                 <div id="loadingSearchPanel" class='loading'></div>
+             </div>
+        </div>
+        <div class="navbar navbar-default navbar-fixed-top header_area" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    
+                    <span class="navbar-brand"><i class="glyphicon glyphicon-home"></i>高専Webシラバス</span>
+                    <div class="navbar-text navbar-text-min-none">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+
+                    
+
+                    
+                    <table class="navbar-brand navbar-right" style="height:50px;">
+                        
+                        <tr id="SyllabusSearchBlankArea">
+	<td style="padding-top:6px;">
+                                 <input type="text" class="form-control" style="width:200px; visibility:hidden"/>
+                            </td>
+	<td style="padding-top:6px;">
+                                <button class="btn btn-default" style="visibility:hidden">検索</button>
+                            </td>
+</tr>
+
+                    </table>
+                    <div class="navbar-text navbar-text-min-none navbar-right">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                    <div class="navbar-collapse navbar-brand navbar-right">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="page-header">
+
+            <ol class="breadcrumb">
+                <li><a href="/Pages/PublicSchools?lang=ja"><i class="glyphicon glyphicon-home"></i>ホーム</a></li>
+                
+
+    <li>
+        <a href="./PublicDepartments?school_id=45&lang=ja">
+            北九州工業高等専門学校
+        </a>
+    </li>
+    <li>
+
+        
+        <a href="./PublicSubjects?school_id=45&department_id=35&year=2026&lang=ja">
+            生産デザイン工学科（物質化学コース） 
+        </a>
+        
+        
+    </li>
+    <li>
+        高分子化学B
+    </li>
+
+
+            </ol>
+            <div id="AlertMessage" class="alert alert-danger" style="display:none;">
+            </div>
+        </div>
+        <div class="container" style="margin-left:50px;margin-right:50px;width:90%;">
+            
+
+
+    <div class="mcc-title-bar">
+        <div class="row">
+            <div class="col-md-6">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1>高分子化学B</h1>
+                    </div>
+                    <div class="col-md-6"></div>
+                </div>
+
+            </div>
+
+            <div class="col-md-4 mcc-page-actions">
+                <div class="btn-group" style="margin-top:6px;">
+                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="height:auto;">
+                        PDF
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu text-left" role="menu">
+                        <li>
+                            <a class="" target="_blank" role="menuitem"
+                                href="/Pages/SyllabusPDF?school_id=45&department_id=35&subject_id=0206&year=2022&lang=ja&subject_code=&preview=False&type=start&attachment=false">
+                                表示
+                            </a>
+                        </li>
+                         <li>
+                             <a class="" target="_blank" role="menuitem"
+                                href="/Pages/SyllabusPDF?school_id=45&department_id=35&subject_id=0206&year=2022&lang=ja&subject_code=&preview=False&type=start&attachment=true">
+                                保存
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <form method="post" action="./PublicSyllabus?school_id=45&amp;department_id=35&amp;subject_id=0206&amp;year=2022&amp;lang=ja" id="asp_form">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTQ3NTA3ODgwNg9kFgJmD2QWCAIBDxYCHgdWaXNpYmxlaBYCZg9kFgICAQ9kFgJmDxBkZBQrAQFmZAICDxYCHwBoZAIDDxYCHwBnZAIHD2QWAmYPZBYCAgMPZBYCAgEPZBYCZg9kFgQCAg8PFgIeBFRleHQF6wPjgIzln7rnpI7jgYvjgonjgo/jgYvjgovpq5jliIblrZDmnZDmlpkgKOeJqeizquW3peWtpuWFpemWgOOCt+ODquODvOOCuinjgI3jgIHkupXkuIog5ZKM5Lq644CB5riF5rC0IOengOS/oeOAgeWyoemDqCDli50g44G744GL44CB5qOu5YyX5Ye654mIIC8g44CM5Zuz6Kej5YWl6ZaAIOOCiOOBj+OCj+OBi+OCiyDmnIDmlrAg6auY5YiG5a2Q5YyW5a2m44Gu5Z+65pys44Go5LuV57WE44G/44CN44CB6b2L6JekIOWLneijleOAgeengOWSjOOCt+OCueODhuODoCAvwqDjgIzmlrDpq5jliIblrZDljJblrabluo/oq5bjgI3jgIHkvIrli6LlhbjlpKvku5bokZfjgIHljJblrablkIzkurogLyDjgIzpq5jliIblrZDnp5Hlrabjga7ln7rnpI7jgI3jgIHpq5jliIblrZDlrabkvJrokZfjgIHmnbHkuqzljJblrablkIzkurovIOOAjOWfuuekjumrmOWIhuWtkOenkeWtpuOAjeOAgemrmOWIhuWtkOWtpuS8muiRl+OAgeadseS6rOWMluWtpuWQjOS6uiAvIOiHquS9nOaVmeadkGRkAgMPZBYiZg8PFgIfAQWjBTEuIOaKgOihk+iAheOBqOOBl+OBpumrmOWIhuWtkOWMluWtpuOBruWfuuekjueahOOBquamguW/teOCkui6q+OBq+S7mOOBkeOAgemrmOWIhuWtkOOBruWIhuWtkOani+mAoOOBqOa6tua2sueJqeaAp+OChOmrmOWIhuWtkOOBruWbuuS9k+ani+mAoOOBqOmrmOWIhuWtkOeJqeaAp+OBq+OBpOOBhOOBpueQhuino+OBmeOCi+OBk+OBqOOAggoyLiDogJDnhrHmgKfpq5jliIblrZDmnZDmlpnjgajpq5jlvLfluqbjgIHpq5jlvL7mgKfnjofpq5jliIblrZDmnZDmlpnjgarjganpq5jmgKfog73pq5jliIblrZDmnZDmlpnjgavjgaTjgYTjgaboqqzmmI7jgafjgY3jgovjgZPjgajjgIIKMy4g44Kw44Oq44O844Oz44Kx44Of44K544OI44Oq44O877yI55Kw5aKD5YyW5a2m77yJ44Gr5qC544GW44GX44Gf55Sf5YiG6Kej5oCn6auY5YiG5a2Q44Gr44Gk44GE44Gm6Kqs5piO44Gn44GN44KL44CCCjQuIOODiuODjuODhuOCr+ODjuODreOCuOODvO+8iOi2heW+rue0sOWKoOW3peaKgOihk++8ieOBi+OCieOCguOBn+OCieOBleOCjOOCi+mrmOWIhuWtkOODiuODjuadkOaWmeOChOWMu+eUqOmrmOWIhuWtkOadkOaWmeKAlOeUn+S9k+adkOaWme+8iOODkOOCpOOCquODnuODhuODquOCouODq++8ieOBquOBqeapn+iDveaAp+mrmOWIhuWtkOadkOaWmeOBq+OBpOOBhOOBpuiqrOaYjuOBp+OBjeOCi+OAgmRkAgEPDxYEHghDc3NDbGFzcwUfdGFibGUgdGFibGUtYm9yZGVyZWQgbm8tcGFkZGluZx4EXyFTQgICFgIeBXN0eWxlBR1zdHlsZTpiYWNrZ3JvdW5kLWNvbG9yOndoaXRlO2QCAg8WAh4LXyFJdGVtQ291bnQCAxYGZg9kFgZmDxUBV0pBQkVFIFNCIOWwguaUu+WIhumHjuOBruOAjOeUn+eUo+OAjeOBq+mWouOCj+OCi+WwgumWgOefpeitmOOCkui6q+OBq+S7mOOBkeOBn+aKgOihk+iAhWQCAQ8VBgdqYWJlZV8wV0pBQkVFIFNCIOWwguaUu+WIhumHjuOBruOAjOeUn+eUo+OAjeOBq+mWouOCj+OCi+WwgumWgOefpeitmOOCkui6q+OBq+S7mOOBkeOBn+aKgOihk+iAhU7lsILmlLvliIbph47jga7jgIznlJ/nlKPjgI3jgavplqLjgo/jgovlsILploDnn6XorZjjgpLouqvjgavku5jjgZHjgZ/mioDooZPogIUPamFiZWVfMF9kaXNwbGF5V0pBQkVFIFNCIOWwguaUu+WIhumHjuOBruOAjOeUn+eUo+OAjeOBq+mWouOCj+OCi+WwgumWgOefpeitmOOCkui6q+OBq+S7mOOBkeOBn+aKgOihk+iAhQxqYWJlZV8wX29wZW5kAgIPFQENamFiZWVfMF9jbG9zZWQCAQ9kFgZmDxUBqAFKQUJFRSBTQuKRoCDlhbHpgJrln7rnpI7nn6XorZjjgpLnlKjjgYTjgabjgIHlsILmlLvliIbph47jgavjgYrjgZHjgovoqK3oqIjjg7voo73kvZzjg7voqZXkvqHjg7vmlLnoia/jgarjgannlJ/nlKPjgavplqLjgo/jgovlsILploDlt6Xlrabjga7ln7rnpI7jgpLnkIbop6PjgafjgY3jgovjgIJkAgEPFQYHamFiZWVfMagBSkFCRUUgU0LikaAg5YWx6YCa5Z+656SO55+l6K2Y44KS55So44GE44Gm44CB5bCC5pS75YiG6YeO44Gr44GK44GR44KL6Kit6KiI44O76KO95L2c44O76KmV5L6h44O75pS56Imv44Gq44Gp55Sf55Sj44Gr6Zai44KP44KL5bCC6ZaA5bel5a2m44Gu5Z+656SO44KS55CG6Kej44Gn44GN44KL44CCnAHlhbHpgJrln7rnpI7nn6XorZjjgpLnlKjjgYTjgabjgIHlsILmlLvliIbph47jgavjgYrjgZHjgovoqK3oqIjjg7voo73kvZzjg7voqZXkvqHjg7vmlLnoia/jgarjgannlJ/nlKPjgavplqLjgo/jgovlsILploDlt6Xlrabjga7ln7rnpI7jgpLnkIbop6PjgafjgY3jgovjgIIPamFiZWVfMV9kaXNwbGF5qAFKQUJFRSBTQuKRoCDlhbHpgJrln7rnpI7nn6XorZjjgpLnlKjjgYTjgabjgIHlsILmlLvliIbph47jgavjgYrjgZHjgovoqK3oqIjjg7voo73kvZzjg7voqZXkvqHjg7vmlLnoia/jgarjgannlJ/nlKPjgavplqLjgo/jgovlsILploDlt6Xlrabjga7ln7rnpI7jgpLnkIbop6PjgafjgY3jgovjgIIMamFiZWVfMV9vcGVuZAICDxUBDWphYmVlXzFfY2xvc2VkAgIPZBYGZg8VAXtKQUJFRSBTQuKRoSDoh6rkuLvnmoTjg7vntpnntprnmoTjgarlrabnv5LjgpLpgJrjgZjjgabjgIHlsILploDlt6Xlrabjga7ln7rnpI7np5Hnm67jgavplqLjgZnjgovllY/poYzjgpLop6PmsbrjgafjgY3jgovjgIJkAgEPFQYHamFiZWVfMntKQUJFRSBTQuKRoSDoh6rkuLvnmoTjg7vntpnntprnmoTjgarlrabnv5LjgpLpgJrjgZjjgabjgIHlsILploDlt6Xlrabjga7ln7rnpI7np5Hnm67jgavplqLjgZnjgovllY/poYzjgpLop6PmsbrjgafjgY3jgovjgIJv6Ieq5Li755qE44O757aZ57aa55qE44Gq5a2m57+S44KS6YCa44GY44Gm44CB5bCC6ZaA5bel5a2m44Gu5Z+656SO56eR55uu44Gr6Zai44GZ44KL5ZWP6aGM44KS6Kej5rG644Gn44GN44KL44CCD2phYmVlXzJfZGlzcGxheXtKQUJFRSBTQuKRoSDoh6rkuLvnmoTjg7vntpnntprnmoTjgarlrabnv5LjgpLpgJrjgZjjgabjgIHlsILploDlt6Xlrabjga7ln7rnpI7np5Hnm67jgavplqLjgZnjgovllY/poYzjgpLop6PmsbrjgafjgY3jgovjgIIMamFiZWVfMl9vcGVuZAICDxUBDWphYmVlXzJfY2xvc2VkAgMPDxYCHwEFywbpq5jliIblrZDjga/jgIHkurrplpPjga7nlJ/mtLvjgpLmlK/jgYjjgovooaPpo5/kvY/jgpLjga/jgZjjgoHjgIHouqvjga7lm57jgorjga7mnZDmlpnjgYLjgovjgYTjga/lhYjnq6/mnZDmlpnjgavluoPjgY/kvb/nlKjjgZXjgozjgabjgYTjgovjgILjgZPjga7jgojjgYbjgavmgKXpgJ/jgavpgLLmranjgZfjgIHnj77ku6Pjga7np5HlrabjgajmioDooZPjga7kuK3jgafph43opoHjgarkvY3nva7jgpLljaDjgoHjgovpq5jliIblrZDjga7ln7rnpI7jgpLnn6XjgovjgZPjgajjga/jgIHoh6rnhLbnp5Hlrabjga7noJTnqbbogIXjg7vmioDooZPogIXjgavjgajjgaPjgabkuI3lj6/mrKDjgafjgYLjgovjgILmnKzorJvnvqnjgafjga/jgIHpq5jliIblrZDljJblrabjga7ln7rnpI7nmoTjgarmpoLlv7XjgpLouqvjgavku5jjgZHjgIHpq5jliIblrZDjga7lhKrjgozjgZ/mgKfos6rjgoTmqZ/og73jgavjgaTjgYTjgabnkIbop6PjgafjgY3jgovjgojjgYbjgavlrabnv5LjgZnjgovjgILjgb7jgZ/jgIHmnIDlhYjnq6/lt6Xmpa3mioDooZPjgafjgYLjgovjg4rjg47jg4bjgq/jg47jg63jgrjjg7zvvIjotoXlvq7ntLDliqDlt6XmioDooZPvvInjgYvjgonjgoLjgZ/jgonjgZXjgozjgovpq5jliIblrZDjg4rjg47mnZDmlpnjgIHljLvnlKjpq5jliIblrZDmnZDmlpnigJTnlJ/kvZPmnZDmlpnvvIjjg5DjgqTjgqrjg57jg4bjg6rjgqLjg6vvvInjgYrjgojjgbPjgrDjg6rjg7zjg7PjgrHjg5/jgrnjg4jjg6rjg7zvvIjnkrDlooPljJblrabvvInjgavmoLnjgZbjgZfjgZ/nlJ/liIbop6PmgKfpq5jliIblrZDjgavjgaTjgYTjgabjgoLkvbXjgZvjgablrabnv5LjgZnjgovjgIJkZAIEDw8WAh8BBfMC6auY5YiG5a2Q44Gr6IiI5ZGz44KS5oyB44Gf44Gb44KL44Gf44KB44Gr44CB5o6I5qWt5YaF5a6544Gr6Zai6YCj44GZ44KL6Lqr6L+R44Gq6auY5YiG5a2Q5p2Q5paZ44O75qmf6IO95oCn6auY5YiG5a2Q5p2Q5paZ44KS57S55LuL44GX44Gq44GM44KJ6Kyb576p44KS6YCy44KB44KL44CCCuism+e+qeOBrumAsuihjOOBq+WQiOOCj+OBm+OBpumWoumAo+OBmeOCi+iqsumhjOOCkuWHuuOBl+OAgemrmOWIhuWtkOWMluWtpuOBrueQhuino+OCkua3seOCgeOBleOBm+OCi+OAggrliY3lm57jga7mjojmpa3jga7kuojnv5Ljg7vlvqnnv5LjgpLivo/jgYTjgIHmjojmpa3lhoXjgafmjIfnpLrjgZfjgZ/oqrLpoYzjgavlj5bjgorntYTjgoDjgZPjgajjgIJkZAIFDw8WAh8BBbECNOW5tOasoeOBp+Wtpue/kuOBl+OBn+OAjOmrmOWIhuWtkOWMluWtpiBJ44CN44Gu56eR55uu44KS5b6p57+S44GX44Gm44GK44GP44GT44Go44CCCumrmOWIhuWtkOWMluWQiOeJqeOBruekuuOBmeeJueW+tOOBguOCi+aAp+izquOChOapn+iDveOBq+OBpOOBhOOBpuWfuuacrOeahOOBq+eQhuino+OBp+OBjeOBpuOBhOOCi+OBk+OBqOOAggrpgZTmiJDnm67mqJnjgavlr77jgZnjgovnkIbop6PluqbjgpLkuIvoqJjjga7oqZXkvqHmlrnms5Xjgafnt4/lkIjoqZXkvqHjgZfjgIE2MCDngrnku6XkuIrjgpLlkIjmoLzjgajjgZnjgovjgIJkZAIGDw8WAh8BZWRkAgcPDxYCHwFlZGQCCA8QDxYCHgdDaGVja2VkaGRkZGQCCQ8QDxYCHwZoZGRkZAIKDxAPFgIfBmhkZGRkAgsPEA8WAh8GaGRkZGQCDA8PFgQfAWUeCU1heExlbmd0aAIFZGQCDQ8WAh8AaBYEZg8WAh8AaBYwZg8PFgIfAWVkZAIBDw8WAh8BZWRkAgIPFgIeBVZhbHVlZWQCAw8PFgIfAWVkZAIEDw8WAh8BZWRkAgUPFgIfCGVkAgYPDxYCHwFlZGQCBw8PFgIfAWVkZAIIDxYCHwhlZAIJDw8WAh8BZWRkAgoPDxYCHwFlZGQCCw8WAh8IZWQCDA8PFgIfAWVkZAINDw8WAh8BZWRkAg4PFgIfCGVkAg8PDxYCHwFlZGQCEA8PFgIfAWVkZAIRDxYCHwhlZAISDw8WAh8BZWRkAhMPDxYCHwFlZGQCFA8WAh8IZWQCFQ8PFgIfAWVkZAIWDw8WAh8BZWRkAhcPFgIfCGVkAgEPFgIfAGgWMGYPDxYCHwFlZGQCAQ8PFgIfAWVkZAICDxYCHwhlZAIDDw8WAh8BZWRkAgQPDxYCHwFlZGQCBQ8WAh8IZWQCBg8PFgIfAWVkZAIHDw8WAh8BZWRkAggPFgIfCGVkAgkPDxYCHwFlZGQCCg8PFgIfAWVkZAILDxYCHwhlZAIMDw8WAh8BZWRkAg0PDxYCHwFlZGQCDg8WAh8IZWQCDw8PFgIfAWVkZAIQDw8WAh8BZWRkAhEPFgIfCGVkAhIPDxYCHwFlZGQCEw8PFgIfAWVkZAIUDxYCHwhlZAIVDw8WAh8BZWRkAhYPDxYCHwFlZGQCFw8WAh8IZWQCDg9kFgRmD2QWIGYPDxYCHwEFUumrmOWIhuWtkOeJqeaAp+OAgArpq5jliIblrZDpjpbjga7lvaLmhYvjgIDlm57ou6LnlbDmgKfkvZPjgIHjg6njg7Pjg4Djg6DjgrPjgqTjg6tkZAIBDw8WAh8BBTzjg7vpq5jliIblrZDjga7liIblrZDmp4vpgKDjgavjgaTjgYTjgabnkIbop6PjgafjgY3jgovjgILjgIBkZAIDDw8WAh8BBYcB6auY5YiG5a2Q54mp5oCn44CACumrmOWIhuWtkOmOluOBrua6tua2sueJqeaAp+OAgOW6g+OBjOOCiu+8iOWbnui7ouWNiuW+hO+8ieOAgc6477yI44K344O844K/77yJ54q25oWL44CB5oyB57aa6ZW344CB6auY5YiG5a2Q6Zu76Kej6LOqZGQCBA8PFgIfAQVA44O7IOmrmOWIhuWtkOOBruW9ouOBqOWkp+OBjeOBleOBq+OBpOOBhOOBpueQhuino+OBp+OBjeOCi+OAguOAgGRkAgYPDxYCHwEFXumrmOWIhuWtkOeJqeaAp+OAgArpq5jliIblrZDjga7lm7rkvZPmp4vpgKDjgIDntZDmmbbmgKfjgajpnZ7mmbbmgKfjgIHjg6njg6Hjg6nmp4vpgKDjgIHnkIPmmbZkZAIHDw8WAh8BBUDjg7sg6auY5YiG5a2Q44Gu5Zu65L2T5qeL6YCg44Gr44Gk44GE44Gm55CG6Kej44Gn44GN44KL44CC44CA44CAZGQCCQ8PFgIfAQWMAemrmOWIhuWtkOeJqeaAp+OAgArnhrHnmoTmgKfos6rjgIDjgqzjg6njgrnou6Lnp7vngrnvvIhUZ++8ieOBqOiejeeCue+8iFRt77yJ44CB57KY5by+5oCn44CB44Ko44Oz44OI44Ot44OU44O85by+5oCn44Gu55CG6KuW44CB5p625qmL5qeL6YCgZGQCCg8PFgIfAQVD44O7IOmrmOWIhuWtkOOBruWKm+WtpueahOaAp+izquOBq+OBpOOBhOOBpueQhuino+OBp+OBjeOCi+OAguOAgOOAgGRkAgwPDxYCHwEFkQHpq5jmgKfog73pq5jliIblrZDmnZDmlpnvvIjvvJHvvIkK44Ko44Oz44K444OL44Ki44Oq44Oz44Kw44OX44Op44K544OB44OD44Kv44K544CB44K544O844OR44O844Ko44Oz44OX44Op44CB44Km44Or44OI44Op44K544O844OR44O844Ko44Oz44OX44OpZGQCDQ8PFgIfAQVm44O76ICQ54ax5oCn6auY5YiG5a2Q5p2Q5paZ44Go6auY5by35bqm44CB6auY5by+5oCn546H6auY5YiG5a2Q5p2Q5paZ44Gr44Gk44GE44Gm55CG6Kej44Gn44GN44KL44CC44CAZGQCDw8PFgIfAQWOAemrmOaAp+iDvemrmOWIhuWtkOadkOaWme+8iO+8ku+8iQrpq5jlvLfluqbjg7vpq5jlvL7mgKfnjofnuYrntq3jgIDngq3ntKDnuYrntq3jgIHjgqzjg6njgrnnuYrntq3jgIHjgqLjg6njg5/jg4nnuYrntq3jgIDkuJbnlYzmnIDlvLfjga7nuYrntq1kZAIQDw8WAh8BBWbjg7vogJDnhrHmgKfpq5jliIblrZDmnZDmlpnjgajpq5jlvLfluqbjgIHpq5jlvL7mgKfnjofpq5jliIblrZDmnZDmlpnjgavjgaTjgYTjgabnkIbop6PjgafjgY3jgovjgILjgIBkZAISDw8WAh8BBYUB6auY5oCn6IO96auY5YiG5a2Q5p2Q5paZ77yI77yT77yJCuiAkOeGseaAp+mrmOWIhuWtkOOAgOikh+WQiOadkOaWmeOAgeODneODquODnuODvOOCouODreOCpOOAgeODiuOCpOODreODs+ezu+ODiuODjuOCs+ODs+ODneOCuOODg+ODiGRkAhMPDxYCHwEFZuODu+iAkOeGseaAp+mrmOWIhuWtkOadkOaWmeOBqOmrmOW8t+W6puOAgemrmOW8vuaAp+eOh+mrmOWIhuWtkOadkOaWmeOBq+OBpOOBhOOBpueQhuino+OBp+OBjeOCi+OAguOAgGRkAhUPDxYCHwEFDOS4remWk+ippumok2RkAhYPDxYCHwEFXOODuzHvvZ436YCx44G+44Gn44Gu5YaF5a6544KS57ay576F44GX44Gf6Kmm6aiT44Gr44KI44KK44CB5o6I5qWt5YaF5a6544Gu5a6a552A44KS5Zuz44KL44CCZGQCAQ9kFiBmDw8WAh8BBYQB6auY5YiG5a2Q5p2Q5paZ44Gu44Oq44K144Kk44Kv44Or44Go55Kw5aKD5ZWP6aGM44CA44OX44Op44K544OB44OD44Kv5ZWP6aGM44G444Gu44Ki44OX44Ot44O844OB44CB44Oq44K144Kk44Kv44Or5oqA6KGT44Gu5pyA5YmN57eaZGQCAQ8PFgIfAQV/44O75Lit6ZaT6Kmm6aiT44Gu5YaF5a6544KS55CG6Kej44GZ44KL44CCCuODu+mrmOWIhuWtkOadkOaWmeOBruODquOCteOCpOOCr+ODq+OBqOeSsOWig+WVj+mhjOOBq+OBpOOBhOOBpueQhuino+OBp+OBjeOCi+OAguOAgGRkAgMPDxYCHwEFOeeUn+WIhuino+aAp+mrmOWIhuWtkOOBqOOCsOODquODvOODs+ODl+ODqeOCueODgeODg+OCr+OCuWRkAgQPDxYCHwEFbOODu+eUn+WIhuino+aAp+mrmOWIhuWtkOOBqOOCsOODquODvOODs+OCseODn+OCueODiOODquODvO+8iOeSsOWig+WMluWtpu+8ieOBq+OBpOOBhOOBpueQhuino+OBp+OBjeOCi+OAguOAgGRkAgYPDxYCHwEFmgHmqZ/og73mgKfpq5jliIblrZDmnZDmlpnvvIjvvJHvvIkK44OK44OO44OG44Kv44OO44Ot44K444O877yI6LaF5b6u57Sw5Yqg5bel5oqA6KGT77yJ44Gu55m65bGV44Go5qmf6IO95oCn6auY5YiG5a2Q44OK44OO5p2Q5paZ44Gu6ZaL55m644Gu5Y+W44KK57WE44G/44CAZGQCBw8PFgIfAQVj44O76auY5YiG5a2Q44Go44OK44OO44OG44Kv44OO44Ot44K444O877yI6LaF5b6u57Sw5Yqg5bel5oqA6KGT77yJ44Gr44Gk44GE44Gm55CG6Kej44Gn44GN44KL44CC44CAZGQCCQ8PFgIfAQVx5qmf6IO95oCn6auY5YiG5a2Q5p2Q5paZ77yI77yS77yJCueSsOWig+adkOaWmeOCu+ODq+ODreODvOOCueODiuODjuODleOCoeOCpOODkOODvO+8iENORu+8ieOAgeWwjumbu+aAp+mrmOWIhuWtkApkZAIKDw8WAh8BBV3jg7vnkrDlooPmnZDmlpnjgrvjg6vjg63jg7zjgrnjg4rjg47jg5XjgqHjgqTjg5Djg7zvvIhDTkbvvInjgavjgaTjgYTjgabnkIbop6PjgafjgY3jgovjgILjgIBkZAIMDw8WAh8BBakB5qmf6IO95oCn6auY5YiG5a2Q5p2Q5paZ77yI77yT77yJCuWMu+eUqOmrmOWIhuWtkOadkOaWmeKAlOeUn+S9k+adkOaWme+8iOODkOOCpOOCquODnuODhuODquOCouODq++8ieOAgeaEn+a4qeaAp+ODu+WIuua/gOW/nOetlOaAp+ODneODquODnuODvOOAgemrmOWIhuWtkOOBqOWGjeeUn+WMu+eZgmRkAg0PDxYCHwEFZuODu+WMu+eUqOmrmOWIhuWtkOadkOaWmeKAlOeUn+S9k+adkOaWme+8iOODkOOCpOOCquODnuODhuODquOCouODq++8ieOBq+OBpOOBhOOBpueQhuino+OBp+OBjeOCi+OAguOAgGRkAg8PDxYCHwEFeeapn+iDveaAp+mrmOWIhuWtkOadkOaWme+8iO+8lO+8iQrlpKnnhLbpq5jliIblrZDjgIDjg4fjg7Pjg5fjg7PjgIHjgrvjg6vjg63jg7zjgrnjgIHjgr/jg7Pjg5Hjgq/os6rjgIHlpKnnhLbjgrTjg6DjgIFETkFkZAIQDw8WAh8BBVTjg7vmnInmqZ/jg7vnhKHmqZ/lpKnnhLbpq5jliIblrZDjgajnlJ/kvZPpq5jliIblrZDjgavjgaTjgYTjgabnkIbop6PjgafjgY3jgovjgILjgIBkZAISDw8WAh8BBXzmqZ/og73mgKfpq5jliIblrZDmnZDmlpnjga7jgb7jgajjgoEK5Yy755mC44CB55Kw5aKD44CB6aOf5ZOB44Gq44Gp5bmF5bqD44GE5YiG6YeO44Gn5rS755So44GV44KM44Gm44GE44KL5qmf6IO95oCn6auY5YiG5a2QZGQCEw8PFgIfAQVj44O7Oe+9njE06YCx44G+44Gn44Gu5YaF5a6544KS57ay576F44GX44Gf5oyv44KK6L+U44KK44Gr44KI44KK44CB5o6I5qWt5YaF5a6544Gu5a6a552A44KS5Zuz44KL44CCZGQCFQ8PFgIfAQUV562U5qGI6L+U5Y2044CB6Kej6KqsZGQCFg8PFgIfAQUq44O75a6a5pyf6Kmm6aiT44Gu5YaF5a6544KS55CG6Kej44GZ44KL44CCZGQCDw8PFgQfAgUfdGFibGUgdGFibGUtYm9yZGVyZWQgbm8tcGFkZGluZx8DAgIWAh8EBRdiYWNrZ3JvdW5kLWNvbG9yOndoaXRlOxYCAgEPZBYIZg8PFgIeB1Jvd1NwYW4CCGRkAgEPDxYCHwkCCGRkAgIPDxYCHwkCCGRkAgMPDxYCHwkCCGRkAhAPDxYEHwIFH3RhYmxlIHRhYmxlLWJvcmRlcmVkIG5vLXBhZGRpbmcfAwICFgIfBAUdc3R5bGU6YmFja2dyb3VuZC1jb2xvcjp3aGl0ZTtkGAEFHl9fQ29udHJvbHNSZXF1aXJlUG9zdEJhY2tLZXlfXxYEBTJjdGwwMCRNYWluQ29udGVudCRTdWJqZWN0U3lsbGFidXMkaXNBY3RpdmVMZWFybmluZwUuY3RsMDAkTWFpbkNvbnRlbnQkU3ViamVjdFN5bGxhYnVzJGlzQWlkZWRCeUlDVAU8Y3RsMDAkTWFpbkNvbnRlbnQkU3ViamVjdFN5bGxhYnVzJGlzQXBwbGljYWJsZUZvclJlbW90ZUNsYXNzBUdjdGwwMCRNYWluQ29udGVudCRTdWJqZWN0U3lsbGFidXMkaXNJbnN0cnVjdG9yUHJvZmVzc2lvbmFsbHlFeHBlcmllbmNlZEOSYqaxH6H6wg80ldokJZy61zDsKRQ2UCAfoCwKXZok" />
+
+
+<script src="../Scripts/WebForms/MsAjax/MicrosoftAjax.js" type="text/javascript"></script>
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="DBEB7810" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdABVemB/8dCARoz6Hkhu0KtE6R7L3wySogUAl7PijvtwaUSsm8nTXGaHoUVtfjM0rCZj22oJ4VQ24ZYDTOYTZUrP5vtB5q2NRcavKnoOwBU+gOA64SVEnPyPScYYkpSuU0xW2L4Jve6H60KdcbqEngomYYAGK+IWmF40J3t6o3zJYQj3DsjWHDc/cKA2KFUkqXvhopB6nlbzlu7nJWavaBjuezSQ3X2CP5vn0hjBBJbTLvz3CGZ9Cu8Hncxu1Mzz13m3V7gpVpizzZerj5lK8GW+8vLrFU9WtRM9R2nxmAWJZWhHFXp5SXO+z24qW7wHAsQemku3WtiEWR1FYGon8mnk41yO2HHE1YguYPkDLvX/psMZQL1ESWpI/XcFGLFInH1feb0T4IWniJZEt0XI1iJVuCry12SX7zfqSJ7S/DRiQgIbYsULENMzw4TU3uWFsunRwVbvCRudpHdFbycjEJabynXA8kzAGFrh1nlTUavo+YQ==" />
+        
+    <div style="width:100%;float:left;">
+        
+
+<script type="text/javascript">
+    $(function () {
+        $('.missionOpenBtn').click(function (e) {
+            var parent = $(this).parent('div');
+            var info = parent.data('info');
+            var item_name = parent.data('item_name');
+            var key = parent.data('key');
+            var str = info + ' ' + item_name;
+            $('#' + key + '_open').addClass('hide');
+            $('#' + key + '_close').removeClass('hide');
+            $('#' + key + "_display").text(str);
+
+        });
+        $('.missionCloseBtn').click(function (e) {
+            var parent = $(this).parent('div');
+            var info = parent.data('info');
+            var key = parent.data('key');
+            $('#' + key + '_open').removeClass('hide');
+            $('#' + key + '_close').addClass('hide');
+            $('#' + key + "_display").text(info);
+
+        });
+    })
+</script>
+
+<div id="MainContent_SubjectSyllabus_UpdatePanelSyllabus">
+	
+
+<div>
+    <div>
+        <span id="MainContent_SubjectSyllabus_LabelInfo" class="text-danger"><font size="5"></font></span>
+    </div>
+
+    <h3 class="bg-info text-center">科目基礎情報</h3>
+    <table class="table table-bordered no-padding" style="background-color:white;">
+        <tr>
+            <th>学校</th>
+            <td >北九州工業高等専門学校</td>
+            <th >開講年度</th>
+            <td >令和08年度 (2026年度)</td>
+        </tr>
+        <tr>
+            <th>授業科目</th>
+            <td colspan="3">高分子化学B</td>
+        </tr>
+        <tr>
+            <th>科目番号</th>
+            <td>0206</td>
+            <th>科目区分</th>
+            <td>専門 / 選択</td>
+        </tr>
+        <tr>
+            <th>授業形態</th>
+            <td>講義</td>
+            <th>単位の種別と単位数</th>
+            <td>履修単位: 1</td>
+        </tr>
+        <tr>
+            <th>開設学科</th>
+            <td>生産デザイン工学科（物質化学コース）</td>
+            <th>対象学年</th>
+            <td>5</td>
+        </tr>
+        <tr>
+            <th>開設期</th>
+            <td>後期</td>
+            <th>週時間数</th>
+            <td>2</td>
+        </tr>
+        <tr>
+            <th>教科書/教材</th>
+            <td colspan="3">
+                「基礎からわかる高分子材料 (物質工学入門シリーズ)」、井上 和人、清水 秀信、岡部 勝 ほか、森北出版 / 「図解入門 よくわかる 最新 高分子化学の基本と仕組み」、齋藤 勝裕、秀和システム / 「新高分子化学序論」、伊勢典夫他著、化学同人 / 「高分子科学の基礎」、高分子学会著、東京化学同人/ 「基礎高分子科学」、高分子学会著、東京化学同人 / 自作教材
+            </td>
+        </tr>
+        <tr>
+            <th>担当教員</th>
+            <td colspan="3">
+                <span id="Teachers">山根 大和</span>
+            </td>
+        </tr>
+    </table>
+
+    <div id="MainContent_SubjectSyllabus_syllabusContent">
+
+    <h3 class="bg-info text-center">到達目標</h3>
+    <div style="background-color:white;">
+        1. 技術者として高分子化学の基礎的な概念を身に付け、高分子の分子構造と溶液物性や高分子の固体構造と高分子物性について理解すること。<br />2. 耐熱性高分子材料と高強度、高弾性率高分子材料など高性能高分子材料について説明できること。<br />3. グリーンケミストリー（環境化学）に根ざした生分解性高分子について説明できる。<br />4. ナノテクノロジー（超微細加工技術）からもたらされる高分子ナノ材料や医用高分子材料—生体材料（バイオマテリアル）など機能性高分子材料について説明できる。
+    </div>
+
+    <h3 class="bg-info text-center">ルーブリック</h3>
+
+    
+
+    <div style="overflow:auto">
+    <table id="MainContent_SubjectSyllabus_hyouka" class="table table-bordered no-padding" style="style:background-color:white;">
+		<tr class="bg-success">
+			<td></td><th>理想的な到達レベルの目安</th><th>標準的な到達レベルの目安</th><th>未到達レベルの目安</th>
+		</tr><tr id="rubricItemRow_1">
+			<th>評価項目1</th><td>高分子の分子構造と溶液物性や高分子の固体構造と高分子物性について具体的に説明できること。</td><td>高分子の分子構造と溶液物性や高分子の固体構造と高分子物性について説明できる。</td><td>高分子の分子構造と溶液物性や高分子の固体構造と高分子物性について説明できない。</td>
+		</tr><tr id="rubricItemRow_2">
+			<th>評価項目2</th><td>耐熱性高分子材料と高強度、高弾性率高分子材料など高性能高分子材料について具体例を交えて説明できること。</td><td>耐熱性高分子材料と高強度、高弾性率高分子材料など高性能高分子材料について説明できる。</td><td>耐熱性高分子材料と高強度、高弾性率高分子材料など高性能高分子材料について説明できない。</td>
+		</tr><tr id="rubricItemRow_3">
+			<th>評価項目3</th><td>グリーンケミストリー（環境化学）に根ざした生分解性高分子について具体的に説明できること。</td><td>グリーンケミストリー（環境化学）に根ざした生分解性高分子について説明できる。</td><td>グリーンケミストリー（環境化学）に根ざした生分解性高分子について説明していない。</td>
+		</tr><tr id="rubricItemRow_4">
+			<th>評価項目4</th><td>ナノテクノロジーからもたらされる高分子ナノ材料や医用高分子材料—生体材料（バイオマテリアル）など機能性高分子材料について具体例を交えて説明できる。</td><td>ナノテクノロジーからもたらされる高分子ナノ材料や医用高分子材料—生体材料（バイオマテリアル）など機能性高分子材料について説明できる。</td><td>ナノテクノロジーからもたらされる高分子ナノ材料や医用高分子材料—生体材料（バイオマテリアル）など機能性高分子材料について説明できない。</td>
+		</tr>
+	</table>
+    </div>
+
+    <h3 class="bg-info text-center">学科の到達目標項目との関係</h3>
+    <div style="background-color:white;">
+        
+                
+                    <div>
+                        JABEE SB 専攻分野の「生産」に関わる専門知識を身に付けた技術者
+                    </div>
+                
+                
+                    <div>
+                        JABEE SB① 共通基礎知識を用いて、専攻分野における設計・製作・評価・改良など生産に関わる専門工学の基礎を理解できる。
+                    </div>
+                
+                
+                    <div>
+                        JABEE SB② 自主的・継続的な学習を通じて、専門工学の基礎科目に関する問題を解決できる。
+                    </div>
+                
+
+    </div>
+
+    <h3 class="bg-info text-center">教育方法等</h3>
+    <div style="background-color:white;">
+      <b style="font-size: 15px">概要:</b><br />
+      <div>
+          高分子は、人間の生活を支える衣食住をはじめ、身の回りの材料あるいは先端材料に広く使用されている。このように急速に進歩し、現代の科学と技術の中で重要な位置を占める高分子の基礎を知ることは、自然科学の研究者・技術者にとって不可欠である。本講義では、高分子化学の基礎的な概念を身に付け、高分子の優れた性質や機能について理解できるように学習する。また、最先端工業技術であるナノテクノロジー（超微細加工技術）からもたらされる高分子ナノ材料、医用高分子材料—生体材料（バイオマテリアル）およびグリーンケミストリー（環境化学）に根ざした生分解性高分子についても併せて学習する。
+      </div>
+      <b style="font-size:15px">授業の進め方・方法:</b><br />
+      <div>
+          高分子に興味を持たせるために、授業内容に関連する身近な高分子材料・機能性高分子材料を紹介しながら講義を進める。<br />講義の進行に合わせて関連する課題を出し、高分子化学の理解を深めさせる。<br />前回の授業の予習・復習を⾏い、授業内で指示した課題に取り組むこと。
+      </div>
+      <b style="font-size:15px">注意点:</b><br />
+      <div>
+          4年次で学習した「高分子化学 I」の科目を復習しておくこと。<br />高分子化合物の示す特徴ある性質や機能について基本的に理解できていること。<br />達成目標に対する理解度を下記の評価方法で総合評価し、60 点以上を合格とする。
+      </div>
+    </div>
+
+        
+    <h3 class="bg-info text-center">授業の属性・履修上の区分</h3>
+    <div style="background-color:white;">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isActiveLearning" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isActiveLearning" />
+                            アクティブラーニング
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isAidedByICT" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isAidedByICT" />
+                            ICT 利用
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isApplicableForRemoteClass" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isApplicableForRemoteClass" />
+                            遠隔授業対応
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isInstructorProfessionallyExperienced" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isInstructorProfessionallyExperienced" />
+                            実務経験のある教員による授業
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="border: 0px none;">
+                        <div class="">
+                            
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <h3 class="bg-info text-center">授業計画</h3>
+    <table class="table table-bordered no-padding" style="background-color:white;" id="lessonsTable">
+        <tr class="bg-success">
+            <th></th>
+            <th></th>
+            <th>週</th>
+            <th>授業内容</th>
+            <th>週ごとの到達目標</th>
+        </tr>
+        
+        
+            <tr>
+                <th rowspan="19" class="bg-danger">後期</th>
+            </tr>
+            
+                <tr>
+                    <th rowspan="9" class="bg-" style="width:60px;">3rdQ</th>
+                </tr>
+                <tr>
+                    <th class="week_number">1週</th>
+                    <td>高分子物性　<br />高分子鎖の形態　回転異性体、ランダムコイル</td>
+                    <td>・高分子の分子構造について理解できる。　<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget17" id="MainContent_SubjectSyllabus_hiddenLessonTarget17" value=",055010601" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">2週</th>
+                    <td>高分子物性　<br />高分子鎖の溶液物性　広がり（回転半径）、θ（シータ）状態、持続長、高分子電解質</td>
+                    <td>・ 高分子の形と大きさについて理解できる。　<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget18" id="MainContent_SubjectSyllabus_hiddenLessonTarget18" value=",055010602" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">3週</th>
+                    <td>高分子物性　<br />高分子の固体構造　結晶性と非晶性、ラメラ構造、球晶</td>
+                    <td>・ 高分子の固体構造について理解できる。　　<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget19" id="MainContent_SubjectSyllabus_hiddenLessonTarget19" value=",055010603" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">4週</th>
+                    <td>高分子物性　<br />熱的性質　ガラス転移点（Tg）と融点（Tm）、粘弾性、エントロピー弾性の理論、架橋構造</td>
+                    <td>・ 高分子の力学的性質について理解できる。　　<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget20" id="MainContent_SubjectSyllabus_hiddenLessonTarget20" value=",055010604" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">5週</th>
+                    <td>高性能高分子材料（１）<br />エンジニアリングプラスチックス、スーパーエンプラ、ウルトラスーパーエンプラ</td>
+                    <td>・耐熱性高分子材料と高強度、高弾性率高分子材料について理解できる。　<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget21" id="MainContent_SubjectSyllabus_hiddenLessonTarget21" value=",055010701" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">6週</th>
+                    <td>高性能高分子材料（２）<br />高強度・高弾性率繊維　炭素繊維、ガラス繊維、アラミド繊維　世界最強の繊維</td>
+                    <td>・耐熱性高分子材料と高強度、高弾性率高分子材料について理解できる。　<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget22" id="MainContent_SubjectSyllabus_hiddenLessonTarget22" value=",055010702" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">7週</th>
+                    <td>高性能高分子材料（３）<br />耐熱性高分子　複合材料、ポリマーアロイ、ナイロン系ナノコンポジット</td>
+                    <td>・耐熱性高分子材料と高強度、高弾性率高分子材料について理解できる。　<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget23" id="MainContent_SubjectSyllabus_hiddenLessonTarget23" value=",055010703" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">8週</th>
+                    <td>中間試験</td>
+                    <td>・1～7週までの内容を網羅した試験により、授業内容の定着を図る。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget24" id="MainContent_SubjectSyllabus_hiddenLessonTarget24" value=",055010704" />
+                    </td>
+                </tr>
+            
+                <tr>
+                    <th rowspan="9" class="bg-" style="width:60px;">4thQ</th>
+                </tr>
+                <tr>
+                    <th class="week_number">9週</th>
+                    <td>高分子材料のリサイクルと環境問題　プラスチック問題へのアプローチ、リサイクル技術の最前線</td>
+                    <td>・中間試験の内容を理解する。<br />・高分子材料のリサイクルと環境問題について理解できる。　<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget25" id="MainContent_SubjectSyllabus_hiddenLessonTarget25" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">10週</th>
+                    <td>生分解性高分子とグリーンプラスチックス</td>
+                    <td>・生分解性高分子とグリーンケミストリー（環境化学）について理解できる。　<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget26" id="MainContent_SubjectSyllabus_hiddenLessonTarget26" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">11週</th>
+                    <td>機能性高分子材料（１）<br />ナノテクノロジー（超微細加工技術）の発展と機能性高分子ナノ材料の開発の取り組み　</td>
+                    <td>・高分子とナノテクノロジー（超微細加工技術）について理解できる。　<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget27" id="MainContent_SubjectSyllabus_hiddenLessonTarget27" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">12週</th>
+                    <td>機能性高分子材料（２）<br />環境材料セルロースナノファイバー（CNF）、導電性高分子<br /></td>
+                    <td>・環境材料セルロースナノファイバー（CNF）について理解できる。　<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget28" id="MainContent_SubjectSyllabus_hiddenLessonTarget28" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">13週</th>
+                    <td>機能性高分子材料（３）<br />医用高分子材料—生体材料（バイオマテリアル）、感温性・刺激応答性ポリマー、高分子と再生医療</td>
+                    <td>・医用高分子材料—生体材料（バイオマテリアル）について理解できる。　<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget29" id="MainContent_SubjectSyllabus_hiddenLessonTarget29" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">14週</th>
+                    <td>機能性高分子材料（４）<br />天然高分子　デンプン、セルロース、タンパク質、天然ゴム、DNA</td>
+                    <td>・有機・無機天然高分子と生体高分子について理解できる。　<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget30" id="MainContent_SubjectSyllabus_hiddenLessonTarget30" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">15週</th>
+                    <td>機能性高分子材料のまとめ<br />医療、環境、食品など幅広い分野で活用されている機能性高分子</td>
+                    <td>・9～14週までの内容を網羅した振り返りにより、授業内容の定着を図る。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget31" id="MainContent_SubjectSyllabus_hiddenLessonTarget31" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">16週</th>
+                    <td>答案返却、解説</td>
+                    <td>・定期試験の内容を理解する。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget32" id="MainContent_SubjectSyllabus_hiddenLessonTarget32" />
+                    </td>
+                </tr>
+            
+    </table>
+
+        
+
+        <h3 class="bg-info text-center">モデルコアカリキュラムの学習内容と到達目標</h3>
+
+        <table id="MainContent_SubjectSyllabus_mccTable" class="table table-bordered no-padding" style="background-color:white;">
+		<tr class="bg-success">
+			<th colspan="2">分類</th><th>分野</th><th>学習内容</th><th>学習内容の到達目標</th><th>到達レベル</th><th>授業週</th>
+		</tr><tr>
+			<td rowspan="8">専門的能力</td><td rowspan="8">分野別の専門工学</td><td rowspan="8">化学・生物系分野</td><td rowspan="8">有機化学</td><td>高分子化合物がどのようなものか説明できる。</td><td>4</td><td>後1</td>
+		</tr><tr>
+			<td>代表的な高分子化合物の種類と、その性質について説明できる。</td><td>4</td><td>後2</td>
+		</tr><tr>
+			<td>高分子の分子量、一次構造から高次構造、および構造から発現する性質を説明できる。</td><td>4</td><td>後3</td>
+		</tr><tr>
+			<td>高分子の熱的性質を説明できる。</td><td>4</td><td>後4</td>
+		</tr><tr>
+			<td>重合反応について説明できる。</td><td>4</td><td>後5</td>
+		</tr><tr>
+			<td>重縮合・付加重合・重付加・開環重合などの代表的な高分子合成反応を説明でき、どのような高分子がこの反応によりできているか区別できる。</td><td>4</td><td>後6</td>
+		</tr><tr>
+			<td>ラジカル重合・カチオン重合・アニオン重合の反応を説明できる。</td><td>4</td><td>後7</td>
+		</tr><tr>
+			<td>ラジカル重合・カチオン重合・アニオン重合の特徴を説明できる。</td><td>4</td><td>後8</td>
+		</tr>
+	</table>
+
+        
+    
+    <h3 class="bg-info text-center">評価割合</h3>
+
+    <div style="overflow:auto">
+       <table id="MainContent_SubjectSyllabus_wariaiTable" class="table table-bordered no-padding" style="style:background-color:white;">
+		<tr class="bg-success">
+			<td></td><th>試験</th><th>発表</th><th>相互評価</th><th>態度</th><th>ポートフォリオ</th><th>その他</th><th>合計</th>
+		</tr><tr>
+			<th>総合評価割合</th><td><b>70</b></td><td><b>0</b></td><td><b>30</b></td><td><b>0</b></td><td><b>0</b></td><td><b>0</b></td><td><b>100</b></td>
+		</tr><tr>
+			<th>基礎的能力</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td><b>0</b></td>
+		</tr><tr>
+			<th>専門的能力</th><td>70</td><td>0</td><td>30</td><td>0</td><td>0</td><td>0</td><td><b>100</b></td>
+		</tr><tr>
+			<th>分野横断的能力</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td><b>0</b></td>
+		</tr>
+	</table>
+    </div>
+
+    </div>
+
+  </div>
+
+
+</div>
+
+    </div>
+    
+
+<script type="text/javascript">
+//<![CDATA[
+if(typeof initSyllabusScript == 'function'){ initSyllabusScript();}//]]>
+</script>
+</form>
+
+        </div>
+    </div>
+
+    <div id="footer">
+        <br />
+        <br />
+        <div class="container">
+            <p class="text-muted credit">
+                ©2014 - MCC Web Syllabus.
+            </p>
+        </div>
+    </div>
+
+    <script src="/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+    <script src="/Scripts/mcc.js?v=20190215"></script>
+    <script src="/Scripts/Grid.js"></script>
+    <script>
+      $.ajaxSetup({
+        cache: false
+      });
+    </script>
+    
+    <script>
+      $(document).ready(function () {
+          initSyllabusScript();
+      });
+    </script>
+
+
+</body>
+</html>

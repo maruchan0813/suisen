@@ -1,0 +1,617 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+
+</title><link href="../Content/css/bootstrap.css" rel="stylesheet" type="text/css" /><link href="../Content/font-awesome.min.css" rel="stylesheet" type="text/css" /><link href="../Content/css/Grid.css" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc.css?_=20201215" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc_public_theme.css?_=20150406" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/jquery-3.7.1.min.js"></script>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-51403293-1', 'mccdemo.cloudapp.net');
+        ga('send', 'pageview');
+        
+    </script>
+    <script>
+
+        function searchThisSite() {
+
+            
+            $("#loadingModal")[0].style.visibility = "visible";
+            
+            $("#btnSearchThisSite")[0].blur();
+
+            var querys = getUrlVars();
+            var paramString = "";
+
+            querys.forEach(function (value, index, array) {
+
+                if (value != "keyword") {
+                    paramString += "&" + value + "=" + querys[value];
+                }
+            });
+
+            var keyword = $('#siteKeyword').val();
+            var encodeKeyword = encodeURIComponent(keyword);
+
+            var pageName =  getPageName();
+            if (pageName != "PublicSearchResult") {
+                paramString += "&before_page=" + pageName;
+            }
+
+            location.href = "/Pages/PublicSearchResult.aspx?keyword=" + encodeKeyword + paramString;
+        }
+
+        $(document).ready(function () {
+
+            
+            var langSelected = $('#langSelected');
+            langSelected.change(function () {
+                
+                var addQuery = '';
+                var hrefs = location.href.split('?');
+                if (hrefs.length > 1) {
+                    addQuery = cleanQuery(hrefs[1], 'lang');
+                }
+                if (addQuery != '') {
+                    addQuery = addQuery + '&';
+                }
+                location.href = hrefs[0] + '?' + addQuery + 'lang=' + $(this).val();
+            });
+
+            
+            $('#siteKeyword').tooltip();
+        });
+
+        function getPageName() {
+            var split = window.location.pathname.split('/');
+            return split[split.length - 1];
+        }
+
+        function getUrlVars() {
+            var vars = [], hash;
+
+            var split = window.location.href.split('?');
+            if (split.length != 2) {
+                // 要素無し
+                return vars;
+            }
+
+            var hashes = split[1].split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
+        function cleanQuery(query, target) {
+            var arr = [];
+            $.each(query.split('&'), function (i, param) {
+                if (param.split('=')[0] != target) { arr.push(param); }
+            });
+            return arr.join('&');
+        }
+
+    </script>
+
+    
+
+
+    <!-- for dodai -->
+    
+</head>
+<body>
+    
+    <div id="wrap">
+        <!-- Loading -->
+        <div class="modal-backdrop in" id="loadingModal" tabindex="-1" style="visibility:hidden;">
+             <div style="top: 1.5%; position: absolute; left: 50%;">
+                 <div id="loadingSearchPanel" class='loading'></div>
+             </div>
+        </div>
+        <div class="navbar navbar-default navbar-fixed-top header_area" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    
+                    <span class="navbar-brand"><i class="glyphicon glyphicon-home"></i>高専Webシラバス</span>
+                    <div class="navbar-text navbar-text-min-none">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+
+                    
+
+                    
+                    <table class="navbar-brand navbar-right" style="height:50px;">
+                        
+                        <tr id="SyllabusSearchBlankArea">
+	<td style="padding-top:6px;">
+                                 <input type="text" class="form-control" style="width:200px; visibility:hidden"/>
+                            </td>
+	<td style="padding-top:6px;">
+                                <button class="btn btn-default" style="visibility:hidden">検索</button>
+                            </td>
+</tr>
+
+                    </table>
+                    <div class="navbar-text navbar-text-min-none navbar-right">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                    <div class="navbar-collapse navbar-brand navbar-right">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="page-header">
+
+            <ol class="breadcrumb">
+                <li><a href="/Pages/PublicSchools?lang=ja"><i class="glyphicon glyphicon-home"></i>ホーム</a></li>
+                
+
+    <li>
+        <a href="./PublicDepartments?school_id=45&lang=ja">
+            北九州工業高等専門学校
+        </a>
+    </li>
+    <li>
+
+        
+        <a href="./PublicSubjects?school_id=45&department_id=33&year=2026&lang=ja">
+            生産デザイン工学科（電気電子コース） 
+        </a>
+        
+        
+    </li>
+    <li>
+        電気回路ＡⅠ
+    </li>
+
+
+            </ol>
+            <div id="AlertMessage" class="alert alert-danger" style="display:none;">
+            </div>
+        </div>
+        <div class="container" style="margin-left:50px;margin-right:50px;width:90%;">
+            
+
+
+    <div class="mcc-title-bar">
+        <div class="row">
+            <div class="col-md-6">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1>電気回路ＡⅠ</h1>
+                    </div>
+                    <div class="col-md-6"></div>
+                </div>
+
+            </div>
+
+            <div class="col-md-4 mcc-page-actions">
+                <div class="btn-group" style="margin-top:6px;">
+                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="height:auto;">
+                        PDF
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu text-left" role="menu">
+                        <li>
+                            <a class="" target="_blank" role="menuitem"
+                                href="/Pages/SyllabusPDF?school_id=45&department_id=33&subject_id=0081&year=2024&lang=ja&subject_code=&preview=False&type=start&attachment=false">
+                                表示
+                            </a>
+                        </li>
+                         <li>
+                             <a class="" target="_blank" role="menuitem"
+                                href="/Pages/SyllabusPDF?school_id=45&department_id=33&subject_id=0081&year=2024&lang=ja&subject_code=&preview=False&type=start&attachment=true">
+                                保存
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <form method="post" action="./PublicSyllabus?school_id=45&amp;department_id=33&amp;subject_id=0081&amp;year=2024&amp;lang=ja" id="asp_form">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+
+
+<script src="../Scripts/WebForms/MsAjax/MicrosoftAjax.js" type="text/javascript"></script>
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="DBEB7810" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdABV2qlVg3z+A7eWfnktvmS5bR7L3wySogUAl7PijvtwaUSsm8nTXGaHoUVtfjM0rCZj22oJ4VQ24ZYDTOYTZUrP5vtB5q2NRcavKnoOwBU+gOFuZNgbutiT/9QNQ8KAQQUmuUSB1iQXvm8kYo0aR42WIvdrGE9S+MFljAcAMyN35TqiPob/uxh50k4d9Otx1edKQFYf7ktK+pg/fRBarI9curvAtRO7k0YSfR52jbyiJEdL7EgSHU2NR/GkMooHyn2eKyBfV8NWUDOOq4zAH9eL6mUONb4p+LK5GOAgfiK6zu66xvUPoV+07Y4KVVOkYZtprK3AwxJNHjIL3LHLUH8OSpUaMufwC1vLmd5p4NCmxTnO3TIpLIbrZrG1ZA0Rpm5hNXM8Wg+fXjJVwKa/aE/8oQ8IRHTJvwSirmyK9c5RaMxGk6gOHn7ndkVsOPsFb8m7ZYo4ztxcVIZ4iCmKUKfnRsmV+H6RsIWpXVcgT/o+N5g==" />
+        
+    <div style="width:100%;float:left;">
+        
+
+<script type="text/javascript">
+    $(function () {
+        $('.missionOpenBtn').click(function (e) {
+            var parent = $(this).parent('div');
+            var info = parent.data('info');
+            var item_name = parent.data('item_name');
+            var key = parent.data('key');
+            var str = info + ' ' + item_name;
+            $('#' + key + '_open').addClass('hide');
+            $('#' + key + '_close').removeClass('hide');
+            $('#' + key + "_display").text(str);
+
+        });
+        $('.missionCloseBtn').click(function (e) {
+            var parent = $(this).parent('div');
+            var info = parent.data('info');
+            var key = parent.data('key');
+            $('#' + key + '_open').removeClass('hide');
+            $('#' + key + '_close').addClass('hide');
+            $('#' + key + "_display").text(info);
+
+        });
+    })
+</script>
+
+<div id="MainContent_SubjectSyllabus_UpdatePanelSyllabus">
+	
+
+<div>
+    <div>
+        <span id="MainContent_SubjectSyllabus_LabelInfo" class="text-danger"><font size="5"></font></span>
+    </div>
+
+    <h3 class="bg-info text-center">科目基礎情報</h3>
+    <table class="table table-bordered no-padding" style="background-color:white;">
+        <tr>
+            <th>学校</th>
+            <td >北九州工業高等専門学校</td>
+            <th >開講年度</th>
+            <td >令和08年度 (2026年度)</td>
+        </tr>
+        <tr>
+            <th>授業科目</th>
+            <td colspan="3">電気回路ＡⅠ</td>
+        </tr>
+        <tr>
+            <th>科目番号</th>
+            <td>0081</td>
+            <th>科目区分</th>
+            <td>専門 / 必修</td>
+        </tr>
+        <tr>
+            <th>授業形態</th>
+            <td>講義</td>
+            <th>単位の種別と単位数</th>
+            <td>履修単位: 1</td>
+        </tr>
+        <tr>
+            <th>開設学科</th>
+            <td>生産デザイン工学科（電気電子コース）</td>
+            <th>対象学年</th>
+            <td>3</td>
+        </tr>
+        <tr>
+            <th>開設期</th>
+            <td>前期</td>
+            <th>週時間数</th>
+            <td>2</td>
+        </tr>
+        <tr>
+            <th>教科書/教材</th>
+            <td colspan="3">
+                「例題と演習で学ぶ電気回路」 服藤 憲司(森北出版) 
+            </td>
+        </tr>
+        <tr>
+            <th>担当教員</th>
+            <td colspan="3">
+                <span id="Teachers">前川 孝司</span>
+            </td>
+        </tr>
+    </table>
+
+    <div id="MainContent_SubjectSyllabus_syllabusContent">
+
+    <h3 class="bg-info text-center">到達目標</h3>
+    <div style="background-color:white;">
+        1.交流電圧や交流電流、インピーダンス、アドミタンスを直交形式、極形式、フェーザー形式でそれぞれ示すことができる<br />2.交流の直列回路、並列回路、直並列回路の計算ができる <br />3.交流電力の皮相電力、有効電力、無効電力、力率について理解し、計算することができる
+    </div>
+
+    <h3 class="bg-info text-center">ルーブリック</h3>
+
+    
+
+    <div style="overflow:auto">
+    <table id="MainContent_SubjectSyllabus_hyouka" class="table table-bordered no-padding" style="style:background-color:white;">
+		<tr class="bg-success">
+			<td></td><th>理想的な到達レベルの目安</th><th>標準的な到達レベルの目安</th><th>未到達レベルの目安</th>
+		</tr><tr id="rubricItemRow_1">
+			<th>評価項目１</th><td>直交形式、極形式、フェーザー形式の各種表示ができるとともにそれら特徴を理解し、使い分けができる</td><td>直交形式、極形式、フェーザー形式の各種表示ができる</td><td>電直交形式、極形式、フェーザー形式の各種表示ができない</td>
+		</tr><tr id="rubricItemRow_2">
+			<th>評価項目２</th><td>交流回路の素子について理解し、計算ができ、複素平面にベクトルを描くことができる．</td><td>交流回路の素子について理解し、計算ができるあるいは、複素平面にベクトルを描くことのいづれかができる．</td><td>交流回路の素子について理解できず、計算や、複素平面にベクトルを描くことができない．</td>
+		</tr><tr id="rubricItemRow_3">
+			<th>評価項目３</th><td>交流電力について理解し、計算ができ、進みや遅れの関係について説明ができる</td><td>交流電力について理解し、計算ができる</td><td>交流電力について理解できず、計算ができない</td>
+		</tr>
+	</table>
+    </div>
+
+    <h3 class="bg-info text-center">学科の到達目標項目との関係</h3>
+    <div style="background-color:white;">
+        
+
+    </div>
+
+    <h3 class="bg-info text-center">教育方法等</h3>
+    <div style="background-color:white;">
+      <b style="font-size: 15px">概要:</b><br />
+      <div>
+          電気数学で学んだ内容を,より物理的に理解させる.特に,交流回路の解析に不可欠なベクトルとしての複素数の考え方を十分理解させ,この考え方を交流回路に適用し,交流回路の諸特性の解析及びその手法の習得を目的とする.
+      </div>
+      <b style="font-size:15px">授業の進め方・方法:</b><br />
+      <div>
+          講義形式で進め、演習問題を通じて理解を深め応用力を身につける
+      </div>
+      <b style="font-size:15px">注意点:</b><br />
+      <div>
+          電気数学の内容を土台としている
+      </div>
+    </div>
+
+        
+    <h3 class="bg-info text-center">授業の属性・履修上の区分</h3>
+    <div style="background-color:white;">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isActiveLearning" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isActiveLearning" />
+                            アクティブラーニング
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isAidedByICT" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isAidedByICT" checked="checked" />
+                            ICT 利用
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isApplicableForRemoteClass" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isApplicableForRemoteClass" checked="checked" />
+                            遠隔授業対応
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isInstructorProfessionallyExperienced" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isInstructorProfessionallyExperienced" />
+                            実務経験のある教員による授業
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="border: 0px none;">
+                        <div class="">
+                            
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <h3 class="bg-info text-center">授業計画</h3>
+    <table class="table table-bordered no-padding" style="background-color:white;" id="lessonsTable">
+        <tr class="bg-success">
+            <th></th>
+            <th></th>
+            <th>週</th>
+            <th>授業内容</th>
+            <th>週ごとの到達目標</th>
+        </tr>
+        
+            <tr>
+                <th rowspan="19" class="bg-primary">前期</th>
+            </tr>
+            
+                <tr>
+                    <th rowspan="9" class="bg-" style="width:60px;">1stQ</th>
+                </tr>
+                <tr class="bg-">
+                    <th class="week_number">1週</th>
+                    <td>ガイダンス</td>
+                    <td>交流の基本として三角関数、複素数での計算が必要であることを理解する<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget1" id="MainContent_SubjectSyllabus_hiddenLessonTarget1" value=",053010101,053010102,021040201,021040203,021040202" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">2週</th>
+                    <td>交流回路の基礎</td>
+                    <td>正弦波の特徴を理解し、周波数や位相、実効値など諸量について理解できる<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget2" id="MainContent_SubjectSyllabus_hiddenLessonTarget2" value=",053010203,053011002,021040202,053010301,053010302" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">3週</th>
+                    <td>複素数と三角関数</td>
+                    <td>直交形式や極形式あるいは形式変換を用いて複素数の計算を行うことができる<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget3" id="MainContent_SubjectSyllabus_hiddenLessonTarget3" value=",053010203" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">4週</th>
+                    <td>交流の基本素子（R,L,C）と瞬時値での計算</td>
+                    <td>交流の基本素子(R,L,C)単体の電圧や電流、リアクタンスと正弦波交流電圧、電流の関係を説明できる<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget4" id="MainContent_SubjectSyllabus_hiddenLessonTarget4" value=",053010304,053010305" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">5週</th>
+                    <td>正弦波交流のフェーザ表示</td>
+                    <td>正弦波交流のフェーザ表示を理解し、瞬時値との相互変換ができる<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget5" id="MainContent_SubjectSyllabus_hiddenLessonTarget5" value=",021040203,053010303,053010305" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">6週</th>
+                    <td>交流直列回路</td>
+                    <td>交流の直列回路の計算問題を解くことができる<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget6" id="MainContent_SubjectSyllabus_hiddenLessonTarget6" value=",053010306,053010307" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">7週</th>
+                    <td>交流並列回路</td>
+                    <td>交流の並列回路の計算問題を解くことができる<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget7" id="MainContent_SubjectSyllabus_hiddenLessonTarget7" value=",053010402,053010306,053010307" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">8週</th>
+                    <td>中間試験</td>
+                    <td>指定された問題に対して60点以上の得点をとることができる<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget8" id="MainContent_SubjectSyllabus_hiddenLessonTarget8" />
+                    </td>
+                </tr>
+            
+                <tr>
+                    <th rowspan="9" class="bg-" style="width:60px;">2ndQ</th>
+                </tr>
+                <tr>
+                    <th class="week_number">9週</th>
+                    <td>直並列回路</td>
+                    <td>交流の直並列回路の計算問題を解くことができる<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget9" id="MainContent_SubjectSyllabus_hiddenLessonTarget9" value=",053010306,053010307" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">10週</th>
+                    <td>交流ブリッジ回路</td>
+                    <td>交流ブリッジ回路の計算問題を解くことができる<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget10" id="MainContent_SubjectSyllabus_hiddenLessonTarget10" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">11週</th>
+                    <td>複素平面上へのベクトル図示</td>
+                    <td>交流回路の各ベクトルを複素平面上に描くことができる<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget11" id="MainContent_SubjectSyllabus_hiddenLessonTarget11" value=",053010304" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">12週</th>
+                    <td>交流回路の電力</td>
+                    <td>交流回路の各素子の電力を求めることができる<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget12" id="MainContent_SubjectSyllabus_hiddenLessonTarget12" value=",053010306" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">13週</th>
+                    <td>交流電力（皮相電力、有効電力、無効電力、力率）</td>
+                    <td>交流電力について理解し、皮相電力、有効電力、無効電力、力率について計算することができる<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget13" id="MainContent_SubjectSyllabus_hiddenLessonTarget13" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">14週</th>
+                    <td>複素電力</td>
+                    <td>複素電力の考え方を理解し、進みや遅れについて説明することができる<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget14" id="MainContent_SubjectSyllabus_hiddenLessonTarget14" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">15週</th>
+                    <td>まとめの演習</td>
+                    <td>これまでの内容について理解し、演習問題を解くことができる<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget15" id="MainContent_SubjectSyllabus_hiddenLessonTarget15" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">16週</th>
+                    <td>定期試験</td>
+                    <td>指定された問題に対して60点以上の得点をとることができる<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget16" id="MainContent_SubjectSyllabus_hiddenLessonTarget16" />
+                    </td>
+                </tr>
+            
+        
+    </table>
+
+        
+
+        <h3 class="bg-info text-center">モデルコアカリキュラムの学習内容と到達目標</h3>
+
+        <table id="MainContent_SubjectSyllabus_mccTable" class="table table-bordered no-padding" style="background-color:white;">
+		<tr class="bg-success">
+			<th colspan="2">分類</th><th>分野</th><th>学習内容</th><th>学習内容の到達目標</th><th>到達レベル</th><th>授業週</th>
+		</tr><tr>
+			<td rowspan="1">基礎的能力</td><td rowspan="1">自然科学</td><td rowspan="1">物理</td><td rowspan="1">力学</td><td>導体と不導体の違いについて、自由電子と関連させて説明できる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td rowspan="5">専門的能力</td><td rowspan="5">分野別の専門工学</td><td rowspan="5">電気・電子系分野</td><td rowspan="5">電気回路</td><td>電荷と電流、電圧、電力の関係を理解し、回路の計算に用いることができる。</td><td>4</td><td>前1</td>
+		</tr><tr>
+			<td>合成抵抗や分圧・分流の考え方を用いて、回路の計算ができる。</td><td>4</td><td>前1</td>
+		</tr><tr>
+			<td>キルヒホッフの法則や重ねの理等の定理を理解し、回路の電圧や電流、電力を計算できる。</td><td>4</td><td></td>
+		</tr><tr>
+			<td>平均値と実効値を説明し、これらを計算できる。</td><td>4</td><td>前2</td>
+		</tr><tr>
+			<td>フェーザ、複素数表示を理解し、これらを正弦波交流回路の計算に用いることができる。</td><td>4</td><td>前5</td>
+		</tr>
+	</table>
+
+        
+    
+    <h3 class="bg-info text-center">評価割合</h3>
+
+    <div style="overflow:auto">
+       <table id="MainContent_SubjectSyllabus_wariaiTable" class="table table-bordered no-padding" style="style:background-color:white;">
+		<tr class="bg-success">
+			<td></td><th>試験</th><th>小テスト等</th><th>演習・レポート</th><th>発表</th><th>相互評価</th><th>合計</th>
+		</tr><tr>
+			<th>総合評価割合</th><td><b>70</b></td><td><b>30</b></td><td><b>0</b></td><td><b>0</b></td><td><b>0</b></td><td><b>100</b></td>
+		</tr><tr>
+			<th>基礎的能力</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td><b>0</b></td>
+		</tr><tr>
+			<th>専門的能力</th><td>70</td><td>30</td><td>0</td><td>0</td><td>0</td><td><b>100</b></td>
+		</tr><tr>
+			<th>分野横断的能力</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td><b>0</b></td>
+		</tr>
+	</table>
+    </div>
+
+    </div>
+
+  </div>
+
+
+</div>
+
+    </div>
+    
+
+<script type="text/javascript">
+//<![CDATA[
+if(typeof initSyllabusScript == 'function'){ initSyllabusScript();}//]]>
+</script>
+</form>
+
+        </div>
+    </div>
+
+    <div id="footer">
+        <br />
+        <br />
+        <div class="container">
+            <p class="text-muted credit">
+                ©2014 - MCC Web Syllabus.
+            </p>
+        </div>
+    </div>
+
+    <script src="/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+    <script src="/Scripts/mcc.js?v=20190215"></script>
+    <script src="/Scripts/Grid.js"></script>
+    <script>
+      $.ajaxSetup({
+        cache: false
+      });
+    </script>
+    
+    <script>
+      $(document).ready(function () {
+          initSyllabusScript();
+      });
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,623 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+
+</title><link href="../Content/css/bootstrap.css" rel="stylesheet" type="text/css" /><link href="../Content/font-awesome.min.css" rel="stylesheet" type="text/css" /><link href="../Content/css/Grid.css" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc.css?_=20201215" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc_public_theme.css?_=20150406" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/jquery-3.7.1.min.js"></script>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-51403293-1', 'mccdemo.cloudapp.net');
+        ga('send', 'pageview');
+        
+    </script>
+    <script>
+
+        function searchThisSite() {
+
+            
+            $("#loadingModal")[0].style.visibility = "visible";
+            
+            $("#btnSearchThisSite")[0].blur();
+
+            var querys = getUrlVars();
+            var paramString = "";
+
+            querys.forEach(function (value, index, array) {
+
+                if (value != "keyword") {
+                    paramString += "&" + value + "=" + querys[value];
+                }
+            });
+
+            var keyword = $('#siteKeyword').val();
+            var encodeKeyword = encodeURIComponent(keyword);
+
+            var pageName =  getPageName();
+            if (pageName != "PublicSearchResult") {
+                paramString += "&before_page=" + pageName;
+            }
+
+            location.href = "/Pages/PublicSearchResult.aspx?keyword=" + encodeKeyword + paramString;
+        }
+
+        $(document).ready(function () {
+
+            
+            var langSelected = $('#langSelected');
+            langSelected.change(function () {
+                
+                var addQuery = '';
+                var hrefs = location.href.split('?');
+                if (hrefs.length > 1) {
+                    addQuery = cleanQuery(hrefs[1], 'lang');
+                }
+                if (addQuery != '') {
+                    addQuery = addQuery + '&';
+                }
+                location.href = hrefs[0] + '?' + addQuery + 'lang=' + $(this).val();
+            });
+
+            
+            $('#siteKeyword').tooltip();
+        });
+
+        function getPageName() {
+            var split = window.location.pathname.split('/');
+            return split[split.length - 1];
+        }
+
+        function getUrlVars() {
+            var vars = [], hash;
+
+            var split = window.location.href.split('?');
+            if (split.length != 2) {
+                // 要素無し
+                return vars;
+            }
+
+            var hashes = split[1].split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
+        function cleanQuery(query, target) {
+            var arr = [];
+            $.each(query.split('&'), function (i, param) {
+                if (param.split('=')[0] != target) { arr.push(param); }
+            });
+            return arr.join('&');
+        }
+
+    </script>
+
+    
+
+
+    <!-- for dodai -->
+    
+</head>
+<body>
+    
+    <div id="wrap">
+        <!-- Loading -->
+        <div class="modal-backdrop in" id="loadingModal" tabindex="-1" style="visibility:hidden;">
+             <div style="top: 1.5%; position: absolute; left: 50%;">
+                 <div id="loadingSearchPanel" class='loading'></div>
+             </div>
+        </div>
+        <div class="navbar navbar-default navbar-fixed-top header_area" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    
+                    <span class="navbar-brand"><i class="glyphicon glyphicon-home"></i>高専Webシラバス</span>
+                    <div class="navbar-text navbar-text-min-none">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+
+                    
+
+                    
+                    <table class="navbar-brand navbar-right" style="height:50px;">
+                        
+                        <tr id="SyllabusSearchBlankArea">
+	<td style="padding-top:6px;">
+                                 <input type="text" class="form-control" style="width:200px; visibility:hidden"/>
+                            </td>
+	<td style="padding-top:6px;">
+                                <button class="btn btn-default" style="visibility:hidden">検索</button>
+                            </td>
+</tr>
+
+                    </table>
+                    <div class="navbar-text navbar-text-min-none navbar-right">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                    <div class="navbar-collapse navbar-brand navbar-right">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="page-header">
+
+            <ol class="breadcrumb">
+                <li><a href="/Pages/PublicSchools?lang=ja"><i class="glyphicon glyphicon-home"></i>ホーム</a></li>
+                
+
+    <li>
+        <a href="./PublicDepartments?school_id=45&lang=ja">
+            北九州工業高等専門学校
+        </a>
+    </li>
+    <li>
+
+        
+        <a href="./PublicSubjects?school_id=45&department_id=31&year=2026&lang=ja">
+            生産デザイン工学科（機械創造システムコース） 
+        </a>
+        
+        
+    </li>
+    <li>
+        情報セキュリティ
+    </li>
+
+
+            </ol>
+            <div id="AlertMessage" class="alert alert-danger" style="display:none;">
+            </div>
+        </div>
+        <div class="container" style="margin-left:50px;margin-right:50px;width:90%;">
+            
+
+
+    <div class="mcc-title-bar">
+        <div class="row">
+            <div class="col-md-6">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1>情報セキュリティ</h1>
+                    </div>
+                    <div class="col-md-6"></div>
+                </div>
+
+            </div>
+
+            <div class="col-md-4 mcc-page-actions">
+                <div class="btn-group" style="margin-top:6px;">
+                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="height:auto;">
+                        PDF
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu text-left" role="menu">
+                        <li>
+                            <a class="" target="_blank" role="menuitem"
+                                href="/Pages/SyllabusPDF?school_id=45&department_id=31&subject_id=0024&year=2026&lang=ja&subject_code=&preview=False&type=start&attachment=false">
+                                表示
+                            </a>
+                        </li>
+                         <li>
+                             <a class="" target="_blank" role="menuitem"
+                                href="/Pages/SyllabusPDF?school_id=45&department_id=31&subject_id=0024&year=2026&lang=ja&subject_code=&preview=False&type=start&attachment=true">
+                                保存
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <form method="post" action="./PublicSyllabus?school_id=45&amp;department_id=31&amp;subject_id=0024&amp;year=2026&amp;lang=ja" id="asp_form">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTQ3NTA3ODgwNg9kFgJmD2QWCAIBDxYCHgdWaXNpYmxlaBYCZg9kFgICAQ9kFgJmDxBkZBQrAQFmZAICDxYCHwBoZAIDDxYCHwBnZAIHD2QWAmYPZBYCAgMPZBYCAgEPZBYCZg9kFgQCAg8PFgIeBFRleHQFe+W3pumWgOiHs+WzsOOAgeOAjuODnuODs+OCrO+8i+Wbs+ino+OBp+WfuuekjuOBjOOCiOOBj+OCj+OBi+OCi+OAgOaDheWgseOCu+OCreODpeODquODhuOCo+OBruaVmeenkeabuOOAj+OAgeaKgOihk+ipleirluekvmRkAgMPZBYiZg8PFgIfAQWdAuaDheWgseOCu+OCreODpeODquODhuOCo+OBruWfuuacrOamguW/teOCkueQhuino+OBl+OAgeaXpeW4uOeUn+a0u+OChOWtpualreOBq+OBiuOBhOOBpuWuieWFqOOBq+ODh+OCuOOCv+ODq+aDheWgseOCkuaJseOBhuiDveWKm+OCkui6q+OBq+OBpOOBkeOCi+OAggrjg4fjg7zjgr/jgoRBSeOCkuaJseOBhuS4iuOBp+OBruWfuuacrOeahOOBqueVmeaEj+S6i+mgheOCkueQhuino+OBl+OAgeOBk+OCjOOCieOCkumBqeWIh+OBq+WIqea0u+eUqOOBmeOCi+iDveWKm+OCkui6q+OBq+OBpOOBkeOCi+OAgmRkAgEPDxYEHghDc3NDbGFzcwUfdGFibGUgdGFibGUtYm9yZGVyZWQgbm8tcGFkZGluZx4EXyFTQgICFgIeBXN0eWxlBR1zdHlsZTpiYWNrZ3JvdW5kLWNvbG9yOndoaXRlO2QCAg8WAh4LXyFJdGVtQ291bnRmZAIDDw8WAh8BBaIE5oOF5aCx44K744Kt44Ol44Oq44OG44Kj44Gu5a2m57+S5YaF5a6544Gr44Gv44CB5oOF5aCx44K744Kt44Ol44Oq44OG44Kj44Gu5Z+65pys5qaC5b+144Go6YeN6KaB5oCn44CB44Kq44Oz44Op44Kk44Oz44Gn44Gu5YCL5Lq65oOF5aCx44Gu5L+d6K235pa55rOV44CB44OV44Kj44OD44K344Oz44Kw5pS75pKD44KE44Oe44Or44Km44Kn44Ki44Gq44Gp44Gu44K744Kt44Ol44Oq44OG44Kj6ISF5aiB44Gu6K2Y5Yil44CB44Km44Kk44Or44K55a++562W44K944OV44OI44KE44OV44Kh44Kk44Ok44Km44Kp44O844Or44Gu5b255Ymy44CB5a6J5YWo44Gq44Kk44Oz44K/44O844ON44OD44OI5Yip55So44CB44GM5ZCr44G+44KM44KL44CC44GT44KM44KJ44Gu5a2m57+S44Gr44KI44KK44CB44OH44K444K/44Or55Kw5aKD44Gn44Gu5a6J5YWo44Gq5rS75YuV44KS6KGM44GG44Gf44KB44Gu55+l6K2Y44Go44K544Kt44Or44KS57+S5b6X44GX44CB5oOF5aCx44K744Kt44Ol44Oq44OG44Kj44Gu6YeN6KaB5oCn44KS5rex44GP55CG6Kej44Gn44GN44KL44CCZGQCBA8PFgIfAQXxAuW6p+WtpuOBruWbnuOBp+OBr+OAgeaDheWgseOCu+OCreODpeODquODhuOCo+OBruamguW/teOBrueQhuino+OCkua3seOCgeOCi+OBn+OCgeOBq+iqsumhjOOBq+WPluOCiue1hOOCgOOAguiqsumhjOOBruWbnuOBp+OBr+OAgeODkeOCveOCs+ODs+OCkueUqOOBhOOBpuOAgeWun+i3teeahOOBquWPluOCiue1hOOBv+OCkuihjOOBhuOAguOCsOODq+ODvOODl+ODr+ODvOOCr+OBiuOCiOOBs+ODl+ODrOOCvOODs+ODhuODvOOCt+ODp+ODs+OBp+OBr+OAgeaDheWgseOCu+OCreODpeODquODhuOCo+OBq+mWouOBmeOCi+WVj+OBhOOBq+OBpOOBhOOBpuitsOirluOBl+OAgeeZuuihqOOCkumAmuOBmOOBpuWtpue/kuOBruaIkOaenOOCkuekuuOBmeOAgmRkAgUPDxYCHwEFZuavjuWbnuOAgeODkeOCveOCs+ODs+OBqOaVmeenkeabuOOBjOW/heimgeOBqOOBquOCi+OBruOBp+OAgeW/mOOCjOOBquOBhOOCiOOBhuOBq+azqOaEj+OBmeOCi+OBk+OBqOOAgmRkAgYPDxYCHwFlZGQCBw8PFgIfAWVkZAIIDxAPFgIeB0NoZWNrZWRnZGRkZAIJDxAPFgIfBmdkZGRkAgoPEA8WAh8GZ2RkZGQCCw8QDxYCHwZoZGRkZAIMDw8WBB8BZR4JTWF4TGVuZ3RoAgVkZAINDxYCHwBoFgRmDxYCHwBoFjBmDw8WAh8BZWRkAgEPDxYCHwFlZGQCAg8WAh4FVmFsdWVlZAIDDw8WAh8BZWRkAgQPDxYCHwFlZGQCBQ8WAh8IZWQCBg8PFgIfAWVkZAIHDw8WAh8BZWRkAggPFgIfCGVkAgkPDxYCHwFlZGQCCg8PFgIfAWVkZAILDxYCHwhlZAIMDw8WAh8BZWRkAg0PDxYCHwFlZGQCDg8WAh8IZWQCDw8PFgIfAWVkZAIQDw8WAh8BZWRkAhEPFgIfCGVkAhIPDxYCHwFlZGQCEw8PFgIfAWVkZAIUDxYCHwhlZAIVDw8WAh8BZWRkAhYPDxYCHwFlZGQCFw8WAh8IZWQCAQ8WAh8AaBYwZg8PFgIfAWVkZAIBDw8WAh8BZWRkAgIPFgIfCGVkAgMPDxYCHwFlZGQCBA8PFgIfAWVkZAIFDxYCHwhlZAIGDw8WAh8BZWRkAgcPDxYCHwFlZGQCCA8WAh8IZWQCCQ8PFgIfAWVkZAIKDw8WAh8BZWRkAgsPFgIfCGVkAgwPDxYCHwFlZGQCDQ8PFgIfAWVkZAIODxYCHwhlZAIPDw8WAh8BZWRkAhAPDxYCHwFlZGQCEQ8WAh8IZWQCEg8PFgIfAWVkZAITDw8WAh8BZWRkAhQPFgIfCGVkAhUPDxYCHwFlZGQCFg8PFgIfAWVkZAIXDxYCHwhlZAIOD2QWBGYPZBYgZg8PFgIfAQUe5oOF5aCx44K744Kt44Ol44Oq44OG44Kj44Go44GvZGQCAQ8PFgIfAQX9AeaDheWgseOCu+OCreODpeODquODhuOCo+OBruW/heimgeaAp+OCkueQhuino+OBl+OAgeWvvuetluOBq+OBpOOBhOOBpuiqrOaYjuOBp+OBjeOCi+OAgu+8j+aDheWgseOCu+OCreODpeODquODhuOCo+OBrjPopoHntKDjgavjgaTjgYTjgaboqqzmmI7jgafjgY3jgovjgILvvI/npL7kvJrjgafjga/jganjga7jgojjgYbjgarjg4fjg7zjgr/jgYzpm4bjgoHjgonjgozmtLvnlKjjgZXjgozjgabjgYTjgovjgYvjgpLoqqzmmI7jgafjgY3jgovjgIJkZAIDDw8WAh8BBTPjg6Hjg7zjg6vjgavplqLjgZnjgovjg6rjgrnjgq/jgajpganliIfjgarkvb/jgYTmlrlkZAIEDw8WAh8BBVHjg6Hjg7zjg6vjgavplqLjgZnjgovjg6rjgrnjgq/jgajpganliIfjgarkvb/jgYTmlrnjgavjgaTjgYTjgabnkIbop6PjgafjgY3jgovjgIJkZAIGDw8WAh8BBR7jgrXjgqTjg5Djg7zmlLvmkoPjga7ku5XntYTjgb9kZAIHDw8WAh8BBWPmg4XloLHnpL7kvJrjgafnlJ/mtLvjgZnjgovkuIrjgafjga7jg57jg4rjg7zjgIHjg6Ljg6njg6vjga7ph43opoHmgKfjgavjgaTjgYTjgaboqqzmmI7jgafjgY3jgovjgIJkZAIJDw8WAh8BBUjpganliIfjgarjg5XjgqHjgqTjg6vjgbjjga7jgqLjgq/jgrvjgrnmqKnpmZDjga7lv4XopoHmgKfjgajoqK3lrprmlrnms5VkZAIKDw8WAh8BBWbpganliIfjgarjg5XjgqHjgqTjg6vjgbjjga7jgqLjgq/jgrvjgrnmqKnpmZDjga7lv4XopoHmgKfjgajoqK3lrprmlrnms5XjgavjgaTjgYTjgabnkIbop6PjgafjgY3jgovjgIJkZAIMDw8WAh8BBTPmg4XloLHjgrvjgq3jg6Xjg6rjg4bjgqPnrqHnkIbjgYrjgojjgbPplqLpgKPms5Xopo9kZAINDw8WAh8BBbEC5oOF5aCx44KE6YCa5L+h44CB44OH44O844K/5YCr55CG44Gr6Zai6YCj44GZ44KL5rOV5Luk44KE6KaP5YmH562J44Go44CB44Gd44Gu5b+F6KaB5oCn44Gr44Gk44GE44Gm6Kqs5piO44Gn44GN44KL44CC77yP5oOF5aCx44K744Kt44Ol44Oq44OG44Kj44KS6YGL55So44GZ44KL44Gf44KB44Gu6ICD44GI5pa544Go5pa55rOV44KS6Kqs5piO44Gn44GN44KL44CC77yP44OH44O844K/44KEQUnjgpLlj5bjgorlt7vjgY/lgKvnkIbnmoTjg7vms5XnmoTjg7vnpL7kvJrnmoToqrLpoYzjgavjgaTjgYTjgabnkIbop6PjgafjgY3jgovjgIJkZAIPDw8WAh8BBRjjgrDjg6vjg7zjg5fjg6/jg7zjgq8oMSlkZAIQDw8WAh8BBX7mg4XloLHjgrvjgq3jg6Xjg6rjg4bjgqPjgavplqLjgZnjgovjg4bjg7zjg57jgavjgaTjgYTjgabjgrDjg6vjg7zjg5fjgaforbDoq5bjgZfjgIHmhI/opovjgpLjgb7jgajjgoHjgovjgZPjgajjgYzjgafjgY3jgovjgIJkZAISDw8WAh8BBR7jg5fjg6zjgrzjg7Pjg4bjg7zjgrfjg6fjg7MoMSlkZAITDw8WAh8BBXvmg4XloLHjgrvjgq3jg6Xjg6rjg4bjgqPjgavplqLjgZnjgovjg4bjg7zjg57jgavjgaTjgYTjgabjgrDjg6vjg7zjg5fjgaforbDoq5bjgZfjgZ/ntZDmnpzjgpLnmbrooajjgZfjgIHoqI7oq5bjgafjgY3jgovjgIJkZAIVDw8WAh8BBSfmg4XloLHjgrvjgq3jg6Xjg6rjg4bjgqPjga7ln7rmnKzmioDooZNkZAIWDw8WAh8BBUXmg4XloLHjgrvjgq3jg6Xjg6rjg4bjgqPjga7ln7rmnKzmioDooZPjgavjgaTjgYTjgaboqqzmmI7jgafjgY3jgovjgIJkZAIBD2QWIGYPDxYCHwEFHuODkOOCpOODiuODquino+aekOOBruS7lee1hOOBv2RkAgEPDxYCHwEFPOODkOOCpOODiuODquino+aekOOBruS7lee1hOOBv+OBq+OBpOOBhOOBpueQhuino+OBp+OBjeOCi+OAgmRkAgMPDxYCHwEFJ+aDheWgseOCu+OCreODpeODquODhuOCo+WvvuetluOBruWfuuacrGRkAgQPDxYCHwEFTuaDheWgseOCu+OCreODpeODquODhuOCo+OCkuaUr+OBiOOCi+aal+WPt+aKgOihk+OBruWfuuekjuOCkuiqrOaYjuOBp+OBjeOCi+OAgmRkAgYPDxYCHwEFFVJTQeaal+WPt+OBruS7lee1hOOBv2RkAgcPDxYCHwEFM1JTQeaal+WPt+OBruS7lee1hOOBv+OBq+OBpOOBhOOBpueQhuino+OBp+OBjeOCi+OAgmRkAgkPDxYCHwEFJ+aDheWgseOCu+OCreODpeODquODhuOCo+WvvuetluOBruW/nOeUqGRkAgoPDxYCHwEFWuaDheWgseOCu+OCreODpeODquODhuOCo+OBq+WfuuOBpeOBhOOBn+aDheWgseOBuOOBruOCouOCr+OCu+OCueaWueazleOCkuiqrOaYjuOBp+OBjeOCi+OAgmRkAgwPDxYCHwEFJOODjeODg+ODiOODr+ODvOOCr+OCu+OCreODpeODquODhuOCo2RkAg0PDxYCHwEF2AHmg4XloLHpgJrkv6Hjg43jg4Pjg4jjg6/jg7zjgq/jga7ku5XntYTjgb/jgoTmp4vmiJDlj4rjgbPmp4vmiJDopoHntKDjgIHjg5fjg63jg4jjgrPjg6vjga7lvbnlibLjgoTmioDooZPjgavjgaTjgYTjgabjga7nn6XorZjjgpLmjIHjgaHjgIHnpL7kvJrjgavjgYrjgZHjgovmg4XloLHpgJrkv6Hjg43jg4Pjg4jjg6/jg7zjgq/jga7lvbnlibLjgpLoqqzmmI7jgafjgY3jgovjgIJkZAIPDw8WAh8BBRjjgrDjg6vjg7zjg5fjg6/jg7zjgq8oMilkZAIQDw8WAh8BBX7mg4XloLHjgrvjgq3jg6Xjg6rjg4bjgqPjgavplqLjgZnjgovjg4bjg7zjg57jgavjgaTjgYTjgabjgrDjg6vjg7zjg5fjgaforbDoq5bjgZfjgIHmhI/opovjgpLjgb7jgajjgoHjgovjgZPjgajjgYzjgafjgY3jgovjgIJkZAISDw8WAh8BBR7jg5fjg6zjgrzjg7Pjg4bjg7zjgrfjg6fjg7MoMilkZAITDw8WAh8BBXvmg4XloLHjgrvjgq3jg6Xjg6rjg4bjgqPjgavplqLjgZnjgovjg4bjg7zjg57jgavjgaTjgYTjgabjgrDjg6vjg7zjg5fjgaforbDoq5bjgZfjgZ/ntZDmnpzjgpLnmbrooajjgZfjgIHoqI7oq5bjgafjgY3jgovjgIJkZAIVDw8WAh8BZWRkAhYPDxYCHwFlZGQCDw8PFgQfAgUfdGFibGUgdGFibGUtYm9yZGVyZWQgbm8tcGFkZGluZx8DAgIWAh8EBRdiYWNrZ3JvdW5kLWNvbG9yOndoaXRlOxYCAgEPZBYIZg8PFgIeB1Jvd1NwYW4CBmRkAgEPDxYCHwkCBmRkAgIPDxYCHwkCBmRkAgMPDxYCHwkCBmRkAhAPDxYEHwIFH3RhYmxlIHRhYmxlLWJvcmRlcmVkIG5vLXBhZGRpbmcfAwICFgIfBAUdc3R5bGU6YmFja2dyb3VuZC1jb2xvcjp3aGl0ZTtkGAEFHl9fQ29udHJvbHNSZXF1aXJlUG9zdEJhY2tLZXlfXxYEBTJjdGwwMCRNYWluQ29udGVudCRTdWJqZWN0U3lsbGFidXMkaXNBY3RpdmVMZWFybmluZwUuY3RsMDAkTWFpbkNvbnRlbnQkU3ViamVjdFN5bGxhYnVzJGlzQWlkZWRCeUlDVAU8Y3RsMDAkTWFpbkNvbnRlbnQkU3ViamVjdFN5bGxhYnVzJGlzQXBwbGljYWJsZUZvclJlbW90ZUNsYXNzBUdjdGwwMCRNYWluQ29udGVudCRTdWJqZWN0U3lsbGFidXMkaXNJbnN0cnVjdG9yUHJvZmVzc2lvbmFsbHlFeHBlcmllbmNlZO/Kz0G75CnZvhfzQM4AddlwwPkJPiiEGJtiYInLqS3p" />
+
+
+<script src="../Scripts/WebForms/MsAjax/MicrosoftAjax.js" type="text/javascript"></script>
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="DBEB7810" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdABXO8KTMW3Q3RvzMna6A7CyvR7L3wySogUAl7PijvtwaUSsm8nTXGaHoUVtfjM0rCZj22oJ4VQ24ZYDTOYTZUrP5vtB5q2NRcavKnoOwBU+gOA64SVEnPyPScYYkpSuU0xW2L4Jve6H60KdcbqEngomYYAGK+IWmF40J3t6o3zJYQj3DsjWHDc/cKA2KFUkqXvhopB6nlbzlu7nJWavaBjuezSQ3X2CP5vn0hjBBJbTLvz3CGZ9Cu8Hncxu1Mzz13m3V7gpVpizzZerj5lK8GW+8vLrFU9WtRM9R2nxmAWJZWhHFXp5SXO+z24qW7wHAsQemku3WtiEWR1FYGon8mnk41yO2HHE1YguYPkDLvX/psMZQL1ESWpI/XcFGLFInH1feb0T4IWniJZEt0XI1iJVuCry12SX7zfqSJ7S/DRiQgIbYsULENMzw4TU3uWFsunQpEAF2fag/xpCD/GNW/SSbXK6pE/4YHQO/kVELzPU4Aw==" />
+        
+    <div style="width:100%;float:left;">
+        
+
+<script type="text/javascript">
+    $(function () {
+        $('.missionOpenBtn').click(function (e) {
+            var parent = $(this).parent('div');
+            var info = parent.data('info');
+            var item_name = parent.data('item_name');
+            var key = parent.data('key');
+            var str = info + ' ' + item_name;
+            $('#' + key + '_open').addClass('hide');
+            $('#' + key + '_close').removeClass('hide');
+            $('#' + key + "_display").text(str);
+
+        });
+        $('.missionCloseBtn').click(function (e) {
+            var parent = $(this).parent('div');
+            var info = parent.data('info');
+            var key = parent.data('key');
+            $('#' + key + '_open').removeClass('hide');
+            $('#' + key + '_close').addClass('hide');
+            $('#' + key + "_display").text(info);
+
+        });
+    })
+</script>
+
+<div id="MainContent_SubjectSyllabus_UpdatePanelSyllabus">
+	
+
+<div>
+    <div>
+        <span id="MainContent_SubjectSyllabus_LabelInfo" class="text-danger"><font size="5"></font></span>
+    </div>
+
+    <h3 class="bg-info text-center">科目基礎情報</h3>
+    <table class="table table-bordered no-padding" style="background-color:white;">
+        <tr>
+            <th>学校</th>
+            <td >北九州工業高等専門学校</td>
+            <th >開講年度</th>
+            <td >令和08年度 (2026年度)</td>
+        </tr>
+        <tr>
+            <th>授業科目</th>
+            <td colspan="3">情報セキュリティ</td>
+        </tr>
+        <tr>
+            <th>科目番号</th>
+            <td>0024</td>
+            <th>科目区分</th>
+            <td>専門 / 必修</td>
+        </tr>
+        <tr>
+            <th>授業形態</th>
+            <td>講義</td>
+            <th>単位の種別と単位数</th>
+            <td>履修単位: 1</td>
+        </tr>
+        <tr>
+            <th>開設学科</th>
+            <td>生産デザイン工学科（機械創造システムコース）</td>
+            <th>対象学年</th>
+            <td>1</td>
+        </tr>
+        <tr>
+            <th>開設期</th>
+            <td>後期</td>
+            <th>週時間数</th>
+            <td>2</td>
+        </tr>
+        <tr>
+            <th>教科書/教材</th>
+            <td colspan="3">
+                左門至峰、『マンガ＋図解で基礎がよくわかる　情報セキュリティの教科書』、技術評論社
+            </td>
+        </tr>
+        <tr>
+            <th>担当教員</th>
+            <td colspan="3">
+                <span id="Teachers">渡邊 厚介,蒋 欣,武市 義弘,諸藤 秀幸,大森 優雅,横田 篤紀</span>
+            </td>
+        </tr>
+    </table>
+
+    <div id="MainContent_SubjectSyllabus_syllabusContent">
+
+    <h3 class="bg-info text-center">到達目標</h3>
+    <div style="background-color:white;">
+        情報セキュリティの基本概念を理解し、日常生活や学業において安全にデジタル情報を扱う能力を身につける。<br />データやAIを扱う上での基本的な留意事項を理解し、これらを適切に利活用する能力を身につける。
+    </div>
+
+    <h3 class="bg-info text-center">ルーブリック</h3>
+
+    
+
+    <div style="overflow:auto">
+    <table id="MainContent_SubjectSyllabus_hyouka" class="table table-bordered no-padding" style="style:background-color:white;">
+		<tr class="bg-success">
+			<td></td><th>理想的な到達レベルの目安</th><th>標準的な到達レベルの目安</th><th>未到達レベルの目安</th>
+		</tr><tr id="rubricItemRow_1">
+			<th>評価項目1</th><td>情報セキュリティの重要性を深く理解し、他者に説明できる</td><td>情報セキュリティの基本概念を理解している</td><td>情報セキュリティの基本概念を理解していない</td>
+		</tr><tr id="rubricItemRow_2">
+			<th>評価項目2</th><td>強力なパスワードを作成し、他者に教えることができる</td><td>基本的なパスワードを作成し、管理できる</td><td>パスワードの作成や管理ができない</td>
+		</tr><tr id="rubricItemRow_3">
+			<th>評価項目3</th><td>フィッシングやマルウェアなどの脅威を深く理解し、他者に説明できる</td><td>セキュリティ脅威を理解している </td><td>セキュリティ脅威を理解していない</td>
+		</tr><tr id="rubricItemRow_4">
+			<th>評価項目4</th><td>ソーシャルエンジニアリング攻撃の手口と対策を理解し、実践できる</td><td>基本的な対策を理解し、実践できる</td><td>ソーシャルエンジニアリング攻撃の手口を理解していない</td>
+		</tr><tr id="rubricItemRow_5">
+			<th>評価項目5</th><td>安全なウェブブラウジングを実践し、他者に教えることができる</td><td>基本的なウェブブラウジングの安全対策を理解している</td><td>安全なウェブブラウジングの方法を理解していない</td>
+		</tr><tr id="rubricItemRow_6">
+			<th>評価項目6</th><td>データやAIを扱う上での留意事項を深く理解し、適切に利活用することができる</td><td>データやAIを扱う上での基本的な留意事項を理解している</td><td>データやAIを扱う上での基本的な留意事項を理解していない</td>
+		</tr>
+	</table>
+    </div>
+
+    <h3 class="bg-info text-center">学科の到達目標項目との関係</h3>
+    <div style="background-color:white;">
+        
+
+    </div>
+
+    <h3 class="bg-info text-center">教育方法等</h3>
+    <div style="background-color:white;">
+      <b style="font-size: 15px">概要:</b><br />
+      <div>
+          情報セキュリティの学習内容には、情報セキュリティの基本概念と重要性、オンラインでの個人情報の保護方法、フィッシング攻撃やマルウェアなどのセキュリティ脅威の識別、ウイルス対策ソフトやファイヤウォールの役割、安全なインターネット利用、が含まれる。これらの学習により、デジタル環境での安全な活動を行うための知識とスキルを習得し、情報セキュリティの重要性を深く理解できる。
+      </div>
+      <b style="font-size:15px">授業の進め方・方法:</b><br />
+      <div>
+          座学の回では、情報セキュリティの概念の理解を深めるために課題に取り組む。課題の回では、パソコンを用いて、実践的な取り組みを行う。グループワークおよびプレゼンテーションでは、情報セキュリティに関する問いについて議論し、発表を通じて学習の成果を示す。
+      </div>
+      <b style="font-size:15px">注意点:</b><br />
+      <div>
+          毎回、パソコンと教科書が必要となるので、忘れないように注意すること。
+      </div>
+    </div>
+
+        
+    <h3 class="bg-info text-center">授業の属性・履修上の区分</h3>
+    <div style="background-color:white;">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isActiveLearning" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isActiveLearning" checked="checked" />
+                            アクティブラーニング
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isAidedByICT" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isAidedByICT" checked="checked" />
+                            ICT 利用
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isApplicableForRemoteClass" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isApplicableForRemoteClass" checked="checked" />
+                            遠隔授業対応
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isInstructorProfessionallyExperienced" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isInstructorProfessionallyExperienced" />
+                            実務経験のある教員による授業
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="border: 0px none;">
+                        <div class="">
+                            
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <h3 class="bg-info text-center">授業計画</h3>
+    <table class="table table-bordered no-padding" style="background-color:white;" id="lessonsTable">
+        <tr class="bg-success">
+            <th></th>
+            <th></th>
+            <th>週</th>
+            <th>授業内容</th>
+            <th>週ごとの到達目標</th>
+        </tr>
+        
+        
+            <tr>
+                <th rowspan="19" class="bg-danger">後期</th>
+            </tr>
+            
+                <tr>
+                    <th rowspan="9" class="bg-" style="width:60px;">3rdQ</th>
+                </tr>
+                <tr>
+                    <th class="week_number">1週</th>
+                    <td>情報セキュリティとは</td>
+                    <td>情報セキュリティの必要性を理解し、対策について説明できる。／情報セキュリティの3要素について説明できる。／社会ではどのようなデータが集められ活用されているかを説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget17" id="MainContent_SubjectSyllabus_hiddenLessonTarget17" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">2週</th>
+                    <td>メールに関するリスクと適切な使い方</td>
+                    <td>メールに関するリスクと適切な使い方について理解できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget18" id="MainContent_SubjectSyllabus_hiddenLessonTarget18" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">3週</th>
+                    <td>サイバー攻撃の仕組み</td>
+                    <td>情報社会で生活する上でのマナー、モラルの重要性について説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget19" id="MainContent_SubjectSyllabus_hiddenLessonTarget19" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">4週</th>
+                    <td>適切なファイルへのアクセス権限の必要性と設定方法</td>
+                    <td>適切なファイルへのアクセス権限の必要性と設定方法について理解できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget20" id="MainContent_SubjectSyllabus_hiddenLessonTarget20" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">5週</th>
+                    <td>情報セキュリティ管理および関連法規</td>
+                    <td>情報や通信、データ倫理に関連する法令や規則等と、その必要性について説明できる。／情報セキュリティを運用するための考え方と方法を説明できる。／データやAIを取り巻く倫理的・法的・社会的課題について理解できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget21" id="MainContent_SubjectSyllabus_hiddenLessonTarget21" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">6週</th>
+                    <td>グループワーク(1)</td>
+                    <td>情報セキュリティに関するテーマについてグループで議論し、意見をまとめることができる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget22" id="MainContent_SubjectSyllabus_hiddenLessonTarget22" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">7週</th>
+                    <td>プレゼンテーション(1)</td>
+                    <td>情報セキュリティに関するテーマについてグループで議論した結果を発表し、討論できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget23" id="MainContent_SubjectSyllabus_hiddenLessonTarget23" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">8週</th>
+                    <td>情報セキュリティの基本技術</td>
+                    <td>情報セキュリティの基本技術について説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget24" id="MainContent_SubjectSyllabus_hiddenLessonTarget24" />
+                    </td>
+                </tr>
+            
+                <tr>
+                    <th rowspan="9" class="bg-" style="width:60px;">4thQ</th>
+                </tr>
+                <tr>
+                    <th class="week_number">9週</th>
+                    <td>バイナリ解析の仕組み</td>
+                    <td>バイナリ解析の仕組みについて理解できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget25" id="MainContent_SubjectSyllabus_hiddenLessonTarget25" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">10週</th>
+                    <td>情報セキュリティ対策の基本</td>
+                    <td>情報セキュリティを支える暗号技術の基礎を説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget26" id="MainContent_SubjectSyllabus_hiddenLessonTarget26" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">11週</th>
+                    <td>RSA暗号の仕組み</td>
+                    <td>RSA暗号の仕組みについて理解できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget27" id="MainContent_SubjectSyllabus_hiddenLessonTarget27" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">12週</th>
+                    <td>情報セキュリティ対策の応用</td>
+                    <td>情報セキュリティに基づいた情報へのアクセス方法を説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget28" id="MainContent_SubjectSyllabus_hiddenLessonTarget28" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">13週</th>
+                    <td>ネットワークセキュリティ</td>
+                    <td>情報通信ネットワークの仕組みや構成及び構成要素、プロトコルの役割や技術についての知識を持ち、社会における情報通信ネットワークの役割を説明できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget29" id="MainContent_SubjectSyllabus_hiddenLessonTarget29" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">14週</th>
+                    <td>グループワーク(2)</td>
+                    <td>情報セキュリティに関するテーマについてグループで議論し、意見をまとめることができる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget30" id="MainContent_SubjectSyllabus_hiddenLessonTarget30" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">15週</th>
+                    <td>プレゼンテーション(2)</td>
+                    <td>情報セキュリティに関するテーマについてグループで議論した結果を発表し、討論できる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget31" id="MainContent_SubjectSyllabus_hiddenLessonTarget31" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">16週</th>
+                    <td></td>
+                    <td><input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget32" id="MainContent_SubjectSyllabus_hiddenLessonTarget32" />
+                    </td>
+                </tr>
+            
+    </table>
+
+        
+
+        <h3 class="bg-info text-center">モデルコアカリキュラムの学習内容と到達目標</h3>
+
+        <table id="MainContent_SubjectSyllabus_mccTable" class="table table-bordered no-padding" style="background-color:white;">
+		<tr class="bg-success">
+			<th colspan="2">分類</th><th>分野</th><th>学習内容</th><th>学習内容の到達目標</th><th>到達レベル</th><th>授業週</th>
+		</tr><tr>
+			<td rowspan="6">基礎的能力</td><td rowspan="6">工学基礎</td><td rowspan="6">情報リテラシー</td><td rowspan="6">情報リテラシー</td><td>情報セキュリティの必要性を理解し、対策について説明できる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td>情報セキュリティを支える暗号技術の基礎を説明できる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td>情報セキュリティに基づいた情報へのアクセス方法を説明できる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td>情報や通信に関連する法令や規則等と、その必要性について説明できる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td>情報社会で生活する上でのマナー、モラルの重要性について説明できる。</td><td>3</td><td></td>
+		</tr><tr>
+			<td>情報セキュリティを運用するための考え方と方法を説明できる。</td><td>3</td><td></td>
+		</tr>
+	</table>
+
+        
+    
+    <h3 class="bg-info text-center">評価割合</h3>
+
+    <div style="overflow:auto">
+       <table id="MainContent_SubjectSyllabus_wariaiTable" class="table table-bordered no-padding" style="style:background-color:white;">
+		<tr class="bg-success">
+			<td></td><th>課題</th><th>演習・プレゼンテーション</th><th>合計</th>
+		</tr><tr>
+			<th>総合評価割合</th><td><b>50</b></td><td><b>50</b></td><td><b>100</b></td>
+		</tr><tr>
+			<th>基礎的能力</th><td>0</td><td>0</td><td><b>0</b></td>
+		</tr><tr>
+			<th>専門的能力</th><td>50</td><td>50</td><td><b>100</b></td>
+		</tr><tr>
+			<th>分野横断的能力</th><td>0</td><td>0</td><td><b>0</b></td>
+		</tr>
+	</table>
+    </div>
+
+    </div>
+
+  </div>
+
+
+</div>
+
+    </div>
+    
+
+<script type="text/javascript">
+//<![CDATA[
+if(typeof initSyllabusScript == 'function'){ initSyllabusScript();}//]]>
+</script>
+</form>
+
+        </div>
+    </div>
+
+    <div id="footer">
+        <br />
+        <br />
+        <div class="container">
+            <p class="text-muted credit">
+                ©2014 - MCC Web Syllabus.
+            </p>
+        </div>
+    </div>
+
+    <script src="/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+    <script src="/Scripts/mcc.js?v=20190215"></script>
+    <script src="/Scripts/Grid.js"></script>
+    <script>
+      $.ajaxSetup({
+        cache: false
+      });
+    </script>
+    
+    <script>
+      $(document).ready(function () {
+          initSyllabusScript();
+      });
+    </script>
+
+
+</body>
+</html>

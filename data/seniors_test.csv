@@ -1,0 +1,101 @@
+course_code,mechanics,thermo_fluid,design_making,control_robotics,circuits_electronics,power_machines,programming,chemistry,biology_food,hands_on,coding,theory,experiment,career_type,destination
+mechanical,4,4,5,4,1,1,2,2,1,5,3,1,4,further_study,"国立大学 工学部 機械系（3年次編入）"
+mechanical,4,4,5,3,2,1,3,1,1,5,2,1,4,employment,鉄鋼メーカー（設備技術職）
+mechanical,3,5,5,2,1,2,1,1,1,5,1,3,2,employment,自動車メーカー（設計職）
+mechanical,5,3,5,3,1,1,1,2,1,5,4,2,4,employment,鉄鋼メーカー（設備技術職）
+mechanical,2,3,5,2,2,2,1,1,1,5,2,2,4,employment,自動車メーカー（設計職）
+mechanical,4,4,4,3,2,1,2,1,1,5,2,1,4,further_study,"北九州高専 専攻科"
+mechanical,5,5,5,1,2,2,1,1,2,5,2,2,2,further_study,"国立大学 工学部 機械系（3年次編入）"
+mechanical,4,5,5,2,1,1,3,1,2,5,1,2,3,employment,鉄鋼メーカー（設備技術職）
+mechanical,4,2,5,2,1,1,1,1,1,5,3,3,4,further_study,"国立大学 工学部 機械系（3年次編入）"
+mechanical,5,3,5,3,1,1,2,1,1,5,3,4,3,further_study,"国立大学 工学部 機械系（3年次編入）"
+mechanical,3,4,4,2,1,2,1,1,2,5,2,2,3,further_study,"北九州高専 専攻科"
+mechanical,3,3,5,2,1,2,1,2,1,5,2,1,1,further_study,"国立大学 工学部 機械系（3年次編入）"
+mechanical,3,4,5,2,2,1,2,1,2,4,2,2,3,further_study,"国立大学 工学部 機械系（3年次編入）"
+mechanical,4,3,5,2,2,1,2,1,1,5,3,3,2,employment,産業機械メーカー（生産技術職）
+mechanical,3,3,3,1,1,1,2,1,1,4,1,2,2,employment,重工業メーカー（設備保全職）
+mechanical,5,3,5,3,1,1,1,1,1,5,1,3,3,employment,自動車メーカー（設計職）
+mechanical,3,4,5,1,1,2,1,2,1,4,1,3,2,employment,重工業メーカー（設備保全職）
+mechanical,4,4,5,3,1,1,3,1,2,5,3,3,3,employment,鉄鋼メーカー（設備技術職）
+mechanical,3,5,5,3,2,2,2,1,1,4,4,2,3,employment,自動車メーカー（設計職）
+mechanical,3,5,5,2,1,1,1,2,1,5,2,1,2,employment,産業機械メーカー（生産技術職）
+robotics,3,3,3,5,1,2,5,2,1,3,4,3,2,employment,電機メーカー（ロボットシステム開発職）
+robotics,4,3,4,5,1,1,4,1,1,3,4,3,2,further_study,"国立大学 工学部 ロボティクス系（3年次編入）"
+robotics,3,3,3,5,2,1,3,1,1,2,5,1,2,employment,電機メーカー（ロボットシステム開発職）
+robotics,4,3,4,5,2,1,4,1,1,2,4,2,2,further_study,"北九州高専 専攻科"
+robotics,4,3,2,5,2,1,5,1,2,4,5,3,2,employment,FA機器メーカー（開発職）
+robotics,2,4,4,5,2,2,5,2,1,3,3,3,3,employment,自動車部品メーカー（組込みソフト職）
+robotics,4,4,3,4,2,1,4,1,1,4,4,2,2,employment,自動車部品メーカー（組込みソフト職）
+robotics,4,3,5,4,2,1,4,1,2,4,5,1,1,further_study,"国立大学 工学部 ロボティクス系（3年次編入）"
+robotics,3,3,3,5,2,1,4,1,1,3,3,3,1,further_study,"北九州高専 専攻科"
+robotics,3,2,3,5,1,1,5,1,1,5,4,2,2,employment,電機メーカー（ロボットシステム開発職）
+robotics,3,4,3,5,3,2,3,1,1,5,4,3,2,further_study,"北九州高専 専攻科"
+robotics,4,4,3,4,1,1,3,2,1,4,3,3,2,further_study,"国立大学 工学部 ロボティクス系（3年次編入）"
+robotics,4,1,4,5,2,1,5,1,1,4,5,2,2,employment,FA機器メーカー（開発職）
+robotics,3,3,4,5,1,2,5,1,1,3,5,4,3,employment,電機メーカー（ロボットシステム開発職）
+robotics,3,2,4,4,2,1,3,1,1,3,4,2,2,further_study,"国立大学 工学部 ロボティクス系（3年次編入）"
+robotics,4,3,3,5,1,1,3,1,1,4,4,3,2,employment,産業用ロボットメーカー（制御設計職）
+robotics,3,4,5,5,2,1,4,3,1,3,3,1,2,employment,電機メーカー（ロボットシステム開発職）
+robotics,4,5,5,5,1,1,3,2,1,3,4,2,2,employment,FA機器メーカー（開発職）
+robotics,3,2,4,4,1,1,5,1,1,4,4,3,2,further_study,"北九州高専 専攻科"
+robotics,4,5,4,5,1,2,5,1,2,3,5,2,3,employment,自動車部品メーカー（組込みソフト職）
+electrical,3,3,2,2,5,3,2,1,2,2,3,3,5,employment,鉄道会社（電気設備職）
+electrical,1,2,1,2,5,3,3,2,3,2,3,4,3,employment,電機メーカー（回路設計職）
+electrical,1,1,1,1,5,4,1,1,1,3,2,4,3,further_study,"北九州高専 専攻科"
+electrical,1,1,1,3,4,5,2,2,2,2,2,3,2,employment,電力会社（保守・運用職）
+electrical,1,1,1,2,5,3,1,1,1,2,2,5,4,employment,半導体メーカー（プロセス技術職）
+electrical,1,1,1,4,5,2,1,1,1,2,4,4,4,further_study,"国立大学 工学部 電気電子系（3年次編入）"
+electrical,1,1,2,2,4,4,2,1,1,3,2,4,4,further_study,"北九州高専 専攻科"
+electrical,2,1,1,1,5,4,2,1,1,1,2,5,3,employment,電力会社（保守・運用職）
+electrical,2,1,2,2,4,5,2,1,2,3,5,3,4,employment,鉄道会社（電気設備職）
+electrical,1,1,2,1,5,3,1,1,1,2,3,1,4,further_study,"北九州高専 専攻科"
+electrical,1,1,1,2,5,4,2,2,2,2,2,4,4,further_study,"国立大学 工学部 電気電子系（3年次編入）"
+electrical,1,1,1,1,4,4,2,1,1,1,2,4,3,further_study,"国立大学 工学部 電気電子系（3年次編入）"
+electrical,1,2,1,2,5,4,1,1,1,2,1,3,3,further_study,"北九州高専 専攻科"
+electrical,1,2,1,2,5,3,1,1,1,2,2,3,5,employment,電力会社（保守・運用職）
+electrical,1,1,2,1,5,4,1,1,1,1,3,4,3,further_study,"北九州高専 専攻科"
+electrical,2,2,1,2,4,4,1,1,1,2,2,5,4,employment,電機メーカー（回路設計職）
+electrical,1,2,1,1,4,3,2,1,1,2,1,4,5,further_study,"北九州高専 専攻科"
+electrical,1,1,1,1,5,3,2,1,1,2,2,5,4,employment,鉄道会社（電気設備職）
+electrical,1,1,1,1,5,5,1,1,1,1,3,4,3,further_study,"国立大学 工学部 電気電子系（3年次編入）"
+electrical,1,1,1,2,5,3,1,1,1,1,3,3,3,further_study,"北九州高専 専攻科"
+information,1,1,1,2,4,1,4,2,1,2,4,2,2,further_study,"北九州高専 専攻科"
+information,1,1,1,1,4,1,4,2,1,2,5,3,2,further_study,"国立大学 工学部 情報系（3年次編入）"
+information,2,1,1,2,4,2,5,1,1,1,5,4,1,employment,システム開発会社（システムエンジニア）
+information,1,2,2,2,3,2,5,1,1,3,5,4,2,further_study,"北九州高専 専攻科"
+information,1,2,2,3,4,2,4,1,1,3,4,5,1,employment,電機メーカー（組込みソフト職）
+information,2,1,1,1,5,3,5,1,1,1,5,3,3,employment,電機メーカー（組込みソフト職）
+information,2,2,1,1,5,2,4,2,1,1,5,3,1,further_study,"北九州高専 専攻科"
+information,2,1,2,1,3,2,4,2,1,4,5,3,1,further_study,"北九州高専 専攻科"
+information,1,1,1,1,4,1,5,1,1,1,4,2,1,further_study,"国立大学 工学部 情報系（3年次編入）"
+information,1,1,1,2,4,2,5,2,2,2,5,3,2,further_study,"国立大学 工学部 情報系（3年次編入）"
+information,1,1,1,2,2,1,3,1,1,4,4,3,2,employment,システム開発会社（システムエンジニア）
+information,1,1,1,2,3,1,5,1,1,2,4,5,2,further_study,"北九州高専 専攻科"
+information,2,2,1,1,4,1,5,2,1,2,3,3,3,further_study,"国立大学 工学部 情報系（3年次編入）"
+information,1,1,1,2,3,3,4,2,1,2,4,3,2,employment,通信会社（ネットワーク技術職）
+information,1,1,1,3,3,2,5,1,1,1,5,2,2,further_study,"北九州高専 専攻科"
+information,1,3,1,3,4,1,5,1,1,1,5,3,2,employment,通信会社（ネットワーク技術職）
+information,2,1,1,4,4,2,5,2,1,2,5,3,1,further_study,"国立大学 工学部 情報系（3年次編入）"
+information,2,1,1,2,4,2,5,1,2,2,5,2,2,employment,"ソフトウェア開発会社（Web エンジニア）"
+information,1,1,1,1,5,1,4,1,1,1,4,2,1,employment,"ソフトウェア開発会社（Web エンジニア）"
+information,2,1,1,2,4,1,4,1,1,1,4,3,3,employment,電機メーカー（組込みソフト職）
+chemistry,1,2,1,1,1,1,2,5,2,2,2,3,5,employment,食品メーカー（品質管理職）
+chemistry,2,1,1,1,1,1,2,5,2,2,2,2,4,further_study,"国立大学 工学部 応用化学系（3年次編入）"
+chemistry,1,1,1,1,1,2,2,5,1,1,2,4,5,employment,食品メーカー（品質管理職）
+chemistry,1,1,1,2,1,1,2,5,1,3,2,3,5,employment,食品メーカー（品質管理職）
+chemistry,1,1,1,1,1,2,1,3,1,1,1,2,5,further_study,"北九州高専 専攻科"
+chemistry,1,1,1,1,2,2,1,4,2,2,3,3,4,further_study,"北九州高専 専攻科"
+chemistry,3,1,1,1,2,1,2,4,1,2,1,3,5,further_study,"国立大学 工学部 応用化学系（3年次編入）"
+chemistry,1,1,1,2,1,1,3,5,3,1,1,3,5,employment,化学メーカー（製造技術職）
+chemistry,1,1,2,2,2,1,2,5,2,2,2,4,4,employment,食品メーカー（品質管理職）
+chemistry,1,2,1,1,2,1,1,5,4,2,2,3,4,employment,化学メーカー（製造技術職）
+chemistry,1,1,1,2,1,1,1,5,2,2,3,2,5,further_study,"国立大学 工学部 応用化学系（3年次編入）"
+chemistry,1,2,1,1,1,2,2,5,1,1,2,5,4,employment,素材メーカー（研究開発補助職）
+chemistry,1,1,2,1,1,1,1,5,2,3,3,5,5,further_study,"国立大学 工学部 応用化学系（3年次編入）"
+chemistry,1,2,1,2,1,3,1,4,2,2,2,3,4,employment,食品メーカー（品質管理職）
+chemistry,1,2,1,2,2,1,1,4,2,2,2,4,4,employment,製薬会社（分析職）
+chemistry,1,1,1,1,2,2,3,5,3,3,3,3,5,employment,食品メーカー（品質管理職）
+chemistry,1,1,2,1,1,1,2,5,4,1,2,5,5,further_study,"国立大学 工学部 応用化学系（3年次編入）"
+chemistry,1,1,1,1,2,2,2,5,1,1,3,4,3,further_study,"国立大学 工学部 応用化学系（3年次編入）"
+chemistry,1,2,2,1,1,1,4,5,2,3,1,3,5,employment,製薬会社（分析職）
+chemistry,1,1,1,1,2,1,1,5,2,4,3,3,5,employment,素材メーカー（研究開発補助職）

@@ -1,0 +1,633 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+
+</title><link href="../Content/css/bootstrap.css" rel="stylesheet" type="text/css" /><link href="../Content/font-awesome.min.css" rel="stylesheet" type="text/css" /><link href="../Content/css/Grid.css" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc.css?_=20201215" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc_public_theme.css?_=20150406" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/jquery-3.7.1.min.js"></script>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-51403293-1', 'mccdemo.cloudapp.net');
+        ga('send', 'pageview');
+        
+    </script>
+    <script>
+
+        function searchThisSite() {
+
+            
+            $("#loadingModal")[0].style.visibility = "visible";
+            
+            $("#btnSearchThisSite")[0].blur();
+
+            var querys = getUrlVars();
+            var paramString = "";
+
+            querys.forEach(function (value, index, array) {
+
+                if (value != "keyword") {
+                    paramString += "&" + value + "=" + querys[value];
+                }
+            });
+
+            var keyword = $('#siteKeyword').val();
+            var encodeKeyword = encodeURIComponent(keyword);
+
+            var pageName =  getPageName();
+            if (pageName != "PublicSearchResult") {
+                paramString += "&before_page=" + pageName;
+            }
+
+            location.href = "/Pages/PublicSearchResult.aspx?keyword=" + encodeKeyword + paramString;
+        }
+
+        $(document).ready(function () {
+
+            
+            var langSelected = $('#langSelected');
+            langSelected.change(function () {
+                
+                var addQuery = '';
+                var hrefs = location.href.split('?');
+                if (hrefs.length > 1) {
+                    addQuery = cleanQuery(hrefs[1], 'lang');
+                }
+                if (addQuery != '') {
+                    addQuery = addQuery + '&';
+                }
+                location.href = hrefs[0] + '?' + addQuery + 'lang=' + $(this).val();
+            });
+
+            
+            $('#siteKeyword').tooltip();
+        });
+
+        function getPageName() {
+            var split = window.location.pathname.split('/');
+            return split[split.length - 1];
+        }
+
+        function getUrlVars() {
+            var vars = [], hash;
+
+            var split = window.location.href.split('?');
+            if (split.length != 2) {
+                // 要素無し
+                return vars;
+            }
+
+            var hashes = split[1].split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
+        function cleanQuery(query, target) {
+            var arr = [];
+            $.each(query.split('&'), function (i, param) {
+                if (param.split('=')[0] != target) { arr.push(param); }
+            });
+            return arr.join('&');
+        }
+
+    </script>
+
+    
+
+
+    <!-- for dodai -->
+    
+</head>
+<body>
+    
+    <div id="wrap">
+        <!-- Loading -->
+        <div class="modal-backdrop in" id="loadingModal" tabindex="-1" style="visibility:hidden;">
+             <div style="top: 1.5%; position: absolute; left: 50%;">
+                 <div id="loadingSearchPanel" class='loading'></div>
+             </div>
+        </div>
+        <div class="navbar navbar-default navbar-fixed-top header_area" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    
+                    <span class="navbar-brand"><i class="glyphicon glyphicon-home"></i>高専Webシラバス</span>
+                    <div class="navbar-text navbar-text-min-none">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+
+                    
+
+                    
+                    <table class="navbar-brand navbar-right" style="height:50px;">
+                        
+                        <tr id="SyllabusSearchBlankArea">
+	<td style="padding-top:6px;">
+                                 <input type="text" class="form-control" style="width:200px; visibility:hidden"/>
+                            </td>
+	<td style="padding-top:6px;">
+                                <button class="btn btn-default" style="visibility:hidden">検索</button>
+                            </td>
+</tr>
+
+                    </table>
+                    <div class="navbar-text navbar-text-min-none navbar-right">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                    <div class="navbar-collapse navbar-brand navbar-right">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="page-header">
+
+            <ol class="breadcrumb">
+                <li><a href="/Pages/PublicSchools?lang=ja"><i class="glyphicon glyphicon-home"></i>ホーム</a></li>
+                
+
+    <li>
+        <a href="./PublicDepartments?school_id=45&lang=ja">
+            北九州工業高等専門学校
+        </a>
+    </li>
+    <li>
+
+        
+        <a href="./PublicSubjects?school_id=45&department_id=33&year=2026&lang=ja">
+            生産デザイン工学科（電気電子コース） 
+        </a>
+        
+        
+    </li>
+    <li>
+        電気電子工学実験Ｃ
+    </li>
+
+
+            </ol>
+            <div id="AlertMessage" class="alert alert-danger" style="display:none;">
+            </div>
+        </div>
+        <div class="container" style="margin-left:50px;margin-right:50px;width:90%;">
+            
+
+
+    <div class="mcc-title-bar">
+        <div class="row">
+            <div class="col-md-6">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1>電気電子工学実験Ｃ</h1>
+                    </div>
+                    <div class="col-md-6"></div>
+                </div>
+
+            </div>
+
+            <div class="col-md-4 mcc-page-actions">
+                <div class="btn-group" style="margin-top:6px;">
+                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="height:auto;">
+                        PDF
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu text-left" role="menu">
+                        <li>
+                            <a class="" target="_blank" role="menuitem"
+                                href="/Pages/SyllabusPDF?school_id=45&department_id=33&subject_id=0188&year=2022&lang=ja&subject_code=&preview=False&type=start&attachment=false">
+                                表示
+                            </a>
+                        </li>
+                         <li>
+                             <a class="" target="_blank" role="menuitem"
+                                href="/Pages/SyllabusPDF?school_id=45&department_id=33&subject_id=0188&year=2022&lang=ja&subject_code=&preview=False&type=start&attachment=true">
+                                保存
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <form method="post" action="./PublicSyllabus?school_id=45&amp;department_id=33&amp;subject_id=0188&amp;year=2022&amp;lang=ja" id="asp_form">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTQ3NTA3ODgwNg9kFgJmD2QWCAIBDxYCHgdWaXNpYmxlaBYCZg9kFgICAQ9kFgJmDxBkZBQrAQFmZAICDxYCHwBoZAIDDxYCHwBnZAIHD2QWAmYPZBYCAgMPZBYCAgEPZBYCZg9kFgQCAg8PFgIeBFRleHQFQuWKoOWztiDnr6Qs56aP5r6kIOWJmyzlsI/nlZHlpKflnLAs5bCP6LevIOe0mOWPsizmlrDkuros5LqM5a6uIOaFtmRkAgMPZBYiZg8PFgIfAQXWAzEu5a6f6aiT44Gu55uu55qE44KE5YaF5a6544KS55CG6Kej44GX44Gm5a6f6aiT44Gr5Y+W44KK57WE44KA44GT44Go44GM44Gn44GN44KL44CCCjIu44Kw44Op44OV44KE6KGo44KS55So44GE44Gf5a6f6aiT57WQ5p6c44Gu5pW055CG44GM44Gn44GN44KL44CCCjMu5a6f6aiT57WQ5p6c44Gu5qSc6KiO44CB6ICD5a+f44GM5Y2B5YiG44Gr44Gn44GN44KL44CCCjQu5a6f6aiT6KOF572u44O75Zmo5YW344O75oOF5aCx5qmf5Zmo562J44KS5Yip55So44GX44Gm55uu55qE44KS6YGU5oiQ44GZ44KL5omL5rOV44KS55CG6Kej44GZ44KL44CCCjUu5a6f6aiT44KS6YCa44GY44Gm5bel5a2m44Gu5Z+656SO44Gr5L+C44KP44KL55+l6K2Y44KS55CG6Kej44GZ44KL44CCCjYu5a6f6aiT44GL44KJ5b6X44KJ44KM44Gf44OH44O844K/44Gr44Gk44GE44Gm5bel5a2m55qE44Gr6ICD5a+f44GX44CB6Kqs5piO44Gn44GN44KL44CCZGQCAQ8PFgQeCENzc0NsYXNzBR90YWJsZSB0YWJsZS1ib3JkZXJlZCBuby1wYWRkaW5nHgRfIVNCAgIWAh4Fc3R5bGUFHXN0eWxlOmJhY2tncm91bmQtY29sb3I6d2hpdGU7ZAICDxYCHgtfIUl0ZW1Db3VudGZkAgMPDxYCHwEFkQLmnKzlrp/pqJPjgafjga/jgIHorJvnvqnjgaflrabjgpPjgaDpm7vmsJflt6Xlrabjga7nn6XorZjjgpLnlKjjgYTjgabjgIHlrp/pmpvjga7lv5znlKjkvovjgoTmp5jjgIXjgaroo4Xnva7jga7ljp/nkIbjgarjganjga7nkIbop6PjgpLmt7HjgoHjgovjgZPjgajjgpLnm67nmoTjgajjgZnjgovjgILlrp/pqJPjgafjga/jgIHlvLfpm7vjg7vlvLHpm7vjg7vliLblvqHjg7vmg4XloLHjg7vlhYnlv5znlKjjga7lkITliIbph47jga7jg4bjg7zjg57jgavlj5bjgorntYTjgoDjgIJkZAIEDw8WAh8BBfwE44OG44Kt44K544OI44KE6Zai6YCj44GZ44KL5pWZ56eR5pu444KS5YWD44Gr5Y2B5YiG44Gq5LqI57+S44GM6KGM44KP44KM44Gm44GE44KL44GL44CB5ouF5b2T5pWZ5a6Y44GM5a6f6aiT44OO44O844OI44KS6KaL44Gm56K66KqN44GZ44KL44CC5a6f6aiT44Os44Od44O844OI44Gv5LiA6YCx6ZaT5Lul5YaF44Gr5o+Q5Ye644GZ44KL44GT44Go44GZ44KL44CC5ouF5b2T5pWZ5a6Y44GM44Os44Od44O844OI44Gu5YaF5a6544GM5LiN5Y2B5YiG44Gn44GC44KL44Go5Yik5pat44GX44Gf5aC05ZCI44Gv44CB44Kz44Oh44Oz44OI44KS5LuY44GR44Gm5a2m55Sf44Gr6L+U5Y2044GX44Gm5YaN5o+Q5Ye644KS5rGC44KB44KL44CC44GT44Gu44OV44Kj44O844OJ44OQ44OD44Kv44Gv44CB44Os44Od44O844OI44Gu5YaF5a6544GM5pS55ZaE44GV44KM44KL44G+44Gn57mw44KK6L+U44GX6KGM44KP44KM44KL44CC44G+44Gf5a6f6Zqb44Gr5a6f6aiT44KS6KGM44GG5Lul5aSW44Gr44CB5a6J5YWo44Gr5a6f6aiT44KS6KGM44GG44Gf44KB44Gu6Ku45rOo5oSP44KE44Os44Od44O844OI5L2c5oiQ44Gu5oyH5bCO44CB5bel5aC06KaL5a2m562J44Gr5pmC6ZaT44KS5YWF44Gm44KL5aC05ZCI44GM44GC44KL44CCZGQCBQ8PFgIfAQVIMTk15YiG44Gu5o6I5qWt44KSMTTpgLHlrp/mlr3jgZfjgIHjgZPjgozjgpLjgoLjgaPjgaYy5Y2Y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" />
+
+
+<script src="../Scripts/WebForms/MsAjax/MicrosoftAjax.js" type="text/javascript"></script>
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="DBEB7810" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdABW+Ldkn7B/hG3IX5eMa6wiiR7L3wySogUAl7PijvtwaUSsm8nTXGaHoUVtfjM0rCZj22oJ4VQ24ZYDTOYTZUrP5vtB5q2NRcavKnoOwBU+gOFuZNgbutiT/9QNQ8KAQQUmuUSB1iQXvm8kYo0aR42WIvdrGE9S+MFljAcAMyN35TqiPob/uxh50k4d9Otx1edKQFYf7ktK+pg/fRBarI9curvAtRO7k0YSfR52jbyiJEdL7EgSHU2NR/GkMooHyn2eKyBfV8NWUDOOq4zAH9eL6mUONb4p+LK5GOAgfiK6zu66xvUPoV+07Y4KVVOkYZtprK3AwxJNHjIL3LHLUH8OSpUaMufwC1vLmd5p4NCmxTnO3TIpLIbrZrG1ZA0Rpm5hNXM8Wg+fXjJVwKa/aE/8oQ8IRHTJvwSirmyK9c5RaMxGk6gOHn7ndkVsOPsFb8m6cnBFRcP4+8ry3M3CSRp7bW2AmJEN7VaD8GGaiimmm+w==" />
+        
+    <div style="width:100%;float:left;">
+        
+
+<script type="text/javascript">
+    $(function () {
+        $('.missionOpenBtn').click(function (e) {
+            var parent = $(this).parent('div');
+            var info = parent.data('info');
+            var item_name = parent.data('item_name');
+            var key = parent.data('key');
+            var str = info + ' ' + item_name;
+            $('#' + key + '_open').addClass('hide');
+            $('#' + key + '_close').removeClass('hide');
+            $('#' + key + "_display").text(str);
+
+        });
+        $('.missionCloseBtn').click(function (e) {
+            var parent = $(this).parent('div');
+            var info = parent.data('info');
+            var key = parent.data('key');
+            $('#' + key + '_open').removeClass('hide');
+            $('#' + key + '_close').addClass('hide');
+            $('#' + key + "_display").text(info);
+
+        });
+    })
+</script>
+
+<div id="MainContent_SubjectSyllabus_UpdatePanelSyllabus">
+	
+
+<div>
+    <div>
+        <span id="MainContent_SubjectSyllabus_LabelInfo" class="text-danger"><font size="5"></font></span>
+    </div>
+
+    <h3 class="bg-info text-center">科目基礎情報</h3>
+    <table class="table table-bordered no-padding" style="background-color:white;">
+        <tr>
+            <th>学校</th>
+            <td >北九州工業高等専門学校</td>
+            <th >開講年度</th>
+            <td >令和08年度 (2026年度)</td>
+        </tr>
+        <tr>
+            <th>授業科目</th>
+            <td colspan="3">電気電子工学実験Ｃ</td>
+        </tr>
+        <tr>
+            <th>科目番号</th>
+            <td>0188</td>
+            <th>科目区分</th>
+            <td>専門 / 必修</td>
+        </tr>
+        <tr>
+            <th>授業形態</th>
+            <td>実験</td>
+            <th>単位の種別と単位数</th>
+            <td>履修単位: 2</td>
+        </tr>
+        <tr>
+            <th>開設学科</th>
+            <td>生産デザイン工学科（電気電子コース）</td>
+            <th>対象学年</th>
+            <td>5</td>
+        </tr>
+        <tr>
+            <th>開設期</th>
+            <td>前期</td>
+            <th>週時間数</th>
+            <td>4</td>
+        </tr>
+        <tr>
+            <th>教科書/教材</th>
+            <td colspan="3">
+                加島 篤,福澤 剛,小畑大地,小路 紘史,新人,二宮 慶
+            </td>
+        </tr>
+        <tr>
+            <th>担当教員</th>
+            <td colspan="3">
+                <span id="Teachers">二宮 慶,小路 紘史,小畑 大地,中山 俊太朗</span>
+            </td>
+        </tr>
+    </table>
+
+    <div id="MainContent_SubjectSyllabus_syllabusContent">
+
+    <h3 class="bg-info text-center">到達目標</h3>
+    <div style="background-color:white;">
+        1.実験の目的や内容を理解して実験に取り組むことができる。<br />2.グラフや表を用いた実験結果の整理ができる。<br />3.実験結果の検討、考察が十分にできる。<br />4.実験装置・器具・情報機器等を利用して目的を達成する手法を理解する。<br />5.実験を通じて工学の基礎に係わる知識を理解する。<br />6.実験から得られたデータについて工学的に考察し、説明できる。
+    </div>
+
+    <h3 class="bg-info text-center">ルーブリック</h3>
+
+    
+
+    <div style="overflow:auto">
+    <table id="MainContent_SubjectSyllabus_hyouka" class="table table-bordered no-padding" style="style:background-color:white;">
+		<tr class="bg-success">
+			<td></td><th>理想的な到達レベルの目安</th><th>標準的な到達レベルの目安</th><th>未到達レベルの目安</th>
+		</tr><tr id="rubricItemRow_1">
+			<th>評価項目1</th><td>実験の目的や内容を理解した上で、事前に予習をして実験に取り組むことができる 
+</td><td>実験の目的や内容を理解して実験に取り組むことができる 
+</td><td>実験の目的や内容を理解して実験に取り組むことができない。
+</td>
+		</tr><tr id="rubricItemRow_2">
+			<th>評価項目2</th><td>自ら工夫した方法でグラフや表を用いた実験結果の整理ができる 
+</td><td>グラフや表を用いた実験結果の整理ができる 
+</td><td>グラフや表を用いた実験結果の整理ができない。
+</td>
+		</tr><tr id="rubricItemRow_3">
+			<th>評価項目3</th><td>文献を参考にしながら、実験結果の検討、考察が十分にできる 
+</td><td>実験結果の検討、考察が十分にできる 
+</td><td>実験結果の検討、考察が十分にできない。
+</td>
+		</tr><tr id="rubricItemRow_4">
+			<th>評価項目4</th><td>実験装置・器具・情報機器等を利用して目的を達成する手法を理解した上で、その改善点を考察できる。 
+</td><td>実験装置・器具・情報機器等を利用して目的を達成する手法を理解できる。 
+</td><td>実験装置・器具・情報機器等を利用して目的を達成する手法を理解できない。
+</td>
+		</tr><tr id="rubricItemRow_5">
+			<th>評価項目5</th><td>実験を通じて工学の基礎に係わる知識を理解した上で、応用例について考察できる。 
+</td><td>実験を通じて工学の基礎に係わる知識を理解する。 
+</td><td>実験を通じて工学の基礎に係わる知識を理解できない。 
+</td>
+		</tr><tr id="rubricItemRow_6">
+			<th>評価項目6</th><td>実験から得られたデータについて、参考文献を引用しつつ工学的に考察し、説明できる。 
+</td><td>実験から得られたデータについて工学的に考察し、説明できる。 
+</td><td>実験から得られたデータについて工学的に考察し、説明できない。
+</td>
+		</tr>
+	</table>
+    </div>
+
+    <h3 class="bg-info text-center">学科の到達目標項目との関係</h3>
+    <div style="background-color:white;">
+        
+
+    </div>
+
+    <h3 class="bg-info text-center">教育方法等</h3>
+    <div style="background-color:white;">
+      <b style="font-size: 15px">概要:</b><br />
+      <div>
+          本実験では、講義で学んだ電気工学の知識を用いて、実際の応用例や様々な装置の原理などの理解を深めることを目的とする。実験では、強電・弱電・制御・情報・光応用の各分野のテーマに取り組む。
+      </div>
+      <b style="font-size:15px">授業の進め方・方法:</b><br />
+      <div>
+          テキストや関連する教科書を元に十分な予習が行われているか、担当教官が実験ノートを見て確認する。実験レポートは一週間以内に提出することする。担当教官がレポートの内容が不十分であると判断した場合は、コメントを付けて学生に返却して再提出を求める。このフィードバックは、レポートの内容が改善されるまで繰り返し行われる。また実際に実験を行う以外に、安全に実験を行うための諸注意やレポート作成の指導、工場見学等に時間を充てる場合がある。
+      </div>
+      <b style="font-size:15px">注意点:</b><br />
+      <div>
+          195分の授業を14週実施し、これをもって2単位とする。
+      </div>
+    </div>
+
+        
+    <h3 class="bg-info text-center">授業の属性・履修上の区分</h3>
+    <div style="background-color:white;">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isActiveLearning" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isActiveLearning" />
+                            アクティブラーニング
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isAidedByICT" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isAidedByICT" />
+                            ICT 利用
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isApplicableForRemoteClass" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isApplicableForRemoteClass" />
+                            遠隔授業対応
+                        </div>
+                    </td>
+                    <td style="border: 0px none;">
+                        <div class="">
+                            <input onclick="return false;" id="MainContent_SubjectSyllabus_isInstructorProfessionallyExperienced" type="checkbox" name="ctl00$MainContent$SubjectSyllabus$isInstructorProfessionallyExperienced" />
+                            実務経験のある教員による授業
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="border: 0px none;">
+                        <div class="">
+                            
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <h3 class="bg-info text-center">授業計画</h3>
+    <table class="table table-bordered no-padding" style="background-color:white;" id="lessonsTable">
+        <tr class="bg-success">
+            <th></th>
+            <th></th>
+            <th>週</th>
+            <th>授業内容</th>
+            <th>週ごとの到達目標</th>
+        </tr>
+        
+            <tr>
+                <th rowspan="19" class="bg-primary">前期</th>
+            </tr>
+            
+                <tr>
+                    <th rowspan="9" class="bg-" style="width:60px;">1stQ</th>
+                </tr>
+                <tr class="bg-">
+                    <th class="week_number">1週</th>
+                    <td>ガイダンス<br /></td>
+                    <td>実験内容の説明、レポートの作成並びに安全など実験に際しての諸注意、提出レポートに対しての指導を理解できる<br /><input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget1" id="MainContent_SubjectSyllabus_hiddenLessonTarget1" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">2週</th>
+                    <td>球ギャップによる高電圧の測定とがいしの絶縁破壊試験<br /></td>
+                    <td>実験内容を理解し、安全に実験が遂行できるように留意できる<br /><input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget2" id="MainContent_SubjectSyllabus_hiddenLessonTarget2" value=",022010305" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">3週</th>
+                    <td>波長板・磁性ガラスによる光の制御<br /></td>
+                    <td>実験内容を理解し、安全に実験が遂行できるように留意できる<br /><input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget3" id="MainContent_SubjectSyllabus_hiddenLessonTarget3" value=",022010304" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">4週</th>
+                    <td>太陽電池の特性試験<br /></td>
+                    <td>実験内容を理解し、安全に実験が遂行できるように留意できる<br /><input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget4" id="MainContent_SubjectSyllabus_hiddenLessonTarget4" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">5週</th>
+                    <td>温度制御<br /></td>
+                    <td>実験内容を理解し、安全に実験が遂行できるように留意できる<br /><input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget5" id="MainContent_SubjectSyllabus_hiddenLessonTarget5" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">6週</th>
+                    <td>マルチバイブレータ回路<br /></td>
+                    <td>実験内容を理解し、安全に実験が遂行できるように留意できる<br /><input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget6" id="MainContent_SubjectSyllabus_hiddenLessonTarget6" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">7週</th>
+                    <td>工場見学<br /></td>
+                    <td><input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget7" id="MainContent_SubjectSyllabus_hiddenLessonTarget7" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">8週</th>
+                    <td>追実験、実験レポートの議論、作成指導<br /></td>
+                    <td>実験レポートに関して議論を行い、より良いレポートを作成することができる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget8" id="MainContent_SubjectSyllabus_hiddenLessonTarget8" />
+                    </td>
+                </tr>
+            
+                <tr>
+                    <th rowspan="9" class="bg-" style="width:60px;">2ndQ</th>
+                </tr>
+                <tr>
+                    <th class="week_number">9週</th>
+                    <td>オペアンプ回路<br /></td>
+                    <td>実験内容を理解し、安全に実験が遂行できるように留意できる<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget9" id="MainContent_SubjectSyllabus_hiddenLessonTarget9" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">10週</th>
+                    <td>HEMS<br /></td>
+                    <td>実験内容を理解し、安全に実験が遂行できるように留意できる<br /><input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget10" id="MainContent_SubjectSyllabus_hiddenLessonTarget10" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">11週</th>
+                    <td>PLCを用いた位置決め制御１<br /></td>
+                    <td>実験内容を理解し、安全に実験が遂行できるように留意できる<br /><input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget11" id="MainContent_SubjectSyllabus_hiddenLessonTarget11" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">12週</th>
+                    <td>PLCを用いた位置決め制御２<br /></td>
+                    <td>実験内容を理解し、安全に実験が遂行できるように留意できる<br /><input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget12" id="MainContent_SubjectSyllabus_hiddenLessonTarget12" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">13週</th>
+                    <td>追実験、実験レポートの議論、作成指導<br /></td>
+                    <td>実験レポートに関して議論を行い、より良いレポートを作成することができる。<br /><input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget13" id="MainContent_SubjectSyllabus_hiddenLessonTarget13" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">14週</th>
+                    <td>追実験、実験レポートの議論、作成指導<br /></td>
+                    <td>実験レポートに関して議論を行い、より良いレポートを作成することができる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget14" id="MainContent_SubjectSyllabus_hiddenLessonTarget14" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">15週</th>
+                    <td>追実験、実験レポートの議論、作成指導<br /></td>
+                    <td>実験レポートに関して議論を行い、より良いレポートを作成することができる。<input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget15" id="MainContent_SubjectSyllabus_hiddenLessonTarget15" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="week_number">16週</th>
+                    <td><br /></td>
+                    <td><input type="hidden" name="ctl00$MainContent$SubjectSyllabus$hiddenLessonTarget16" id="MainContent_SubjectSyllabus_hiddenLessonTarget16" />
+                    </td>
+                </tr>
+            
+        
+    </table>
+
+        
+
+        <h3 class="bg-info text-center">モデルコアカリキュラムの学習内容と到達目標</h3>
+
+        <table id="MainContent_SubjectSyllabus_mccTable" class="table table-bordered no-padding" style="background-color:white;">
+		<tr class="bg-success">
+			<th colspan="2">分類</th><th>分野</th><th>学習内容</th><th>学習内容の到達目標</th><th>到達レベル</th><th>授業週</th>
+		</tr><tr>
+			<td rowspan="2">基礎的能力</td><td rowspan="2">自然科学</td><td rowspan="2">物理実験</td><td rowspan="2">物理実験</td><td>光に関する分野に関する実験に基づき、代表的な物理現象を説明できる。</td><td>4</td><td>前3</td>
+		</tr><tr>
+			<td>電磁気に関する分野に関する実験に基づき、代表的な物理現象を説明できる。</td><td>4</td><td>前2</td>
+		</tr>
+	</table>
+
+        
+    
+    <h3 class="bg-info text-center">評価割合</h3>
+
+    <div style="overflow:auto">
+       <table id="MainContent_SubjectSyllabus_wariaiTable" class="table table-bordered no-padding" style="style:background-color:white;">
+		<tr class="bg-success">
+			<td></td><th>試験</th><th>小テスト等</th><th>演習・レポート</th><th>発表</th><th>相互評価</th><th>合計</th>
+		</tr><tr>
+			<th>総合評価割合</th><td><b>0</b></td><td><b>0</b></td><td><b>100</b></td><td><b>0</b></td><td><b>0</b></td><td><b>100</b></td>
+		</tr><tr>
+			<th>基礎的能力</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td><b>0</b></td>
+		</tr><tr>
+			<th>専門的能力</th><td>0</td><td>0</td><td>100</td><td>0</td><td>0</td><td><b>100</b></td>
+		</tr><tr>
+			<th>分野横断的能力</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td><b>0</b></td>
+		</tr>
+	</table>
+    </div>
+
+    </div>
+
+  </div>
+
+
+</div>
+
+    </div>
+    
+
+<script type="text/javascript">
+//<![CDATA[
+if(typeof initSyllabusScript == 'function'){ initSyllabusScript();}//]]>
+</script>
+</form>
+
+        </div>
+    </div>
+
+    <div id="footer">
+        <br />
+        <br />
+        <div class="container">
+            <p class="text-muted credit">
+                ©2014 - MCC Web Syllabus.
+            </p>
+        </div>
+    </div>
+
+    <script src="/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+    <script src="/Scripts/mcc.js?v=20190215"></script>
+    <script src="/Scripts/Grid.js"></script>
+    <script>
+      $.ajaxSetup({
+        cache: false
+      });
+    </script>
+    
+    <script>
+      $(document).ready(function () {
+          initSyllabusScript();
+      });
+    </script>
+
+
+</body>
+</html>
