@@ -1,0 +1,4 @@
+# XAMPP の htdocs の中などに、このフォルダごと置いたときのための設定。
+# 画面と API がある public/ 以外（設定ファイル、ログ、ソース、Git の履歴など）を、ブラウザから開けないようにする。
+# Apache の公開フォルダを public/ にしている場合（MAMP の設定など）は、このファイルは使われない。
+RedirectMatch 404 /(\.git|config|src|storage|data|database|vendor|tests|docs|tools|frontend|policy)(/|$)

@@ -27,7 +27,14 @@ SUISEN は花の「水仙」と「推薦」をかけている。
 7. **検索の索引を確かめる。** `data/search_index.json` があれば何もしなくてよい。シラバスを取り直したときは `php database/build_search_index.php` で作り直す（下の「資料の検索（RAG）」）。
 8. **ブラウザで開く。** MAMP は `http://localhost:8888/`、XAMPP は `http://localhost/`。
 
-### Gmail から確認コードを送る
+### XAMPP の htdocs に置く方法（Apache の設定を変えない）
+
+手順2（ドキュメントルートの変更）の代わりに、このフォルダごと `C:\xampp\htdocs\suisen` に置いてもよい。
+
+- 開く URL は `http://localhost/suisen/`（自動で `public/app/` の画面に移る）。
+- `public/` 以外のフォルダ（設定ファイル、ログ、Git の履歴など）は、一番上の `.htaccess` でブラウザから開けないようにしてある。
+
+## Gmail から確認コードを送る
 
 メール認証はオン（`policy/app.php` の `EMAIL_VERIFICATION_ENABLED` が `true`）。新しい PC で動かすときは、次の準備をしてから使う。
 
