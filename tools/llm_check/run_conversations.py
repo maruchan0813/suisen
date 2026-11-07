@@ -96,9 +96,10 @@ def client():
     state = {"token": ""}
 
     def get(path):
-        html = opener.open(BASE + path, timeout=60).read().decode()
-        m = re.search(r'name="csrf-token" content="([^"]+)"', html)
-        state["token"] = m.group(1) if m else state["token"]
+        return json.loads(opener.open(BASE + path, timeout=60).read().decode())
+
+    def refresh_token():
+        state["token"] = get("/api/session.php")["data"]["csrf_token"]
 
     def post(path, body):
         req = urllib.request.Request(BASE + path, data=json.dumps(body).encode(), method="POST",
@@ -112,16 +113,16 @@ def client():
             except ValueError:
                 return {"ok": False, "error": {"code": f"http_{e.code}", "message": body[:200]}}
 
-    return get, post
+    return refresh_token, post
 
 
 def run_one(key):
     name, run = key
     expected, messages = PERSONAS[name]
-    get, post = client()
-    get("/")
+    refresh_token, post = client()
+    refresh_token()
     post("/api/login.php", {"email": f"bigtest.{abs(hash(name)) % 10000}.{run}@apps.kct.ac.jp"})
-    get("/home.php")
+    refresh_token()  # ログインのあとは CSRF トークンが変わることがあるので読み直す
     cid = post("/api/start_conversation.php", {})["data"]["conversation_id"]
     turns = []
     for text in messages:

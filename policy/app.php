@@ -22,6 +22,10 @@ return [
     // 返事の見直し：これ以上似ている質問は「繰り返し」とみなす（0〜1）。作り直しは何回までか
     'REPLY_REPEAT_SIMILARITY'    => 0.45,
     'REPLY_MAX_REGENERATIONS'    => 1,
+    // 深掘り：1つの項目を何回深掘りするか。これより短い答え、この言葉を含む答えは深掘りせず次の項目へ移る
+    'FOLLOW_UP_MAX_TURNS'        => 1,
+    'FOLLOW_UP_MIN_ANSWER_CHARS' => 10,
+    'FOLLOW_UP_SKIP_PHRASES'     => ['特にない', 'とくにない', 'わからない', '分からない', '別に'],
     // 学生に言ってはいけない内部の言葉（指示文の言葉）。返事に出たら作り直させる
     'REPLY_FORBIDDEN_PHRASES'    => ['参考資料', '授業の一覧', 'コースの説明', '質問を1つ', '質問を一つ'],
 

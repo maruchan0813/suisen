@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Suisen\Service;
 
 use Suisen\AppException;
+use Suisen\Core\FollowUpRule;
 use Suisen\Core\NextTopicPicker;
 use Suisen\Core\PromptTemplate;
 use Suisen\Core\ReplyReview;
@@ -79,8 +80,9 @@ final class ChatService
             : [];
         $subjectList = $this->subjectListFor($plan);
         $askedQuestions = AskedQuestions::from($history);
-        $topic = $plan->studentAsked ? null : $this->nextTopic($conversationId, $askedQuestions, $history, $content);
-        $reply = $this->askForReply($history, $content, $references, $subjectList, $askedQuestions, $this->turnInstruction($plan->studentAsked, $topic));
+        $followUpTopic = $plan->studentAsked ? null : $this->followUpTopic($conversationId, $content);
+        $topic = $plan->studentAsked ? null : ($followUpTopic ?? $this->nextTopic($conversationId, $askedQuestions, $history, $content));
+        $reply = $this->askForReply($history, $content, $references, $subjectList, $askedQuestions, $this->turnInstruction($plan->studentAsked, $topic, $followUpTopic !== null));
 
         // LLM の返事をもらえたときだけ、質問と返事を組で保存する（壊れた履歴を残さない）
         $this->db->transaction(function () use ($conversationId, $content, $reply, $topic): void {
@@ -270,11 +272,24 @@ final class ChatService
         );
     }
 
-    /** 今回の返し方。質問されたら答えるだけ。それ以外は、決めた項目について聞かせる。 */
-    private function turnInstruction(bool $studentAsked, ?string $topic): string
+    /** 学生の答えが話の広がりそうなものなら、前に聞いた項目をもう一歩くわしく聞く。深掘りしないなら null。 */
+    private function followUpTopic(int $conversationId, string $content): ?string
+    {
+        return (new FollowUpRule(
+            $this->policy->int('FOLLOW_UP_MAX_TURNS'),
+            $this->policy->int('FOLLOW_UP_MIN_ANSWER_CHARS'),
+            $this->policy->list('FOLLOW_UP_SKIP_PHRASES'),
+        ))->topicToDeepen($this->messages->assistantTopicsFor($conversationId), $content);
+    }
+
+    /** 今回の返し方。質問されたら答えるだけ。それ以外は、深掘りか、決めた項目について聞かせる。 */
+    private function turnInstruction(bool $studentAsked, ?string $topic, bool $followUp): string
     {
         if ($studentAsked) {
             return $this->policy->message('turn_instruction_answer_only');
+        }
+        if ($followUp && $topic !== null) {
+            return $this->policy->message('turn_instruction_follow_up', ['topic' => $topic]);
         }
         return $topic === null
             ? $this->policy->message('turn_instruction_ask_free')

@@ -33,6 +33,16 @@ final class MessageRepository
         return $statement->fetchAll(\PDO::FETCH_COLUMN);
     }
 
+    /** @return list<string|null> AI の返事ごとの項目（古い順。項目について聞いていない返事は null） */
+    public function assistantTopicsFor(int $conversationId): array
+    {
+        $statement = $this->db->pdo()->prepare(
+            'SELECT topic FROM messages WHERE conversation_id = ? AND role = ? ORDER BY id',
+        );
+        $statement->execute([$conversationId, self::ROLE_ASSISTANT]);
+        return $statement->fetchAll(\PDO::FETCH_COLUMN);
+    }
+
     /** @return list<array{role: string, content: string}> 古い順 */
     public function listFor(int $conversationId): array
     {
