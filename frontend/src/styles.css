@@ -716,6 +716,7 @@ body {
   height: 56px;
   border-radius: 16px;
   background: #eaf3fd;
+  color: var(--color-primary-dark);
   font-size: 30px;
 }
 
@@ -822,11 +823,52 @@ body {
   padding: 30px 24px;
 }
 
+/* ヘッダーは画面の上に付いてくる（position: sticky）。スクロールすると白い帯と影が付き、
+   バナーのボタンが見えなくなったら、右に「診断を始める」が出る。 */
 .home__header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 36px;
+  margin: -30px -24px 36px;
+  padding: 14px 24px;
+}
+
+.home__header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(50% - 50vw);
+  width: 100vw;
+  z-index: -1;
+  background: rgba(255, 255, 255, 0);
+  box-shadow: 0 1px 0 rgba(58, 155, 230, 0);
+  transition: background 0.2s ease, box-shadow 0.2s ease, backdrop-filter 0.2s ease;
+}
+
+.home__header--stuck::before {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 0 var(--color-border), 0 6px 18px rgba(58, 155, 230, 0.1);
+}
+
+.home__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.home__cta .button {
+  min-height: 40px;
+  padding: 6px 20px;
+  font-size: 0.95rem;
+}
+
+body {
+  overflow-x: clip; /* 帯が画面の幅いっぱいに広がっても、横にスクロールしないように */
 }
 
 .home__logo {
@@ -907,6 +949,13 @@ body {
   background: transparent;
   color: #fff;
 }
+
+/* 診断を始めるボタンの前のアイコン（吹き出しと星） */
+.start-icon {
+  flex: none;
+  margin: -0.5em 0; /* 絵を大きくしても、ボタンの高さは変えない */
+}
+
 
 .home-result {
   display: grid;
@@ -999,8 +1048,17 @@ body {
 }
 
 .course-card__icon {
-  margin-bottom: 15px;
-  font-size: 38px;
+  margin-bottom: 10px;
+}
+
+.course-card__icon img {
+  display: block;
+  width: 100%;
+  max-width: 130px;
+  height: auto;
+  aspect-ratio: 6 / 5;
+  margin: 0 auto;
+  border-radius: 16px;
 }
 
 .course-card h3 {
@@ -1105,7 +1163,18 @@ body {
   }
 
   .home__header {
-    margin-bottom: 18px;
+    margin: -16px -14px 18px;
+    padding: 10px 14px;
+  }
+
+  /* 狭い画面では、ボタンが出ている間はロゴの文字を隠して、ボタンの場所を空ける */
+  .home__header--cta .home__logo-text {
+    display: none;
+  }
+
+  .home__cta .button {
+    padding: 6px 14px;
+    font-size: 0.9rem;
   }
 
   .home__logo {
@@ -1177,7 +1246,7 @@ body {
 
   .course-card {
     display: grid;
-    grid-template-columns: 52px 1fr;
+    grid-template-columns: 88px 1fr;
     grid-template-rows: auto auto;
     column-gap: 14px;
     align-items: center;
@@ -1188,7 +1257,6 @@ body {
   .course-card__icon {
     grid-row: 1 / span 2;
     margin: 0;
-    font-size: 32px;
     text-align: center;
   }
 

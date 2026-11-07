@@ -1,8 +1,8 @@
 // S3 ホーム：ようこそのバナー、あなたの診断結果（レーダーチャート付き）、5つのコースの紹介。
 // チームメンバーの試作（home_with_radar.php）のレイアウトをもとにする。
 
-import { motion } from 'motion/react';
-import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api, isLoggedOut } from '../api/client';
 import type { DiagnosisResultView, Status } from '../api/types';
@@ -10,6 +10,7 @@ import { Button } from '../components/Button';
 import { ErrorText } from '../components/ErrorText';
 import { PageTransition } from '../components/PageTransition';
 import { RadarChart } from '../components/RadarChart';
+import { StartIcon } from '../components/StartIcon';
 import { COURSE_INTROS } from '../content/courses';
 import { useSession } from '../session';
 
@@ -30,6 +31,30 @@ export function HomePage() {
   const [latest, setLatest] = useState<DiagnosisResultView | null>(null);
   const [busy, setBusy] = useState<'start' | 'logout' | null>(null);
   const [error, setError] = useState('');
+  // 上のバナーの「診断を始める」が画面の上へ消えたら、画面の上に固定したヘッダーにボタンを出す
+  // （Notion や Duolingo と同じ作り方。ヘッダーは常に上に付いてくる）
+  const startRef = useRef<HTMLDivElement>(null);
+  const [showSticky, setShowSticky] = useState(false);
+  const [stuck, setStuck] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setStuck(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    const target = startRef.current;
+    if (target === null || typeof IntersectionObserver === 'undefined') {
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      setShowSticky(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+    });
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     void api.status().then(async (result) => {
@@ -75,14 +100,32 @@ export function HomePage() {
   return (
     <PageTransition>
       <div className="home">
-        <header className="home__header">
+        <header className={`home__header ${stuck ? 'home__header--stuck' : ''} ${showSticky ? 'home__header--cta' : ''}`}>
           <Link className="home__logo" to="/home">
             <img src="./icon.webp" alt="" />
-            SUISEN
+            <span className="home__logo-text">SUISEN</span>
           </Link>
-          <Button variant="ghost" busy={busy === 'logout'} onClick={logout} data-testid="logout-button">
-            ログアウト
-          </Button>
+          <div className="home__actions">
+            <AnimatePresence initial={false}>
+              {showSticky && (
+                <motion.div
+                  className="home__cta"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.18 }}
+                >
+                  <Button variant="primary" busy={busy === 'start'} onClick={start} data-testid="sticky-start-button">
+                    <StartIcon size="1.9em" />
+                    診断を始める
+                  </Button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <Button variant="ghost" busy={busy === 'logout'} onClick={logout} data-testid="logout-button">
+              ログアウト
+            </Button>
+          </div>
         </header>
 
         <motion.section
@@ -96,9 +139,10 @@ export function HomePage() {
             AIとの会話を通して、あなたの興味や関心を発見。<br />
             自分に合ったコースを探してみましょう！
           </p>
-          <div className="welcome__buttons">
+          <div className="welcome__buttons" ref={startRef}>
             <Button variant="white" busy={busy === 'start'} onClick={start} data-testid="start-button">
-              ✨ 新しい診断を始める
+              <StartIcon />
+              新しい診断を始める
             </Button>
             {status?.active_conversation_id != null && (
               <motion.div whileHover={{ y: -2 }}>
@@ -180,10 +224,10 @@ export function HomePage() {
             >
               <motion.div
                 className="course-card__icon"
-                whileHover={{ scale: 1.25, rotate: [0, -12, 12, 0] }}
-                transition={{ duration: 0.5 }}
+                whileHover={{ scale: 1.08 }}
+                transition={{ duration: 0.3 }}
               >
-                {course.icon}
+                <img src={course.image} alt="" width={400} height={400} loading="lazy" />
               </motion.div>
               <h3>{course.name}</h3>
               <p>{course.description}</p>

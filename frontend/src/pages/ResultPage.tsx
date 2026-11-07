@@ -1,6 +1,7 @@
 // S5 診断結果。診断の直後は「焦らし → ドラムロール → 結果」の順に演出する。
 // ホームなどから見直すときは、すぐ結果を出す。
 
+import { Briefcase, GraduationCap } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -208,7 +209,7 @@ function ResultBody({ result }: { result: DiagnosisResultView }) {
               whileHover={{ y: -3 }}
               transition={{ delay: 0.12 * i, type: 'spring', stiffness: 220, damping: 18 }}
             >
-              <div className="career__icon" aria-hidden="true">{career.is_study ? '🎓' : '💼'}</div>
+              <div className="career__icon" aria-hidden="true">{career.is_study ? <GraduationCap size="1em" /> : <Briefcase size="1em" />}</div>
               <div>
                 <span className="career__tag">{career.type}</span>
                 <strong>{career.destination}</strong>
