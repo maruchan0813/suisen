@@ -279,6 +279,7 @@ final class ChatService
             $this->policy->int('FOLLOW_UP_MAX_TURNS'),
             $this->policy->int('FOLLOW_UP_MIN_ANSWER_CHARS'),
             $this->policy->list('FOLLOW_UP_SKIP_PHRASES'),
+            $this->policy->int('FOLLOW_UP_EVERY_NTH_TOPIC'),
         ))->topicToDeepen($this->messages->assistantTopicsFor($conversationId), $content);
     }
 
