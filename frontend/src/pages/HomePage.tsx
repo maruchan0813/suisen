@@ -215,8 +215,11 @@ export function HomePage() {
           variants={{ show: { transition: { staggerChildren: 0.08 } } }}
         >
           {COURSE_INTROS.map((course) => (
-            <motion.div
+            <motion.a
               key={course.code}
+              href={course.url}
+              target="_blank"
+              rel="noopener noreferrer"
               className={`course-card ${latest?.course_code === course.code ? 'course-card--recommended' : ''}`}
               variants={rise}
               whileHover={{ y: -6, rotate: -1 }}
@@ -232,7 +235,7 @@ export function HomePage() {
               <h3>{course.name}</h3>
               <p>{course.description}</p>
               {latest?.course_code === course.code && <span className="course-card__badge">あなたに一番合う</span>}
-            </motion.div>
+            </motion.a>
           ))}
         </motion.div>
 

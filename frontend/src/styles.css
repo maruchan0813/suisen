@@ -1033,7 +1033,11 @@ body {
 }
 
 .course-card {
+  display: block;
   position: relative;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
   padding: 25px 15px;
   border: 2px solid transparent;
   border-radius: 18px;

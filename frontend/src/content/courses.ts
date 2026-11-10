@@ -13,12 +13,14 @@ export interface CourseIntro {
   name: string;
   image: string;
   description: string;
+  // 北九州高専の公式サイトにある、このコースの紹介ページ
+  url: string;
 }
 
 export const COURSE_INTROS: CourseIntro[] = [
-  { code: 'mechanical', name: '機械創造', image: mechanicalImage, description: '機械の設計やものづくりを学ぶ' },
-  { code: 'robotics', name: '知能ロボット', image: roboticsImage, description: 'ロボットや制御技術を学ぶ' },
-  { code: 'electrical', name: '電気電子', image: electricalImage, description: '電気や電子回路について学ぶ' },
-  { code: 'information', name: '情報システム', image: informationImage, description: 'プログラミングや情報技術を学ぶ' },
-  { code: 'chemistry', name: '物質化学', image: chemistryImage, description: '化学や物質について学ぶ' },
+  { code: 'mechanical', name: '機械創造', image: mechanicalImage, description: '機械の設計やものづくりを学ぶ', url: 'https://www.kct.ac.jp/department/creative-engineering/machine' },
+  { code: 'robotics', name: '知能ロボット', image: roboticsImage, description: 'ロボットや制御技術を学ぶ', url: 'https://www.kct.ac.jp/department/creative-engineering/robotics' },
+  { code: 'electrical', name: '電気電子', image: electricalImage, description: '電気や電子回路について学ぶ', url: 'https://www.kct.ac.jp/department/creative-engineering/electrical' },
+  { code: 'information', name: '情報システム', image: informationImage, description: 'プログラミングや情報技術を学ぶ', url: 'https://www.kct.ac.jp/department/creative-engineering/information' },
+  { code: 'chemistry', name: '物質化学', image: chemistryImage, description: '化学や物質について学ぶ', url: 'https://www.kct.ac.jp/department/creative-engineering/materials' },
 ];
