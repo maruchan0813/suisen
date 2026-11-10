@@ -6,6 +6,7 @@ namespace Suisen\Service;
 
 use JsonException;
 use Suisen\AppException;
+use Suisen\Core\Confidence;
 use Suisen\Core\Course;
 use Suisen\Core\CourseRanking;
 use Suisen\Core\CourseRecommender;
@@ -45,6 +46,8 @@ final class DiagnosisService
         private readonly KnowledgeSearch $knowledge,
         private readonly LlmClient $llm,
         private readonly Policy $policy,
+        private readonly Confidence $confidence,
+        private readonly TopicCoverage $coverage,
     ) {
     }
 
@@ -53,7 +56,7 @@ final class DiagnosisService
     {
         $this->access->requireActive($userId, $conversationId);
         $history = $this->messages->listFor($conversationId);
-        $this->assertEnoughTurns($history);
+        $this->assertEnoughTurns($conversationId, $history);
 
         $features = $this->extractFeatures($history);
         $ranking = $this->recommender->rank($features, $this->courses->all());
@@ -65,7 +68,9 @@ final class DiagnosisService
         $careerText = $this->writeCareerStory($best->course, $similarSeniors, $careerHits);
 
         $sources = KnowledgeSearch::headings([...$subjectHits, ...$careerHits]);
-        $this->saveResult($userId, $conversationId, $features, $ranking, $similarSeniors, $recommendationText, $careerText, $sources);
+        $coveredTopics = $this->coverage->coveredCount($conversationId);
+        $confidence = $this->confidenceOf($features, $ranking, $coveredTopics);
+        $this->saveResult($userId, $conversationId, $features, $ranking, $similarSeniors, $recommendationText, $careerText, $sources, $confidence, $coveredTopics);
 
         return [
             'redirect'            => "/result/{$conversationId}",
@@ -120,9 +125,9 @@ final class DiagnosisService
     }
 
     /** @param list<array{role: string, content: string}> $history */
-    private function assertEnoughTurns(array $history): void
+    private function assertEnoughTurns(int $conversationId, array $history): void
     {
-        if (!$this->access->canDiagnose(ConversationAccess::countTurns($history))) {
+        if (!$this->access->canDiagnose($conversationId, ConversationAccess::countTurns($history))) {
             throw new AppException('not_enough_turns', 409);
         }
     }
@@ -237,6 +242,19 @@ final class DiagnosisService
     /**
      * @param list<Senior> $similarSeniors
      */
+    /** 信頼度の段階。値がすべて同じ（差が出ない）ときは、必ず「低」。 */
+    private function confidenceOf(FeatureVector $features, CourseRanking $ranking, int $coveredTopics): string
+    {
+        $scores = $ranking->all();
+        return $this->confidence->resultLevel(
+            $coveredTopics,
+            count($this->policy->featureLabels()),
+            $scores[0]->total,
+            $scores[1]->total ?? $scores[0]->total,
+            count(array_unique($features->toArray())) === 1,
+        );
+    }
+
     private function saveResult(
         int $userId,
         int $conversationId,
@@ -246,9 +264,11 @@ final class DiagnosisService
         string $recommendationText,
         string $careerText,
         array $sources,
+        string $confidence,
+        int $coveredTopics,
     ): void {
         $this->db->transaction(function () use (
-            $userId, $conversationId, $features, $ranking, $similarSeniors, $recommendationText, $careerText, $sources
+            $userId, $conversationId, $features, $ranking, $similarSeniors, $recommendationText, $careerText, $sources, $confidence, $coveredTopics
         ): void {
             $this->messages->add($conversationId, MessageRepository::ROLE_ASSISTANT, $recommendationText);
             $this->messages->add($conversationId, MessageRepository::ROLE_ASSISTANT, $careerText);
@@ -262,6 +282,8 @@ final class DiagnosisService
                 recommendationText: $recommendationText,
                 careerText: $careerText,
                 sources: $sources,
+                confidence: $confidence,
+                coveredTopics: $coveredTopics,
             );
             $this->conversations->markDiagnosed($conversationId);
         });

@@ -6,6 +6,7 @@ namespace Suisen\Service;
 
 use Suisen\AppException;
 use Suisen\Core\FollowUpRule;
+use Suisen\Core\Confidence;
 use Suisen\Core\NextTopicPicker;
 use Suisen\Core\PromptTemplate;
 use Suisen\Core\ReplyReview;
@@ -33,6 +34,9 @@ final class ChatService
         private readonly KnowledgeSearch $knowledge,
         private readonly LlmClient $llm,
         private readonly Policy $policy,
+        private readonly Confidence $confidence,
+        private readonly ConfidencePresenter $presenter,
+        private readonly TopicCoverage $coverage,
     ) {
     }
 
@@ -49,7 +53,7 @@ final class ChatService
     /**
      * 画面に出すための会話の中身。
      *
-     * @return array{id: int, is_active: bool, messages: list<array{role: string, content: string}>, can_diagnose: bool}
+     * @return array{id: int, is_active: bool, messages: list<array{role: string, content: string}>, can_diagnose: bool, evidence: array<string, mixed>}
      */
     public function open(int $userId, int $conversationId): array
     {
@@ -59,11 +63,12 @@ final class ChatService
             'id'           => (int) $conversation['id'],
             'is_active'    => $conversation['status'] === ConversationRepository::STATUS_ACTIVE,
             'messages'     => $messages,
-            'can_diagnose' => $this->access->canDiagnose(ConversationAccess::countTurns($messages)),
+            'can_diagnose' => $this->access->canDiagnose($conversationId, ConversationAccess::countTurns($messages)),
+            'evidence'     => $this->evidenceOf($conversationId),
         ];
     }
 
-    /** @return array{reply: string, turn_count: int, can_diagnose: bool, sources: list<string>} */
+    /** @return array{reply: string, turn_count: int, can_diagnose: bool, sources: list<string>, evidence: array<string, mixed>} */
     public function send(int $userId, int $conversationId, string $rawContent): array
     {
         $this->access->requireActive($userId, $conversationId);
@@ -82,7 +87,7 @@ final class ChatService
         $askedQuestions = AskedQuestions::from($history);
         $followUpTopic = $plan->studentAsked ? null : $this->followUpTopic($conversationId, $content);
         $topic = $plan->studentAsked ? null : ($followUpTopic ?? $this->nextTopic($conversationId, $askedQuestions, $history, $content));
-        $reply = $this->askForReply($history, $content, $references, $subjectList, $askedQuestions, $this->turnInstruction($plan->studentAsked, $topic, $followUpTopic !== null));
+        $reply = $this->askForReply($history, $content, $references, $subjectList, $askedQuestions, $this->topicRecord($conversationId), $this->turnInstruction($plan->studentAsked, $topic, $followUpTopic !== null));
 
         // LLM の返事をもらえたときだけ、質問と返事を組で保存する（壊れた履歴を残さない）
         $this->db->transaction(function () use ($conversationId, $content, $reply, $topic): void {
@@ -94,9 +99,18 @@ final class ChatService
         return [
             'reply'        => $reply,
             'turn_count'   => $turnCount,
-            'can_diagnose' => $this->access->canDiagnose($turnCount),
+            'can_diagnose' => $this->access->canDiagnose($conversationId, $turnCount),
+            'evidence'     => $this->evidenceOf($conversationId),
             'sources'      => [...($subjectList === '' ? [] : [$this->subjectListSource($plan)]), ...KnowledgeSearch::headings($references)],
         ];
+    }
+
+    /** チャット中に出す「いまの情報量」。聞いた項目の数から決める（診断の前なので、点数の差は使えない）。 */
+    private function evidenceOf(int $conversationId): array
+    {
+        $covered = $this->coverage->coveredCount($conversationId);
+        $total = $this->coverage->totalCount();
+        return $this->presenter->evidence($this->confidence->evidenceLevel($covered, $total), $covered, $total);
     }
 
     /**
@@ -129,7 +143,7 @@ final class ChatService
      * @param list<SearchHit> $references
      * @param list<string> $askedQuestions
      */
-    private function askForReply(array $history, string $content, array $references, string $subjectList, array $askedQuestions, string $turnInstruction): string
+    private function askForReply(array $history, string $content, array $references, string $subjectList, array $askedQuestions, string $topicRecord, string $turnInstruction): string
     {
         $review = new ReplyReview(
             $this->knowledge->subjectTitles(),
@@ -139,7 +153,7 @@ final class ChatService
         $revision = '';
         for ($attempt = 0; ; $attempt++) {
             $reply = $this->requestReply([
-                ['role' => 'system', 'content' => $this->systemPrompt($references, $subjectList, $askedQuestions, $turnInstruction, $revision)],
+                ['role' => 'system', 'content' => $this->systemPrompt($references, $subjectList, $askedQuestions, $topicRecord, $turnInstruction, $revision)],
                 ...$history,
                 ['role' => MessageRepository::ROLE_USER, 'content' => $content],
             ]);
@@ -203,7 +217,7 @@ final class ChatService
      * @param list<SearchHit> $references
      * @param list<string> $askedQuestions これまでに AI がした質問（同じ質問を繰り返させないため）
      */
-    private function systemPrompt(array $references, string $subjectList, array $askedQuestions, string $turnInstruction, string $revision = ''): string
+    private function systemPrompt(array $references, string $subjectList, array $askedQuestions, string $topicRecord, string $turnInstruction, string $revision = ''): string
     {
         return PromptTemplate::render($this->policy->prompt('chat_system'), [
             'interest_items'   => implode('、', $this->policy->featureLabels(Policy::GROUP_INTEREST)),
@@ -214,9 +228,21 @@ final class ChatService
             'asked_questions'  => $askedQuestions === []
                 ? $this->policy->message('no_asked_questions')
                 : implode("\n", array_map(static fn (string $question): string => "- {$question}", $askedQuestions)),
+            'topic_record'     => $topicRecord,
             // 学生が質問したあとに、答えてもらえなかった前の質問へ戻るのを防ぐため、今回の返し方を決めて伝える
             'turn_instruction' => $turnInstruction,
             'revision'         => $revision,
+        ]);
+    }
+
+    /** 項目のうち、もう聞いたものと、まだ聞いていないもの（AI が「まだ聞けていない項目を優先して聞く」ために渡す）。 */
+    private function topicRecord(int $conversationId): string
+    {
+        $asked = $this->messages->askedTopicsFor($conversationId);
+        $remaining = array_values(array_diff($this->policy->featureLabels(), $asked));
+        return $this->policy->message('topic_record', [
+            'asked'     => $asked === [] ? $this->policy->message('topic_record_none') : implode('、', $asked),
+            'remaining' => $remaining === [] ? $this->policy->message('topic_record_none') : implode('、', $remaining),
         ]);
     }
 

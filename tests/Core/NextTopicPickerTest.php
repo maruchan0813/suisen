@@ -39,4 +39,20 @@ final class NextTopicPickerTest extends TestCase
 
         self::assertNull($picker->pick(['力学', '流体', '情報', '手を動かす']));
     }
+
+    public function testCoveredTopicsIncludeAskedAndStudentMentioned(): void
+    {
+        $picker = new NextTopicPicker(['化学', '生物・食品', 'プログラミング・情報']);
+
+        // 化学は聞いた。プログラミングは学生が自分から話した。生物・食品は話に出ていない
+        self::assertSame(
+            ['化学', 'プログラミング・情報'],
+            $picker->coveredTopics(['プログラミングが好きです'], ['化学']),
+        );
+    }
+
+    public function testCoveredTopicsAreEmptyAtTheStart(): void
+    {
+        self::assertSame([], (new NextTopicPicker(['化学']))->coveredTopics([], []));
+    }
 }

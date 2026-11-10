@@ -1409,3 +1409,96 @@ body {
     max-width: 320px;
   }
 }
+
+
+/* 信頼度（高・中・低）。色（青・黄・灰）だけに頼らず、文字も出す */
+.confidence {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  background: #eaf3fd;
+  color: var(--color-primary-dark);
+}
+
+.confidence--high {
+  background: #e5484d;
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(229, 72, 77, 0.4);
+}
+
+.confidence--medium {
+  background: var(--color-accent);
+  color: #8a6a00;
+}
+
+.confidence--low {
+  background: #e6e9ed;
+  color: var(--color-text-muted);
+}
+
+.confidence__label {
+  font-size: 1rem;
+}
+
+.chat__evidence {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+}
+
+.chat__evidence-hint {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.hero__confidence {
+  margin-top: 12px;
+  font-size: 0.85rem;
+}
+
+.hero__confidence p {
+  margin: 6px 0 0;
+}
+
+
+/* 診断できるようになったことを知らせる（チャットの中のお知らせと、光る「診断する」） */
+.message--notice {
+  align-self: center;
+  max-width: 90%;
+  padding: 8px 16px;
+  border: 2px solid var(--color-accent-dark);
+  border-radius: 999px;
+  background: #fff8e0;
+  color: #8a6a00;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.button--ready {
+  animation: ready-glow 1.6s ease-in-out infinite;
+}
+
+@keyframes ready-glow {
+  0%, 100% { box-shadow: 0 6px 16px rgba(248, 201, 74, 0.4), 0 0 0 0 rgba(248, 201, 74, 0.7); }
+  50% { box-shadow: 0 6px 16px rgba(248, 201, 74, 0.4), 0 0 0 10px rgba(248, 201, 74, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button--ready { animation: none; box-shadow: 0 0 0 4px var(--color-accent-dark); }
+}
+
+/* 結果は AI の判断であることを、はっきり伝える */
+.result-disclaimer {
+  margin: 14px 0 0;
+  padding: 10px 14px;
+  border: 2px dashed var(--color-accent-dark);
+  border-radius: 12px;
+  background: #fff8e0;
+  color: #8a6a00;
+  font-size: 0.85rem;
+  line-height: 1.7;
+}

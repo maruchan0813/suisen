@@ -9,6 +9,7 @@ import { api, isLoggedOut } from '../api/client';
 import type { CareerExample, DiagnosisResultView } from '../api/types';
 import { Button } from '../components/Button';
 import { CountUp } from '../components/CountUp';
+import { ConfidenceBadge } from '../components/ConfidenceBadge';
 import { ErrorText } from '../components/ErrorText';
 import { RadarChart } from '../components/RadarChart';
 import { RevealCard } from '../components/RevealCard';
@@ -171,7 +172,30 @@ function ResultBody({ result }: { result: DiagnosisResultView }) {
         <motion.div className="hero__meta" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }}>
           <span data-testid="result-date">診断日時 {formatDate(result.diagnosed_at)}</span>
         </motion.div>
+        {result.confidence !== null && (
+          <motion.div className="hero__confidence" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}>
+            <ConfidenceBadge
+              level={result.confidence.level}
+              label={result.confidence.label}
+              caption="信頼度"
+              testId="result-confidence"
+            />
+            <p>{result.confidence.reason}</p>
+            {result.confidence.runner_up !== null && <p>{result.confidence.runner_up}</p>}
+            {result.confidence.retry !== null && <p>{result.confidence.retry}</p>}
+          </motion.div>
+        )}
       </motion.section>
+
+      <motion.p
+        className="result-disclaimer"
+        data-testid="result-disclaimer"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.6 }}
+      >
+        これは、AIが会話から判断した結果です。あくまで目安なので、コースを決めるときは、先生や先輩の話、学校の説明も参考にしてください。
+      </motion.p>
 
       <RevealCard title="あなたの興味バランス" testId="result-interests">
         <div className="radar-box">
@@ -263,11 +287,15 @@ function ChipList({ title, items, school = false }: { title: string; items: stri
         viewport={{ once: true }}
         variants={{ show: { transition: { staggerChildren: 0.03 } } }}
       >
-        {shown.map((item) => (
+        {shown.map((item, index) => (
           <motion.span
             key={item}
             className={`chip ${school ? 'chip--school' : ''}`}
-            variants={{ hidden: { opacity: 0, scale: 0.6 }, show: { opacity: 1, scale: 1 } }}
+            // 「すべて見る」のあとに増えるチップには、親の表示アニメーションが伝わらず、見えないままになる。
+            // そのため、増えた分だけは自分で出す
+            {...(index < CHIPS_SHOWN_FIRST
+              ? { variants: { hidden: { opacity: 0, scale: 0.6 }, show: { opacity: 1, scale: 1 } } }
+              : { initial: { opacity: 0, scale: 0.6 }, animate: { opacity: 1, scale: 1 } })}
           >
             {item}
           </motion.span>

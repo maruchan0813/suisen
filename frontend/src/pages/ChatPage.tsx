@@ -4,8 +4,9 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { api, isLoggedOut } from '../api/client';
-import type { ChatMessage } from '../api/types';
+import type { ChatMessage, Evidence } from '../api/types';
 import { Button } from '../components/Button';
+import { ConfidenceBadge } from '../components/ConfidenceBadge';
 import { ErrorText } from '../components/ErrorText';
 import { Header } from '../components/Header';
 import { MessageBubble } from '../components/MessageBubble';
@@ -17,6 +18,7 @@ import { useSession } from '../session';
 const STATUS_THINKING = '考え中…';
 const STATUS_DIAGNOSING = '診断中…（少し時間がかかります）';
 const INPUT_MAX_HEIGHT = 140;
+const NOTICE_CAN_DIAGNOSE = '診断ができるようになりました。もう少し話してもよいですし、「診断する」を押してもかまいません。';
 
 /** 指で操作する端末（スマホ・タブレット）か。キーボードの Enter は改行にする */
 const isTouchDevice = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
@@ -31,6 +33,7 @@ export function ChatPage() {
   const [loadedCount, setLoadedCount] = useState(0); // 読み込んだ時点の件数（これより後だけ動かして出す）
   const [isActive, setIsActive] = useState(true);
   const [canDiagnose, setCanDiagnose] = useState(false);
+  const [evidence, setEvidence] = useState<Evidence | null>(null);
   const [input, setInput] = useState('');
   const [waiting, setWaiting] = useState<Waiting>(null);
   const [error, setError] = useState('');
@@ -44,6 +47,7 @@ export function ChatPage() {
         setLoadedCount(result.data.messages.length);
         setIsActive(result.data.is_active);
         setCanDiagnose(result.data.can_diagnose);
+        setEvidence(result.data.evidence);
       } else if (isLoggedOut(result)) {
         await refresh();
         navigate('/');
@@ -70,6 +74,7 @@ export function ChatPage() {
     if (content === '' || waiting !== null) {
       return;
     }
+    const couldDiagnose = canDiagnose;
     setError('');
     setInput('');
     setMessages((current) => [...current, { role: 'user', content }]);
@@ -78,7 +83,13 @@ export function ChatPage() {
     const result = await api.sendMessage(conversationId, content);
     if (result.ok) {
       setCanDiagnose(result.data.can_diagnose);
-      setMessages((current) => [...current, { role: 'assistant', content: result.data.reply, sources: result.data.sources }]);
+      setEvidence(result.data.evidence);
+      const reply: ChatMessage = { role: 'assistant', content: result.data.reply, sources: result.data.sources };
+      // 診断を押せるようになった最初の返事のあとに、チャットでも知らせる
+      const notice: ChatMessage[] = !couldDiagnose && result.data.can_diagnose
+        ? [{ role: 'assistant', content: NOTICE_CAN_DIAGNOSE, notice: true }]
+        : [];
+      setMessages((current) => [...current, reply, ...notice]);
     } else {
       // サーバーは保存していないので、画面からも取り除いて入力欄に戻す
       setMessages((current) => current.slice(0, -1));
@@ -163,6 +174,17 @@ export function ChatPage() {
                 disabled={waiting !== null}
                 data-testid="message-input"
               />
+              {evidence !== null && (
+                <div className="chat__evidence" data-testid="evidence">
+                  <ConfidenceBadge
+                    level={evidence.level}
+                    label={evidence.label}
+                    caption="いまの情報量"
+                    testId="evidence-level"
+                  />
+                  {evidence.hint !== null && <span className="chat__evidence-hint">{evidence.hint}</span>}
+                </div>
+              )}
               <div className="chat__buttons">
                 <Button type="submit" busy={waiting === 'thinking'} disabled={waiting !== null} data-testid="send-button">
                   送信
@@ -170,8 +192,9 @@ export function ChatPage() {
                 <Button
                   variant="accent"
                   busy={waiting === 'diagnosing'}
+                  className={canDiagnose && waiting === null ? 'button--ready' : ''}
                   disabled={waiting !== null || !canDiagnose}
-                  title="何回か話すと押せるようになります"
+                  title={canDiagnose ? undefined : '情報量が「中」になると押せるようになります'}
                   onClick={diagnose}
                   data-testid="diagnose-button"
                 >

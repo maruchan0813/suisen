@@ -7,6 +7,20 @@ const SOURCES_PREFIX = '参考にしたシラバス：';
 
 export function MessageBubble({ message, animate }: { message: ChatMessage; animate: boolean }) {
   const fromUser = message.role === 'user';
+  if (message.notice === true) {
+    return (
+      <motion.li
+        layout
+        className="message message--notice"
+        data-testid="chat-notice"
+        initial={animate ? { opacity: 0, scale: 0.9, y: 12 } : false}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+      >
+        {message.content}
+      </motion.li>
+    );
+  }
   return (
     <motion.li
       layout

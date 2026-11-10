@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Suisen;
 
+use Suisen\Core\Confidence;
 use Suisen\Core\CourseRecommender;
 use Suisen\Core\SeniorFinder;
 use Suisen\Infra\Database;
@@ -21,6 +22,7 @@ use Suisen\Repository\SearchIndexRepository;
 use Suisen\Repository\SeniorRepository;
 use Suisen\Repository\UserRepository;
 use Suisen\Service\ChatService;
+use Suisen\Service\ConfidencePresenter;
 use Suisen\Service\ConversationAccess;
 use Suisen\Service\DiagnosisService;
 use Suisen\Service\KnowledgeSearch;
@@ -28,6 +30,7 @@ use Suisen\Service\SearchPlanner;
 use Suisen\Service\LoginService;
 use Suisen\Service\ResultService;
 use Suisen\Service\StatusService;
+use Suisen\Service\TopicCoverage;
 
 /**
  * 部品を組み立てる場所。環境設定（env）と方針（policy）は、ここで機構に渡す。
@@ -71,6 +74,9 @@ final class App
             $this->knowledgeSearch(),
             $this->llm(),
             $this->policy,
+            $this->confidence(),
+            new ConfidencePresenter($this->policy),
+            new TopicCoverage(new MessageRepository($this->database()), $this->policy),
         );
     }
 
@@ -94,6 +100,8 @@ final class App
             $this->knowledgeSearch(),
             $this->llm(),
             $this->policy,
+            $this->confidence(),
+            new TopicCoverage(new MessageRepository($this->database()), $this->policy),
         );
     }
 
@@ -104,6 +112,9 @@ final class App
             new SeniorRepository($this->database(), $this->policy->featureKeys()),
             $this->policy,
             $this->rootDir . '/data/kct_careers.json',
+            $this->courseRepository(),
+            $this->confidence(),
+            new ConfidencePresenter($this->policy),
         );
     }
 
@@ -132,9 +143,24 @@ final class App
         return new CourseRepository($this->database(), $this->policy->featureKeys());
     }
 
+    private function confidence(): Confidence
+    {
+        return new Confidence(
+            $this->policy->float('CONFIDENCE_MID_RATIO'),
+            $this->policy->float('CONFIDENCE_HIGH_RATIO'),
+            $this->policy->float('CONFIDENCE_MARGIN_FULL'),
+            $this->policy->float('CONFIDENCE_WEIGHT_EVIDENCE'),
+        );
+    }
+
     private function conversationAccess(): ConversationAccess
     {
-        return new ConversationAccess(new ConversationRepository($this->database()), $this->policy);
+        return new ConversationAccess(
+            new ConversationRepository($this->database()),
+            $this->policy,
+            $this->confidence(),
+            new TopicCoverage(new MessageRepository($this->database()), $this->policy),
+        );
     }
 
     private function llm(): LlmClient

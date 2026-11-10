@@ -28,11 +28,13 @@ final class DiagnosisRepository
         string $recommendationText,
         string $careerText,
         array $sources,
+        string $confidence,
+        int $coveredTopics,
     ): void {
         $this->db->pdo()->prepare(
             'INSERT INTO diagnoses
-               (conversation_id, user_id, features, course_id, course_scores, senior_ids, recommendation_text, career_text, sources)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+               (conversation_id, user_id, features, course_id, course_scores, senior_ids, recommendation_text, career_text, sources, confidence, covered_topics)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         )->execute([
             $conversationId,
             $userId,
@@ -43,6 +45,8 @@ final class DiagnosisRepository
             $recommendationText,
             $careerText,
             self::toJson($sources),
+            $confidence,
+            $coveredTopics,
         ]);
     }
 
@@ -50,13 +54,14 @@ final class DiagnosisRepository
      * その利用者の、その会話の診断結果（他人の診断は null）。
      *
      * @return array{course_code: string, course_name: string, features: array<string, float>, senior_ids: list<int>,
-     *               recommendation_text: ?string, career_text: string, sources: list<string>, created_at: string}|null
+     *               recommendation_text: ?string, career_text: string, sources: list<string>, created_at: string,
+     *               course_scores: array<string, float>, confidence: ?string, covered_topics: ?int}|null
      */
     public function findFor(int $conversationId, int $userId): ?array
     {
         $statement = $this->db->pdo()->prepare(
-            'SELECT c.code AS course_code, c.name AS course_name, d.features, d.senior_ids,
-                    d.recommendation_text, d.career_text, d.sources, d.created_at
+            'SELECT c.code AS course_code, c.name AS course_name, d.features, d.senior_ids, d.course_scores,
+                    d.recommendation_text, d.career_text, d.sources, d.confidence, d.covered_topics, d.created_at
              FROM diagnoses d JOIN courses c ON c.id = d.course_id
              WHERE d.conversation_id = ? AND d.user_id = ?',
         );
@@ -67,6 +72,8 @@ final class DiagnosisRepository
         }
         $row['features'] = json_decode($row['features'], true);
         $row['senior_ids'] = json_decode($row['senior_ids'], true);
+        $row['course_scores'] = json_decode($row['course_scores'], true);
+        $row['covered_topics'] = $row['covered_topics'] === null ? null : (int) $row['covered_topics'];
         $row['sources'] = $row['sources'] === null ? [] : json_decode($row['sources'], true);
         return $row;
     }

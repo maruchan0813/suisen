@@ -13,7 +13,7 @@ return [
     'invalid_content'     => 'メッセージを入力してください（{{max}}文字まで）。',
     'conversation_closed' => 'この会話は診断済みです。ホームから新しい会話を始めてください。',
     'turn_limit'          => '会話が長くなったので、診断してください。',
-    'not_enough_turns'    => 'もう少し話してから診断しましょう。',
+    'not_enough_turns'    => 'もう少し話してから診断しましょう。（情報量が「中」になると診断できます）',
     'llm_unavailable'     => 'AI に接続できませんでした。学内ネットワークにつながっているか確かめてください。',
     'network_error'       => '通信に失敗しました。',
     'not_logged_in'       => 'ログインの期限が切れました。もう一度ログインしてください。',
@@ -28,6 +28,21 @@ return [
 
     // チャット
     'chat_greeting' => "こんにちは！SUISEN です。コース選びの相談にのります。\nまずは、最近の授業や実験で「楽しかった」「もっとやってみたい」と思ったことを教えてください。",
+    // AI に渡す、聞いた項目の記録
+    'topic_record'      => "- もう聞いた項目：{{asked}}\n- まだ聞いていない項目：{{remaining}}",
+    'topic_record_none' => 'なし',
+    // 信頼度
+    'confidence_label_high'   => '高',
+    'confidence_label_medium' => '中',
+    'confidence_label_low'    => '低',
+    'evidence_hint_low'       => 'もう少し話すと、診断できるようになります。',
+    'confidence_reason_high'   => 'たくさんの項目について聞けました。{{margin}}',
+    'confidence_reason_medium' => 'いくつかの項目について聞けました。{{margin}}',
+    'confidence_reason_low'    => '聞けた項目が少なめです。{{margin}}',
+    'confidence_margin_clear' => '2位のコースとの差も大きいです。',
+    'confidence_margin_close' => '2位のコースとの差は小さめです。',
+    'confidence_runner_up'    => '僅差で「{{course}}」コースも近いです。',
+    'confidence_retry'        => 'もう少し話してから、もう一度診断すると精度が上がります。',
     'recommendation'                => 'あなたに一番合いそうなのは「{{course}}」コースです。特に{{reasons}}への興味が、このコースの学びと重なっています。',
     'recommendation_without_reason' => 'あなたに一番合いそうなのは「{{course}}」コースです。',
     'recommendation_subjects'       => 'このコースでは{{subjects}}などの授業で学べます。',

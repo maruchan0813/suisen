@@ -28,6 +28,31 @@ export interface ChatMessage {
   content: string;
   /** 返事の根拠にしたシラバス（保存しないので、読み込み直すと消える） */
   sources?: string[];
+  /** 画面だけに出すお知らせ（保存しない。AI の返事ではない） */
+  notice?: boolean;
+}
+
+/** 信頼度の段階 */
+export type ConfidenceLevel = 'high' | 'medium' | 'low';
+
+/** チャット中の「いまの情報量」（聞いた項目の数から決める） */
+export interface Evidence {
+  level: ConfidenceLevel;
+  label: string;
+  covered: number;
+  total: number;
+  hint: string | null;
+}
+
+/** 結果画面の信頼度（前の診断は null） */
+export interface ResultConfidence {
+  level: ConfidenceLevel;
+  label: string;
+  covered: number;
+  total: number;
+  reason: string;
+  runner_up: string | null;
+  retry: string | null;
 }
 
 export interface Conversation {
@@ -35,12 +60,14 @@ export interface Conversation {
   is_active: boolean;
   messages: ChatMessage[];
   can_diagnose: boolean;
+  evidence: Evidence;
 }
 
 export interface SendResult {
   reply: string;
   turn_count: number;
   can_diagnose: boolean;
+  evidence: Evidence;
   sources: string[];
 }
 
@@ -77,6 +104,7 @@ export interface DiagnosisResultView {
   sources: string[];
   careers: CareerExample[];
   kct: KctCareers | null;
+  confidence: ResultConfidence | null;
 }
 
 export interface DiagnoseResult extends Redirect {

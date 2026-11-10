@@ -37,6 +37,22 @@ final class NextTopicPicker
         return null;
     }
 
+    /**
+     * 聞けた項目：AI が聞いた項目と、学生が自分から話した項目。次の項目を選ぶときに飛ばすものと同じ基準。
+     *
+     * @param list<string> $studentTexts 学生の発言
+     * @param list<string> $askedTopics もう聞かせた項目
+     * @return list<string> 表示名（決まった順）
+     */
+    public function coveredTopics(array $studentTexts, array $askedTopics): array
+    {
+        $conversation = implode("\n", $studentTexts);
+        return array_values(array_filter(
+            $this->labels,
+            static fn (string $label): bool => in_array($label, $askedTopics, true) || self::isMentioned($label, $conversation),
+        ));
+    }
+
     private static function isMentioned(string $label, string $conversation): bool
     {
         foreach (explode(self::LABEL_SEPARATOR, $label) as $word) {

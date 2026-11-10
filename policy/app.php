@@ -16,7 +16,6 @@ return [
     'SESSION_LIFETIME_SECONDS'           => 604800,
 
     // チャット
-    'MIN_TURNS_BEFORE_DIAGNOSIS' => 5,
     'MAX_TURNS_PER_CONVERSATION' => 20,
     'MAX_MESSAGE_LENGTH'         => 1000,
     // 返事の見直し：これ以上似ている質問は「繰り返し」とみなす（0〜1）。作り直しは何回までか
@@ -27,6 +26,11 @@ return [
     'FOLLOW_UP_MIN_ANSWER_CHARS' => 10,
     // 何項目に1回、深掘りするか。毎回深掘りすると、学生が自分の相談を言えないという指摘があったため、1つおきにする
     'FOLLOW_UP_EVERY_NTH_TOPIC'  => 2,
+    // 信頼度（高・中・低）：段階の境目、1位と2位の点数の差がこれ以上なら「差が大きい」、根拠の量の重み
+    'CONFIDENCE_MID_RATIO'        => 0.4,
+    'CONFIDENCE_HIGH_RATIO'       => 0.7,
+    'CONFIDENCE_MARGIN_FULL'      => 0.1,
+    'CONFIDENCE_WEIGHT_EVIDENCE'  => 0.5,
     'FOLLOW_UP_SKIP_PHRASES'     => ['特にない', 'とくにない', 'わからない', '分からない', '別に'],
     // 学生に言ってはいけない内部の言葉（指示文の言葉）。返事に出たら作り直させる
     'REPLY_FORBIDDEN_PHRASES'    => ['参考資料', '授業の一覧', 'コースの説明', '質問を1つ', '質問を一つ'],

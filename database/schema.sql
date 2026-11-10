@@ -78,6 +78,8 @@ CREATE TABLE IF NOT EXISTS diagnoses (
   recommendation_text TEXT         NULL,     -- 推薦の文章（結果の画面で読み直すため。2026-10-13 追加）
   career_text     TEXT             NOT NULL,
   sources         JSON             NULL,     -- 参考にしたシラバスの見出し（2026-10-13 追加）
+  confidence      VARCHAR(6)       NULL,     -- 信頼度 high / medium / low（2026-11-10 追加）
+  covered_topics  TINYINT UNSIGNED NULL,     -- 診断までに聞いた項目の数（2026-11-10 追加）
   created_at      DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY uq_diagnoses_conversation (conversation_id),

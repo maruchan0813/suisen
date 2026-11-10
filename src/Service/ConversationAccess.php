@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Suisen\Service;
 
 use Suisen\AppException;
+use Suisen\Core\Confidence;
 use Suisen\Policy;
 use Suisen\Repository\ConversationRepository;
 use Suisen\Repository\MessageRepository;
@@ -17,6 +18,8 @@ final class ConversationAccess
     public function __construct(
         private readonly ConversationRepository $conversations,
         private readonly Policy $policy,
+        private readonly Confidence $confidence,
+        private readonly TopicCoverage $coverage,
     ) {
     }
 
@@ -54,8 +57,19 @@ final class ConversationAccess
         ));
     }
 
-    public function canDiagnose(int $turnCount): bool
+    /**
+     * 診断できるか。情報量が「中」以上になったら。往復数の上限まで話したときは、情報量が低くても診断できる
+     * （上限に達すると、これ以上話せないため）。
+     */
+    public function canDiagnose(int $conversationId, int $turnCount): bool
     {
-        return $turnCount >= $this->policy->int('MIN_TURNS_BEFORE_DIAGNOSIS');
+        if ($turnCount >= $this->policy->int('MAX_TURNS_PER_CONVERSATION')) {
+            return true;
+        }
+        $level = $this->confidence->evidenceLevel(
+            $this->coverage->coveredCount($conversationId),
+            $this->coverage->totalCount(),
+        );
+        return $level !== Confidence::LOW;
     }
 }

@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Suisen\Service;
 
 use Suisen\AppException;
+use Suisen\Core\Confidence;
 use Suisen\Core\Senior;
 use Suisen\Policy;
+use Suisen\Repository\CourseRepository;
 use Suisen\Repository\DiagnosisRepository;
 use Suisen\Repository\SeniorRepository;
 
@@ -20,6 +22,9 @@ final class ResultService
         private readonly SeniorRepository $seniors,
         private readonly Policy $policy,
         private readonly string $kctCareersFile,
+        private readonly CourseRepository $courses,
+        private readonly Confidence $confidence,
+        private readonly ConfidencePresenter $presenter,
     ) {
     }
 
@@ -45,7 +50,41 @@ final class ResultService
                 'course_name' => $senior->courseName,
             ], $this->seniors->findByIds($diagnosis['senior_ids'])),
             'kct'             => $this->kctCareersOf($diagnosis['course_code']),
+            'confidence'      => $this->confidenceOf($diagnosis),
         ];
+    }
+
+    /**
+     * 信頼度。前の診断（保存していない）は null。
+     *
+     * @param array<string, mixed> $diagnosis
+     * @return array<string, mixed>|null
+     */
+    private function confidenceOf(array $diagnosis): ?array
+    {
+        if ($diagnosis['confidence'] === null || $diagnosis['covered_topics'] === null) {
+            return null;
+        }
+        $scores = $diagnosis['course_scores'];
+        arsort($scores);
+        $codes = array_keys($scores);
+        $top = (float) $scores[$codes[0]];
+        $second = (float) ($scores[$codes[1] ?? $codes[0]]);
+        $names = [];
+        foreach ($this->courses->all() as $course) {
+            $names[$course->code] = $course->name;
+        }
+        $runnerUp = $names[$codes[0] === $diagnosis['course_code'] ? ($codes[1] ?? $codes[0]) : $codes[0]] ?? '';
+
+        $total = count($this->policy->featureLabels());
+        return $this->presenter->result(
+            $diagnosis['confidence'],
+            $this->confidence->evidenceLevel($diagnosis['covered_topics'], $total),
+            $diagnosis['covered_topics'],
+            $total,
+            $this->confidence->marginIsClear($top, $second),
+            $runnerUp,
+        );
     }
 
     /**
